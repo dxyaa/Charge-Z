@@ -88,10 +88,29 @@ const DashBoard = () => {
               charge
             </div>
           </div>
+          <div className="bg-blue-600 flex justify-center items-center w-full rounded-lg h-1/3">
+            {" "}
+            graph here
+          </div>
         </div>
-        <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-5">
+        <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-5 space-y-5">
           <div className="flex h-3/4 w-full bg-black rounded-lg  justify-center items-center">
             map here
+          </div>
+          <div className="bg-black h-1/4 flex rounded-lg p-5">
+            <div className="flex justify-start flex-row space-x-7">
+              <div className="rounded-sm bg-gray-700 w-10 h-10 flex justify-center items-center">
+                icon
+              </div>
+              <div className="flex flex-col">
+                <div className="text-sm">Car Name</div>
+                <div className="text-sm text-gray-500">Car name detailed</div>
+              </div>
+            </div>
+            <hr className="w-2/3 mt-4 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
+            <div className="flex justify-between">
+              <div className="flex flex-row"></div>
+            </div>
           </div>
         </div>
       </div>
