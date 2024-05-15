@@ -35,6 +35,13 @@ const HomePage = () => {
     month: "short",
     day: "numeric",
   });
+
+  useEffect(() => {
+    const videoElement = document.querySelector("video");
+    if (videoElement) {
+      videoElement.defaultPlaybackRate = 5.0;
+    }
+  }, []);
   return (
     <div className="relative h-screen overflow-hidden w-screen bg-black">
       <video
@@ -42,7 +49,7 @@ const HomePage = () => {
         muted
         className="absolute inset-0 z-0 w-full h-full object-cover transform scale-75"
       >
-        <source src="/carvideo.mp4" type="video/mp4" />
+        <source src="/carvideolast.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
       <div className=" flex justify-center text-white z-10 w-full">
