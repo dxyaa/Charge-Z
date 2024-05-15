@@ -39,7 +39,6 @@ const HomePage = () => {
     <div className="relative h-screen overflow-hidden w-screen bg-black">
       <video
         autoPlay
-        loop
         muted
         className="absolute inset-0 z-0 w-full h-full object-cover transform scale-75"
       >
@@ -120,7 +119,6 @@ const HomePage = () => {
             </Link>
           </div>
         </div>
-        <div className="flex justify-center items-center">hello</div>
       </div>
     </div>
   );
