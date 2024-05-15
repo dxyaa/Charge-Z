@@ -36,81 +36,92 @@ const HomePage = () => {
     day: "numeric",
   });
   return (
-    <div className="h-screen bg-black text-white w-screen">
-      <div className="flex justify-center">
-        <div className="flex justify-center  items-center rounded-b-lg bg-gradient-to-r from-gray-900 to-gray-800 w-1/6 h-9 p-1">
+    <div className="relative h-screen overflow-hidden w-screen bg-black">
+      <video
+        autoPlay
+        loop
+        muted
+        className="absolute inset-0 z-0 w-full h-full object-cover transform scale-75"
+      >
+        <source src="/carvideo.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+      <div className=" flex justify-center text-white z-10 w-full">
+        <div className="flex justify-center z-10 w-full">
+          <div className="flex justify-center  items-center rounded-b-lg bg-gradient-to-r from-gray-900 to-gray-800 w-1/6 h-9 p-1 z-10">
+            {" "}
+            <TiWeatherPartlySunny />{" "}
+            <p className="ml-2 text-sm  font-bold">24°C</p>
+          </div>
+        </div>
+        <div className="absolute top-5 left-5">
           {" "}
-          <TiWeatherPartlySunny />{" "}
-          <p className="ml-2 text-sm  font-bold">24°C</p>
+          <div className="flex flex-col">
+            <div className="text-3xl ">{formattedTime}</div>
+            <div className="flex flex-row text-sm">
+              <div>{dayOfWeek} </div>
+              <div>
+                <RxDividerVertical className="mt-1" />
+              </div>
+              <div className="text-sm">
+                {monthAndDate}, {currentDate.getFullYear()}
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-      <div className="absolute top-5 left-5">
-        {" "}
-        <div className="flex flex-col">
-          <div className="text-3xl ">{formattedTime}</div>
-          <div className="flex flex-row text-sm">
-            <div>{dayOfWeek} </div>
+        <div className="absolute top-5 right-5">
+          <div className="flex flex-row space-x-2">
             <div>
-              <RxDividerVertical className="mt-1" />
+              <FaBluetoothB size={20} />
             </div>
-            <div className="text-sm">
-              {monthAndDate}, {currentDate.getFullYear()}
+            <div>
+              <FaLocationDot size={18} />
             </div>
-          </div>
-        </div>
-      </div>
-      <div className="absolute top-5 right-5">
-        <div className="flex flex-row space-x-2">
-          <div>
-            <FaBluetoothB size={20} />
-          </div>
-          <div>
-            <FaLocationDot size={18} />
-          </div>
-          <div>
-            <FaWifi size={20} />
-          </div>
-          <div>
-            <RiBatteryChargeLine size={24} />
-          </div>
-          {/*<div>
+            <div>
+              <FaWifi size={20} />
+            </div>
+            <div>
+              <RiBatteryChargeLine size={24} />
+            </div>
+            {/*<div>
         <GiNetworkBars />
          </div>*/}
+          </div>
         </div>
-      </div>
-      <div className="absolute bottom-5 w-full p-5 ">
-        <div className="rounded-md bg-gray-800 flex justify-center items-center h-16 flex-row space-x-2">
-          <Link
-            href="/"
-            className="p-2 rounded-md flex items-center group hover:bg-gray-700"
-          >
-            <IoHomeSharp size={24} className="mr-2" />
-            <span className="hidden group-hover:inline  ">Home</span>
-          </Link>
-          <Link
-            href="/"
-            className="p-2 rounded-md flex items-center group hover:bg-gray-700"
-          >
-            <FaBolt size={24} className="mr-2" />
-            <span className="hidden group-hover:inline  ">Charge Now</span>
-          </Link>
-          <Link
-            href="/"
-            className="p-2 rounded-md flex items-center group hover:bg-gray-700"
-          >
-            <RiCalendarScheduleFill size={24} className="mr-2" />
-            <span className="hidden group-hover:inline  ">Book Later</span>
-          </Link>
-          <Link
-            href="/"
-            className="p-2 rounded-md flex items-center group hover:bg-gray-700"
-          >
-            <IoPersonCircle size={24} className="mr-2" />
-            <span className="hidden group-hover:inline  ">Profile</span>
-          </Link>
+        <div className="absolute bottom-5 w-full p-5 ">
+          <div className="rounded-md bg-gray-800 flex justify-center items-center h-16 flex-row space-x-2">
+            <Link
+              href="/"
+              className="p-2 rounded-md flex items-center group hover:bg-gray-700"
+            >
+              <IoHomeSharp size={24} className="mr-2" />
+              <span className="hidden group-hover:inline  ">Home</span>
+            </Link>
+            <Link
+              href="/"
+              className="p-2 rounded-md flex items-center group hover:bg-gray-700"
+            >
+              <FaBolt size={24} className="mr-2" />
+              <span className="hidden group-hover:inline  ">Charge Now</span>
+            </Link>
+            <Link
+              href="/"
+              className="p-2 rounded-md flex items-center group hover:bg-gray-700"
+            >
+              <RiCalendarScheduleFill size={24} className="mr-2" />
+              <span className="hidden group-hover:inline  ">Book Later</span>
+            </Link>
+            <Link
+              href="/"
+              className="p-2 rounded-md flex items-center group hover:bg-gray-700"
+            >
+              <IoPersonCircle size={24} className="mr-2" />
+              <span className="hidden group-hover:inline  ">Profile</span>
+            </Link>
+          </div>
         </div>
+        <div className="flex justify-center items-center">hello</div>
       </div>
-      <div className="flex justify-center items-center">hi</div>
     </div>
   );
 };
