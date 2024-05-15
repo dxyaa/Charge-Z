@@ -5,7 +5,11 @@ import { TiWeatherPartlySunny } from "react-icons/ti";
 import { useEffect } from "react";
 import { useState } from "react";
 import { RxDividerVertical } from "react-icons/rx";
-import { CiBatteryCharging } from "react-icons/ci";
+import { GiNetworkBars } from "react-icons/gi";
+import { FaWifi } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
+import { RiBatteryChargeLine } from "react-icons/ri";
+import { FaBluetoothB } from "react-icons/fa";
 
 const DashBoard = () => {
   const currentDate = new Date();
@@ -27,7 +31,7 @@ const DashBoard = () => {
     day: "numeric",
   });
   return (
-    <div className="h-screen bg-black text-white ">
+    <div className="h-screen bg-black text-white w-screen">
       <div className="flex justify-center">
         <div className="flex justify-center  items-center rounded-b-lg bg-gradient-to-r from-gray-900 to-gray-800 w-1/6 h-9 p-1">
           {" "}
@@ -49,6 +53,30 @@ const DashBoard = () => {
             </div>
           </div>
         </div>
+      </div>
+      <div className="absolute top-5 right-5">
+        <div className="flex flex-row space-x-2">
+          <div>
+            <FaBluetoothB size={20} />
+          </div>
+          <div>
+            <FaLocationDot size={18} />
+          </div>
+          <div>
+            <FaWifi size={20} />
+          </div>
+          <div>
+            <RiBatteryChargeLine size={24} />
+          </div>
+          {/*<div>
+            <GiNetworkBars />
+             </div>*/}
+        </div>
+      </div>
+
+      <div className="flex justify-center items-center mt-20 w-full h-3/4 bg-gray-500 flex-row space-x-5 px-10">
+        <div className="w-1/3 rounded-lg bg-red-200 h-full">hi</div>
+        <div className="w-2/3 rounded-lg bg-green-200 h-full">hi</div>
       </div>
     </div>
   );
