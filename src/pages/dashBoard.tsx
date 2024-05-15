@@ -97,7 +97,7 @@ const DashBoard = () => {
           <div className="flex h-3/4 w-full bg-black rounded-lg  justify-center items-center">
             map here
           </div>
-          <div className="bg-black h-1/4 flex rounded-lg p-5">
+          <div className="bg-black h-1/4 flex flex-col rounded-lg p-5">
             <div className="flex justify-start flex-row space-x-7">
               <div className="rounded-sm bg-gray-700 w-10 h-10 flex justify-center items-center">
                 icon
@@ -107,9 +107,17 @@ const DashBoard = () => {
                 <div className="text-sm text-gray-500">Car name detailed</div>
               </div>
             </div>
-            <hr className="w-2/3 mt-4 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700"></hr>
+            <hr className="w-2/3 h-1 mx-auto my-4 bg-gray-100 border-0 rounded "></hr>
             <div className="flex justify-between">
-              <div className="flex flex-row"></div>
+              <div className="flex flex-row space-x-2">
+                <div>x km</div>
+                <div>•</div>
+                <div className="text-blue-600">y min</div>
+              </div>
+              <div className="flex flex-row space-x-2">
+                <div className="text-sm text-gray-500 mt-1"> Arrival Time</div>
+                <div className="text-xl"> 00:00 PM</div>
+              </div>
             </div>
           </div>
         </div>
