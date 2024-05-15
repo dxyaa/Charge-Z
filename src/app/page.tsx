@@ -1,7 +1,7 @@
-"use client"
-import Confirmation from "@/pages/confirm-book";
+"use client";
+import Confirmation from "@/pages/confirmBook";
 
-import Home from "@/pages/main-page";
+import Home from "@/pages/mainPage";
 export default function main() {
   return (
     <div className="flex flex-col w-screen min-h-screen">
