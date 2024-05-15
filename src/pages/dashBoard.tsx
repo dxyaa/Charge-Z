@@ -74,9 +74,26 @@ const DashBoard = () => {
         </div>
       </div>
 
-      <div className="flex justify-center items-center mt-20 w-full h-3/4 bg-gray-500 flex-row space-x-5 px-10">
-        <div className="w-1/3 rounded-lg bg-red-200 h-full">hi</div>
-        <div className="w-2/3 rounded-lg bg-green-200 h-full">hi</div>
+      <div className="flex justify-center items-center mt-20 w-full h-3/4  flex-row space-x-5 px-10">
+        <div className="w-1/3 rounded-xl bg-slate-800 h-full flex flex-col p-5 space-y-5">
+          <div className="flex h-1/3 w-full bg-black justify-center items-center rounded-lg">
+            {" "}
+            car image here
+          </div>
+          <div className="flex flex-row space-x-5 ">
+            <div className="bg-blue-600 h-32 w-1/2 rounded-md flex justify-center items-center">
+              speed
+            </div>
+            <div className="bg-blue-600 h-32 w-1/2 rounded-md flex justify-center items-center">
+              charge
+            </div>
+          </div>
+        </div>
+        <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-5">
+          <div className="flex h-3/4 w-full bg-black rounded-lg  justify-center items-center">
+            map here
+          </div>
+        </div>
       </div>
     </div>
   );
