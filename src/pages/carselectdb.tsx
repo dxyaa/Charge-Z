@@ -15,6 +15,7 @@ interface Car {
   Capacity: string;
   Mileage:string;
   DrainRate:string;
+  CurrentCharge:number;
 }
 
 const Autocomplete: React.FC = () => {
@@ -25,7 +26,8 @@ const Autocomplete: React.FC = () => {
     Capacity: "",
     UserName:"",
     Mileage:"",
-   DrainRate:""
+   DrainRate:"",
+   CurrentCharge:0
   });
   const [carList, setCarList] = useState<Car[]>([]);
   const [carDetails, setCarDetails] = useState<Car | null>(null);
@@ -120,6 +122,14 @@ const Autocomplete: React.FC = () => {
         name="DrainRates"
         placeholder="Car DrainRate"
       />
+        <input
+        type="text"
+        value={formData.CurrentCharge}
+        className='w-full'
+        onChange={handleFormData}
+        name="CurrentCharge"
+        placeholder="Current Charge"
+      />
       <button onClick={addCarData}>Add Car</button>
 
       <h2>Car List</h2>
@@ -130,6 +140,9 @@ const Autocomplete: React.FC = () => {
             <p>Name: {car.id}</p>
             <p>Mileage:{car.Mileage}</p>
             <p>Capacity: {car.Capacity}</p>
+            <p>Mileage: {car.Mileage}</p>
+            <p>Drain Rate: {car.DrainRate}</p>
+            <p>Current Charge: {car.CurrentCharge}</p>
           </li>
         ))}
       </ul>
