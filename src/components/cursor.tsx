@@ -2,9 +2,11 @@ import React, { useEffect, useRef } from "react";
 import gsap from "gsap";
 
 const lerp = (x: number, y: number, a: number) => x * (1 - a) + y * a;
+
 interface CursorProps {
   isActive: boolean;
 }
+
 export const Cursor: React.FC<CursorProps> = ({ isActive }) => {
   const mouse = useRef({ x: 0, y: 0 });
   const circle = useRef<HTMLDivElement | null>(null);
@@ -54,18 +56,42 @@ export const Cursor: React.FC<CursorProps> = ({ isActive }) => {
 
   const size = isActive ? 200 : 30;
 
+  useEffect(() => {
+    const handleMouseOver = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (target.tagName === "A" || target.closest("a")) {
+        target.style.color = "#00BFFF"; 
+      }
+    };
+
+    const handleMouseOut = (event: MouseEvent) => {
+      const target = event.target as HTMLElement;
+      if (target.tagName === "A" || target.closest("a")) {
+        target.style.color = ""; 
+      }
+    };
+
+    window.addEventListener("mouseover", handleMouseOver);
+    window.addEventListener("mouseout", handleMouseOut);
+
+    return () => {
+      window.removeEventListener("mouseover", handleMouseOver);
+      window.removeEventListener("mouseout", handleMouseOut);
+    };
+  }, []);
+
   return (
     <div className="relative h-screen">
       <div
         ref={circle}
         style={{
-          backgroundColor: "#1F51FF",
+          backgroundColor: "#00BFFF",
           width: size,
           height: size,
           filter: `blur(${isActive ? 20 : 0}px)`,
           transition: `height 0.3s ease-out, width 0.3s ease-out, filter 0.3s ease-out`,
         }}
-        className="top-0 left-0 fixed rounded-full mix-blend-difference pointer-events-none"
+        className="top-0 left-0 fixed rounded-full mix-blend-lighten pointer-events-none"
       />
     </div>
   );

@@ -19,6 +19,8 @@ import BookLater from "./bookLater";
 import ChargeNow from "./chargeNow";
 import Profile from "./profile";
 import { Cursor } from "@/components/cursor";
+import CircularProgressBar from "@/components/battery";
+import { Poppins } from "next/font/google";
 
 const HomePage = () => {
   const currentDate = new Date();
@@ -61,6 +63,11 @@ const HomePage = () => {
 
   const [videoFinished, setVideoFinished] = useState(false);
   const [isActive, setIsActive] = useState(false);
+  const [progress, setProgress] = useState(0)
+
+  const onChangeProgress = () => {
+    setProgress((prev) => prev + 20)
+  }
   return (
     <div className="relative h-screen overflow-hidden w-screen bg-black">
       <div className="relative h-screen overflow-hidden w-screen bg-black">
@@ -68,16 +75,16 @@ const HomePage = () => {
           <video
             autoPlay
             muted
-            className={`absolute inset-0 z-0 w-full h-full object-cover transform scale-100 transition-opacity duration-1000 ${
+            className={`absolute inset-0 z-0 w-full h-full object-cover transform scale-200 transition-opacity duration-1000 ${
               videoFinished ? "opacity-0 ease-in" : "opacity-100 ease-out"
             }`}
           >
-            <source src="/charge-z.mp4" type="video/mp4" />
+            <source src="" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         )}
 
-        <div className="z-50 flex justify-center items-center text-center text-white  text-4xl font-bold pt-20">
+        <div className="z-50 flex flex-col gap-7 justify-center items-center text-center text-white  text-4xl font-bold pt-20">
           <div
             onMouseOver={() => {
               setIsActive(true);
@@ -85,13 +92,17 @@ const HomePage = () => {
             onMouseLeave={() => {
               setIsActive(false);
             }}
-            className={`z-50 flex justify-center items-center text-center text-white text-4xl font-bold pt-20 transition-opacity duration-1000 ${
+            className={` flex justify-center items-center text-center text-white text-7xl font-bold pt-20 transition-opacity duration-1000 ${
               videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
             }`}
           >
             Charge-Z
           </div>
+            <div className="pt-14">
+            <CircularProgressBar sqSize={200} strokeWidth={12} percentage={20} />
+            </div>
         </div>
+    
       </div>
       <div className=" flex justify-center text-white z-10 w-full">
         <div className="flex justify-center z-10 w-full absolute top-0">
