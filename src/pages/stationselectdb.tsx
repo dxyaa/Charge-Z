@@ -112,6 +112,7 @@ const StationSelect: React.FC = () => {
           <li key={index}>
             <p>Name: {station.id}</p>
             <p>Status:{station.Status?'Active':'Inactive'}</p>
+            <br></br>
           </li>
         ))}
       </ul>

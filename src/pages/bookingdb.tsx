@@ -117,6 +117,7 @@ const BookingsSelect: React.FC = () => {
             <p>Name: {Bookings.id}</p>
             <p>Date:{Bookings.Date}</p>
             <p>Time:{Bookings.Time}</p>
+            <br></br>
           </li>
         ))}
       </ul>
