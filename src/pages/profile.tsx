@@ -20,7 +20,7 @@ export default function Scene2() {
         }}
         className="  flex justify-center text-center text-white items-center"
       >
-        thingy
+        profile
       </div>
 
       <Cursor isActive={isActive} />

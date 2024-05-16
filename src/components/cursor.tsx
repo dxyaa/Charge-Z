@@ -7,7 +7,7 @@ interface CursorProps {
 }
 export const Cursor: React.FC<CursorProps> = ({ isActive }) => {
   const mouse = useRef({ x: 0, y: 0 });
-  const circle = useRef<HTMLDivElement | null>(null); // Update type to HTMLDivElement | null
+  const circle = useRef<HTMLDivElement | null>(null);
   const delayedMouse = useRef({ x: 0, y: 0 });
   const rafId = useRef<number | null>(null);
 
@@ -52,7 +52,7 @@ export const Cursor: React.FC<CursorProps> = ({ isActive }) => {
     };
   }, []);
 
-  const size = isActive ? 400 : 30;
+  const size = isActive ? 200 : 30;
 
   return (
     <div className="relative h-screen">
@@ -62,7 +62,7 @@ export const Cursor: React.FC<CursorProps> = ({ isActive }) => {
           backgroundColor: "#BCE4F2",
           width: size,
           height: size,
-          filter: `blur(${isActive ? 30 : 0}px)`,
+          filter: `blur(${isActive ? 20 : 0}px)`,
           transition: `height 0.3s ease-out, width 0.3s ease-out, filter 0.3s ease-out`,
         }}
         className="top-0 left-0 fixed rounded-full mix-blend-difference pointer-events-none"
