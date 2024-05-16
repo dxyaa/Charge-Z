@@ -72,6 +72,7 @@ const HomePage = () => {
             Your browser does not support the video tag.
           </video>
         )}
+
         <div className="z-50 flex justify-center items-center text-center text-white  text-4xl font-bold pt-20">
           Charge-Z
         </div>
