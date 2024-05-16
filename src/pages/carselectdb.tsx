@@ -119,7 +119,7 @@ const Autocomplete: React.FC = () => {
         value={formData.DrainRate}
         className='w-full'
         onChange={handleFormData}
-        name="DrainRates"
+        name="DrainRate"
         placeholder="Car DrainRate"
       />
         <input
@@ -133,9 +133,9 @@ const Autocomplete: React.FC = () => {
       <button onClick={addCarData}>Add Car</button>
 
       <h2>Car List</h2>
-      <ul>
+      <ul >
         {carList.map((car, index) => (
-          <li key={index}>
+          <li className='gap-6' key={index}>
           
             <p>Name: {car.id}</p>
             <p>Mileage:{car.Mileage}</p>
@@ -143,6 +143,7 @@ const Autocomplete: React.FC = () => {
             <p>Mileage: {car.Mileage}</p>
             <p>Drain Rate: {car.DrainRate}</p>
             <p>Current Charge: {car.CurrentCharge}</p>
+            <br></br>
           </li>
         ))}
       </ul>
