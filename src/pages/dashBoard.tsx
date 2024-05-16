@@ -10,6 +10,11 @@ import { FaWifi } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { RiBatteryChargeLine } from "react-icons/ri";
 import { FaBluetoothB } from "react-icons/fa";
+import App from "next/app";
+import Maps from "./maps";
+
+
+
 
 const DashBoard = () => {
   const currentDate = new Date();
@@ -17,6 +22,7 @@ const DashBoard = () => {
     hour: "2-digit",
     minute: "2-digit",
   });
+  
   const formattedDate = currentDate.toLocaleDateString(undefined, {
     weekday: "long",
     year: "numeric",
@@ -95,7 +101,7 @@ const DashBoard = () => {
         </div>
         <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-5 space-y-5">
           <div className="flex h-3/4 w-full bg-black rounded-lg  justify-center items-center">
-            map here
+             <Maps/>
           </div>
           <div className="bg-black h-1/4 flex flex-col rounded-lg p-5">
             <div className="flex justify-start flex-row space-x-7">
