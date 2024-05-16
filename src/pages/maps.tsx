@@ -25,7 +25,7 @@ import { useRef, useState } from "react";
 
 const center = { lat: 48.8584, lng: 2.2945 };
 
-function App() {
+function Maps() {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
     libraries: ["places"],
@@ -143,8 +143,8 @@ function App() {
   
     // Define the request parameters for the Places Nearby Search API
     const request: google.maps.places.PlaceSearchRequest = {
-      location: map.getCenter(), // Use the center of the map as the reference point
-      radius: 100, // Search within a radius of 10 kilometers (adjust as needed)
+      location: map.getCenter(), //
+      radius: 5000, // Search within a radius of 10 kilometers (adjust as needed)
       type: 'charging_station', // Specify the type of place (charging station)
       keyword: 'electric vehicle charging', // Specify keywords related to electric vehicle charging
     };
@@ -189,10 +189,10 @@ function App() {
       position="relative"
       flexDirection="column"
       alignItems="center"
-      h="100vh"
-      w="100vw"
+      h="50vh"
+      w="75vw"
     >
-      <Box position="absolute" left={0} top={0} h="100%" w="100%">
+      <Box position="absolute" left={0} top={0} h="50vh" borderRadius={7} w="60.5vw">
         {/* Google Map Box */}
         <GoogleMap
           center={center}
@@ -221,7 +221,7 @@ function App() {
         minW="container.md"
         zIndex="1"
       >
-        <HStack spacing={2} justifyContent="space-between">
+        <HStack spacing={2} className="text-black" justifyContent="space-between">
           <Box flexGrow={1}>
             <Autocomplete>
               <Input type="text" placeholder="Origin" ref={originRef} />
@@ -237,7 +237,7 @@ function App() {
             </Autocomplete>
           </Box>
 
-          <ButtonGroup>
+          <ButtonGroup className="text-black">
             <Button colorScheme="pink" type="submit" onClick={calculateRoute}>
               Calculate Route
             </Button>
@@ -260,7 +260,8 @@ function App() {
             />
           </ButtonGroup>
         </HStack>
-        <HStack spacing={4} mt={4} justifyContent="space-between">
+
+        <HStack spacing={4} mt={4} className="text-black" justifyContent="space-between">
           <Text>Distance: {distance} </Text>
           <Text>Duration: {duration} </Text>
           <IconButton
@@ -278,4 +279,4 @@ function App() {
   );
 }
 
-export default App;
+export default Maps;

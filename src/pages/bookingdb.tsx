@@ -19,8 +19,8 @@ interface SearchResult {
 interface Bookings {
   id: string;
   Name: string;
-  Date: string;
-  Time: string;
+  Date: number ;
+  Time: number ;
 }
 
 const BookingsSelect: React.FC = () => {
@@ -29,8 +29,8 @@ const BookingsSelect: React.FC = () => {
   const [formData, setFormData] = useState<Bookings>({
     id: "",
     Name: "",
-    Date: "",
-    Time: "",
+    Date: 0,
+    Time: 0,
   });
   const [BookingsList, setBookingsList] = useState<Bookings[]>([]);
   const [BookingsDetails, setBookingsDetails] = useState<Bookings | null>(null);
@@ -48,7 +48,7 @@ const BookingsSelect: React.FC = () => {
       const db = getFirestore(app);
       const BookingsCollectionRef = collection(db, "bookings");
 
-      const { ...BookingsData } = formData;
+      const {id, ...BookingsData } = formData;
 
       await setDoc(doc(BookingsCollectionRef, formData.Name), BookingsData);
     } catch (error) {
@@ -94,7 +94,7 @@ const BookingsSelect: React.FC = () => {
         className="w-full"
         onChange={handleFormData}
         name="Date"
-        placeholder="Car name"
+        placeholder="Date"
       />
         <input
         type="text"
@@ -102,7 +102,7 @@ const BookingsSelect: React.FC = () => {
         className="w-full"
         onChange={handleFormData}
         name="Time"
-        placeholder="Car name"
+        placeholder="Timer"
       />
 
 
@@ -116,6 +116,7 @@ const BookingsSelect: React.FC = () => {
           <li key={index}>
             <p>Name: {Bookings.id}</p>
             <p>Date:{Bookings.Date}</p>
+            <p>Time:{Bookings.Time}</p>
           </li>
         ))}
       </ul>

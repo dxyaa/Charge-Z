@@ -11,9 +11,10 @@ interface SearchResult {
 interface Car {
   id:string;
   Name: string;
+  UserName:string;
   Capacity: string;
   Mileage:string;
-  Timer:string;
+  DrainRate:string;
 }
 
 const Autocomplete: React.FC = () => {
@@ -22,8 +23,9 @@ const Autocomplete: React.FC = () => {
     id:"",
     Name: "",
     Capacity: "",
+    UserName:"",
     Mileage:"",
-    Timer:""
+   DrainRate:""
   });
   const [carList, setCarList] = useState<Car[]>([]);
   const [carDetails, setCarDetails] = useState<Car | null>(null);
@@ -77,14 +79,22 @@ const Autocomplete: React.FC = () => {
 
 
   return (
-    <div className='border flex flex-col gap-lg-5 border-2 lg:w-1/2 align-self-lg-center ml-32'>
+    <div className=' flex flex-col gap-lg-5 border-2 lg:w-1/2 align-self-lg-center ml-32'>
       <input
         type="text"
         value={formData.Name}
         className='w-full'
         onChange={handleFormData}
         name="Name"
-        placeholder="Car name"
+        placeholder="Car Name"
+      />
+       <input
+        type="text"
+        value={formData.UserName}
+        className='w-full'
+        onChange={handleFormData}
+        name="UserName"
+        placeholder="User Name"
       />
       <input
         type="text"
@@ -104,11 +114,11 @@ const Autocomplete: React.FC = () => {
       />
         <input
         type="text"
-        value={formData.Timer}
+        value={formData.DrainRate}
         className='w-full'
         onChange={handleFormData}
-        name="Timer"
-        placeholder="Car Mileage"
+        name="DrainRates"
+        placeholder="Car DrainRate"
       />
       <button onClick={addCarData}>Add Car</button>
 
