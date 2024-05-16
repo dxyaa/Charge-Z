@@ -15,6 +15,9 @@ import Link from "next/link";
 import { FaBolt } from "react-icons/fa6";
 import { RiCalendarScheduleFill } from "react-icons/ri";
 import { IoPersonCircle } from "react-icons/io5";
+import BookLater from "./bookLater";
+import ChargeNow from "./chargeNow";
+import Profile from "./profile";
 
 const HomePage = () => {
   const currentDate = new Date();
@@ -104,21 +107,21 @@ const HomePage = () => {
               <span className="hidden group-hover:inline  ">Home</span>
             </Link>
             <Link
-              href="/"
+              href="/chargeNow"
               className="p-2 rounded-md flex items-center group hover:bg-gray-700"
             >
               <FaBolt size={24} className="mr-2" />
               <span className="hidden group-hover:inline  ">Charge Now</span>
             </Link>
             <Link
-              href="/"
+              href="/bookLater"
               className="p-2 rounded-md flex items-center group hover:bg-gray-700"
             >
               <RiCalendarScheduleFill size={24} className="mr-2" />
               <span className="hidden group-hover:inline  ">Book Later</span>
             </Link>
             <Link
-              href="/"
+              href="/profile"
               className="p-2 rounded-md flex items-center group hover:bg-gray-700"
             >
               <IoPersonCircle size={24} className="mr-2" />
