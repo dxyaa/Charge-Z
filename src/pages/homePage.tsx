@@ -68,9 +68,11 @@ const HomePage = () => {
           <video
             autoPlay
             muted
-            className="absolute inset-0 z-0 w-full h-full object-cover transform scale-75"
+            className={`absolute inset-0 z-0 w-full h-full object-cover transform scale-100 transition-opacity duration-1000 ${
+              videoFinished ? "opacity-0 ease-in" : "opacity-100 ease-out"
+            }`}
           >
-            <source src="/carvideolast.mp4" type="video/mp4" />
+            <source src="/charge-z.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         )}
@@ -83,7 +85,9 @@ const HomePage = () => {
             onMouseLeave={() => {
               setIsActive(false);
             }}
-            className="  flex justify-center text-center text-white items-center "
+            className={`z-50 flex justify-center items-center text-center text-white text-4xl font-bold pt-20 transition-opacity duration-1000 ${
+              videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
+            }`}
           >
             Charge-Z
           </div>
