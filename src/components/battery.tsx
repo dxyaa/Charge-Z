@@ -25,12 +25,7 @@ const CircularProgressBar: FC<Props> = (props) => {
         r={radius}
         strokeWidth={`${strokeWidth}px`}
       />
-      <g 
-        transform={`translate(${sqSize / 2}, ${sqSize / 2})`} // Centering the group
-        style={{ transformOrigin: 'center' }} 
-      >
-        <FaCar className='' size={iconSize} color="#0044AA" /> 
-      </g>
+     
       <circle
         className="fill-none stroke-[#0044AA] transition-all ease-in delay-200"
         cx={sqSize / 2}

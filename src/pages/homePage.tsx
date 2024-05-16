@@ -21,7 +21,7 @@ import Profile from "./profile";
 import { Cursor } from "@/components/cursor";
 import CircularProgressBar from "@/components/battery";
 import { Poppins } from "next/font/google";
-
+import { FaCar } from "react-icons/fa";
 const HomePage = () => {
   const currentDate = new Date();
   const formattedTime = currentDate.toLocaleTimeString([], {
@@ -41,7 +41,7 @@ const HomePage = () => {
     month: "short",
     day: "numeric",
   });
-
+  const iconSize = 60; // Adjust icon size as needed
   useEffect(() => {
     const videoElement = document.querySelector("video");
     if (videoElement) {
@@ -79,7 +79,7 @@ const HomePage = () => {
               videoFinished ? "opacity-0 ease-in" : "opacity-100 ease-out"
             }`}
           >
-            <source src="" type="video/mp4" />
+            <source src="/charge-z.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         )}
@@ -98,7 +98,11 @@ const HomePage = () => {
           >
             Charge-Z
           </div>
-            <div className="pt-14">
+            <div  className={` flex justify-center items-center pt-14  transition-opacity duration-1000 ${
+              videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
+            }`}>
+           
+            <FaCar className='absolute  ' size={iconSize}  /> 
             <CircularProgressBar sqSize={200} strokeWidth={12} percentage={20} />
             </div>
         </div>
