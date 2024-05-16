@@ -18,6 +18,7 @@ import { IoPersonCircle } from "react-icons/io5";
 import BookLater from "./bookLater";
 import ChargeNow from "./chargeNow";
 import Profile from "./profile";
+import { Cursor } from "@/components/cursor";
 
 const HomePage = () => {
   const currentDate = new Date();
@@ -56,9 +57,10 @@ const HomePage = () => {
     setVideoFinished(true);
   };
 
-  // FOR A B H I S H E K : the video currently disappears after playing has ended,which is handled just above with useeffect.
+  // FOR A B H I S H E K : the video currently disappears after playing has ended,which is handled just above with useeffect above.
 
   const [videoFinished, setVideoFinished] = useState(false);
+  const [isActive, setIsActive] = useState(false);
   return (
     <div className="relative h-screen overflow-hidden w-screen bg-black">
       <div className="relative h-screen overflow-hidden w-screen bg-black">
@@ -74,7 +76,17 @@ const HomePage = () => {
         )}
 
         <div className="z-50 flex justify-center items-center text-center text-white  text-4xl font-bold pt-20">
-          Charge-Z
+          <div
+            onMouseOver={() => {
+              setIsActive(true);
+            }}
+            onMouseLeave={() => {
+              setIsActive(false);
+            }}
+            className="  flex justify-center text-center text-white items-center "
+          >
+            Charge-Z
+          </div>
         </div>
       </div>
       <div className=" flex justify-center text-white z-10 w-full">
@@ -152,6 +164,7 @@ const HomePage = () => {
           </div>
         </div>
       </div>
+      <Cursor isActive={isActive} />
     </div>
   );
 };

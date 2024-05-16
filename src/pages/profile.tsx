@@ -6,24 +6,6 @@ import { Cursor } from "@/components/cursor";
 
 import { useState } from "react";
 
-export default function Scene2() {
-  const [isActive, setIsActive] = useState(false);
-
-  return (
-    <div className="h-screen flex items-center justify-center text-center bg-black">
-      <div
-        onMouseOver={() => {
-          setIsActive(true);
-        }}
-        onMouseLeave={() => {
-          setIsActive(false);
-        }}
-        className="  flex justify-center text-center text-white items-center"
-      >
-        profile
-      </div>
-
-      <Cursor isActive={isActive} />
-    </div>
-  );
+export default function Profile() {
+  return <div>profile</div>;
 }

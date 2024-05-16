@@ -59,7 +59,7 @@ export const Cursor: React.FC<CursorProps> = ({ isActive }) => {
       <div
         ref={circle}
         style={{
-          backgroundColor: "#BCE4F2",
+          backgroundColor: "#1F51FF",
           width: size,
           height: size,
           filter: `blur(${isActive ? 20 : 0}px)`,
