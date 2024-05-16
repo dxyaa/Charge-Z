@@ -43,20 +43,41 @@ const HomePage = () => {
     const videoElement = document.querySelector("video");
     if (videoElement) {
       videoElement.defaultPlaybackRate = 5.0;
+      videoElement.addEventListener("ended", handleVideoEnded);
     }
+    return () => {
+      if (videoElement) {
+        videoElement.removeEventListener("ended", handleVideoEnded);
+      }
+    };
   }, []);
+
+  const handleVideoEnded = () => {
+    setVideoFinished(true);
+  };
+
+  // FOR A B H I S H E K : the video currently disappears after playing has ended,which is handled just above with useeffect.
+
+  const [videoFinished, setVideoFinished] = useState(false);
   return (
     <div className="relative h-screen overflow-hidden w-screen bg-black">
-      <video
-        autoPlay
-        muted
-        className="absolute inset-0 z-0 w-full h-full object-cover transform scale-75"
-      >
-        <source src="/carvideolast.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      <div className="relative h-screen overflow-hidden w-screen bg-black">
+        {!videoFinished && (
+          <video
+            autoPlay
+            muted
+            className="absolute inset-0 z-0 w-full h-full object-cover transform scale-75"
+          >
+            <source src="/carvideolast.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        )}
+        <div className="z-50 flex justify-center items-center text-center text-white  text-4xl font-bold pt-20">
+          Charge-Z
+        </div>
+      </div>
       <div className=" flex justify-center text-white z-10 w-full">
-        <div className="flex justify-center z-10 w-full">
+        <div className="flex justify-center z-10 w-full absolute top-0">
           <div className="flex justify-center  items-center rounded-b-lg bg-gradient-to-r from-gray-900 to-gray-800 w-1/6 h-9 p-1 z-10">
             {" "}
             <TiWeatherPartlySunny />{" "}
@@ -93,7 +114,7 @@ const HomePage = () => {
               <RiBatteryChargeLine size={24} />
             </div>
             {/*<div>
-        <GiNetworkBars />
+           <GiNetworkBars />
          </div>*/}
           </div>
         </div>
