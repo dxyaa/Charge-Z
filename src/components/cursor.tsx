@@ -60,14 +60,14 @@ export const Cursor: React.FC<CursorProps> = ({ isActive }) => {
     const handleMouseOver = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (target.tagName === "A" || target.closest("a")) {
-        target.style.color = "#00BFFF"; 
+        target.style.color = "#00BFFF";
       }
     };
 
     const handleMouseOut = (event: MouseEvent) => {
       const target = event.target as HTMLElement;
       if (target.tagName === "A" || target.closest("a")) {
-        target.style.color = ""; 
+        target.style.color = "";
       }
     };
 
@@ -85,13 +85,13 @@ export const Cursor: React.FC<CursorProps> = ({ isActive }) => {
       <div
         ref={circle}
         style={{
-          backgroundColor: "#00BFFF",
+          backgroundColor: "#1F51FF",
           width: size,
           height: size,
           filter: `blur(${isActive ? 20 : 0}px)`,
           transition: `height 0.3s ease-out, width 0.3s ease-out, filter 0.3s ease-out`,
         }}
-        className="top-0 left-0 fixed rounded-full mix-blend-lighten pointer-events-none"
+        className="top-0 left-0 fixed rounded-full mix-blend-lighten pointer-events-none "
       />
     </div>
   );
