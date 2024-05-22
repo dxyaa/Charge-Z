@@ -94,23 +94,23 @@ const DashBoard = () => {
             </div>
           </div>
           <div className="flex flex-row space-x-5 h-1/3">
-            <div className="bg-blue-600 h-full w-1/2 rounded-md flex justify-center items-center flex-col">
+            <div className=" h-full w-1/2 rounded-md flex justify-center items-center flex-col">
               <Image
                 alt="starboy"
                 src={starboy}
-                height={150}
-                width={110}
+                height={200}
+                width={150}
               ></Image>
-              <div className="flex justify-between space-x-8">
+              <div className="flex justify-between space-x-20">
                 {" "}
                 <div className="text-sm text-white mt-1 flex flex-col">
                   {" "}
                   <div>Starboy</div>
                   <div className="text-xs text-gray-400">Weekend</div>
                 </div>
-                <div>
+                <button>
                   <FaRegPauseCircle className="mt-2" size={24} />
-                </div>
+                </button>
               </div>
             </div>
             <div className="bg-blue-600 h-full w-1/2 rounded-md flex justify-center items-center">
