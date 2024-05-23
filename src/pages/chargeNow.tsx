@@ -107,7 +107,6 @@ const ChargeNow = () => {
           <Carousel
             activeIndex={index}
             onSelect={(selectedIndex) => setIndex(selectedIndex)}
-            fade
             interval={1500}
             controls={false}
             className="h-full carousel slide"
@@ -115,7 +114,7 @@ const ChargeNow = () => {
             {index === 0 && (
               <Carousel.Item
                 interval={1500}
-                className="flex justify-center items-center bg-red-200"
+                className="flex justify-center items-center swap"
               >
                 <Image
                   src={darknexon}
@@ -130,7 +129,7 @@ const ChargeNow = () => {
             {index === 1 && (
               <Carousel.Item
                 interval={1500}
-                className="h-60 flex justify-center items-center flex-col space-y-4"
+                className="h-60 flex justify-center items-center flex-col space-y-4 swap"
               >
                 <div className=" ">Your nearest charging station is : </div>
                 <div>Sasthamangalam</div>
