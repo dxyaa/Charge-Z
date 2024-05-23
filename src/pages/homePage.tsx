@@ -22,6 +22,13 @@ import { Cursor } from "@/components/cursor";
 import CircularProgressBar from "@/components/battery";
 import { Poppins } from "next/font/google";
 import { FaCar } from "react-icons/fa";
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  variable: "--font-inter",
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+});
+
 const HomePage = () => {
   const currentDate = new Date();
   const formattedTime = currentDate.toLocaleTimeString([], {
@@ -63,11 +70,11 @@ const HomePage = () => {
 
   const [videoFinished, setVideoFinished] = useState(false);
   const [isActive, setIsActive] = useState(false);
-  const [progress, setProgress] = useState(0)
+  const [progress, setProgress] = useState(0);
 
   const onChangeProgress = () => {
-    setProgress((prev) => prev + 20)
-  }
+    setProgress((prev) => prev + 20);
+  };
   return (
     <div className="relative h-screen overflow-hidden w-screen bg-black">
       <div className="relative h-screen overflow-hidden w-screen bg-black">
@@ -75,16 +82,18 @@ const HomePage = () => {
           <video
             autoPlay
             muted
-            className={`absolute inset-0 z-0 w-full h-full object-cover transform scale-200 transition-opacity duration-1000 ${
-              videoFinished ? "opacity-0 ease-in" : "opacity-100 ease-out"
+            className={`absolute inset-0 z-0 w-full h-full object-cover mr-12 transform scale-200 transition-opacity duration-1500 ${
+              videoFinished
+                ? "opacity-0 ease-in-out-back"
+                : "opacity-100 ease-in-out-back" // Smoother easing
             }`}
           >
-            <source src="/charge-z.mp4" type="video/mp4" />
+            <source src="/charge-z-2.m4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         )}
 
-        <div className="z-50 flex flex-col gap-7 justify-center items-center text-center text-white  text-4xl font-bold pt-20">
+        <div className="z-50 flex flex-col gap-7 justify-center items-center text-center text-white  text-4xl font-bold pt-36">
           <div
             onMouseOver={() => {
               setIsActive(true);
@@ -92,21 +101,23 @@ const HomePage = () => {
             onMouseLeave={() => {
               setIsActive(false);
             }}
-            className={` flex justify-center items-center text-center text-white text-7xl font-bold pt-20 transition-opacity duration-1000 ${
+            className={` ${
+              poppins.variable
+            } flex justify-center items-center text-center text-white text-7xl font-bold pt-14 transition-opacity duration-1000 ${
               videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
             }`}
           >
             Charge-Z
           </div>
-            <div  className={` flex justify-center items-center pt-14  transition-opacity duration-1000 ${
-              videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
-            }`}>
-           
-            <FaCar className='absolute  ' size={iconSize}  /> 
-            <CircularProgressBar sqSize={200} strokeWidth={12} percentage={20} />
-            </div>
+          <div
+            className={` flex justify-center items-center pt-14  transition-opacity duration-1000 
+        `}
+          >
+            <FaCar className="absolute  " size={iconSize} />
+            <CircularProgressBar strokeWidth={2} sqSize={200} rayCount={100} rayLength={15} />
+
+          </div>
         </div>
-    
       </div>
       <div className=" flex justify-center text-white z-10 w-full">
         <div className="flex justify-center z-10 w-full absolute top-0">

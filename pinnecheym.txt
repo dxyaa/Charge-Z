@@ -1,5 +1,5 @@
 
-
+  ${videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"}`
 /////////////////////////////
         DO NOT DELETE
 ////////////////////////////

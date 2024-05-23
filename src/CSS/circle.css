@@ -1,0 +1,31 @@
+@keyframes colorTransition {
+  0% {
+    stroke: rgb(0, 0, 255); /* Blue at 100% */
+  }
+  80% {
+    stroke: rgb(255, 0, 0); /* Red at 20% */
+  }
+  100% {
+    stroke: rgb(0, 0, 255); /* Blue at 100% */
+  }
+}
+
+@keyframes dashTransition {
+  0% {
+    stroke-dashoffset: 0;
+  }
+  80% {
+    stroke-dashoffset: 80;
+  }
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animated-progress {
+  animation: colorTransition 4s linear infinite, dashTransition 4s linear infinite;
+}
+
+.ray {
+  stroke: gray;
+}
