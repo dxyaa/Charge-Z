@@ -19,9 +19,21 @@ import { IoPauseCircle } from "react-icons/io5";
 import Link from "next/link";
 import { IoPlayForward } from "react-icons/io5";
 import { IoPlayBack } from "react-icons/io5";
+import { useRouter } from "next/router";
+import { useSearchParams } from "next/navigation";
 /* end of imports*/
 const DashBoard = () => {
   const currentDate = new Date();
+
+  const router  = useRouter();
+
+  const searchParams = useSearchParams()
+
+  const Starting = searchParams?.get('Starting');
+  const Destination = searchParams?.get('Destination');
+
+
+
   const formattedTime = currentDate.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -129,7 +141,7 @@ const DashBoard = () => {
         </div>
         <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-5 space-y-5">
           <div className="flex h-3/4 w-full bg-black rounded-lg  justify-center items-center">
-            <Maps />
+            <Maps  origin="Trivandrum" destination="Kochi"/>
           </div>
           <div className="flex flex-row space-x-5 h-full">
             {" "}

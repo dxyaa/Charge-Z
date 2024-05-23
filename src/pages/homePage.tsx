@@ -114,7 +114,7 @@ const HomePage = () => {
             }}
             className={` ${
               poppins.variable
-            } flex justify-center items-center text-center text-white text-7xl pt-14 transition-opacity duration-1000 ${
+            } flex justify-center items-center text-center text-white font-extralight text-7xl pt-14 transition-opacity duration-1000 ${
               videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
             }`}
           >
@@ -122,34 +122,34 @@ const HomePage = () => {
           </div>
           <div
             className={` flex justify-center items-center pt-14  transition-opacity duration-1000 
-        `}
+            ${videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"}`}
           >
             {/* <FaCar className="absolute  " size={iconSize} />*/}
-            <div className="flex flex-col absolute">
-              <svg width="100" height="100">
+            <div className="flex flex-col  absolute">
+              <svg width="300" height="300">
                 <circle
-                  cx="50"
-                  cy="50"
-                  r="48"
+                  cx="150"
+                  cy="150"
+                  r="120"
                   fill="transparent"
                   stroke="#36454F"
                   strokeWidth="4"
                 />
                 <text
-                  x="50"
-                  y="50"
+                  x="150"
+                  y="150"
                   textAnchor="middle"
                   dominantBaseline="central"
                   fill="#FFFFFF"
                 >
-                  <tspan className="flex flex-col text-5xl">
-                    <tspan>80</tspan>
+                  <tspan className="flex flex-col font-extralight text-9xl">
+                    <tspan className="font-extralight">80</tspan>
                   </tspan>
                 </text>
               </svg>
-              <div className="text-xs text-gray-600 pt-1">km/h</div>
+            {/* <div className="text-xs text-gray-600 pt-1">km/h</div>*/}
             </div>
-            <CircularProgressBar strokeWidth={2} sqSize={200} progress={60} />
+            <CircularProgressBar strokeWidth={2} sqSize={300} progress={60} />
           </div>
         </div>
       </div>
