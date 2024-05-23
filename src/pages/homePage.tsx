@@ -114,7 +114,7 @@ const HomePage = () => {
             }}
             className={` ${
               poppins.variable
-            } flex justify-center items-center text-center text-white font-thin text-7xl pt-14 transition-opacity duration-1000 ${
+            } flex justify-center items-center text-center text-white font-light text-7xl pt-14 transition-opacity duration-1000 ${
               videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
             }`}
           >
@@ -195,7 +195,11 @@ const HomePage = () => {
          </div>*/}
           </div>
         </div>
-        <div className={`absolute bottom-5 w-full px-48    ${videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"}`}  >
+        <div
+          className={`absolute bottom-5 w-full px-48    ${
+            videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
+          }`}
+        >
           <div className="rounded-md bg-gray-800 flex justify-center items-center h-16 flex-row space-x-2">
             <Link
               href="/"
