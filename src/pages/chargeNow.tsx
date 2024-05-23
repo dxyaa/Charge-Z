@@ -92,13 +92,7 @@ const ChargeNow = () => {
         <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-8 space-y-5">
           <div className="flex h-1/3 w-full flex-row justify-center rounded-lg">
             {" "}
-            <Image
-              alt="car"
-              src={darknexon}
-              height={500}
-              width={400}
-              className=""
-            ></Image>
+            <Image alt="car" src={darknexon} height={500} width={400}></Image>
           </div>
 
           <div className="flex justify-start flex-row space-x-7">
@@ -112,6 +106,7 @@ const ChargeNow = () => {
               </div>
             </div>
           </div>
+
           <hr className="w-full h-1 mx-auto my-4 bg-gray-700 border-0 rounded  "></hr>
           <div className="flex flex-row space-x-5 ">
             <div className="bg-black h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
