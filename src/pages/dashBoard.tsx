@@ -28,14 +28,12 @@ import { useSearchParams } from "next/navigation";
 const DashBoard = () => {
   const currentDate = new Date();
 
-  const router  = useRouter();
+  const router = useRouter();
 
-  const searchParams = useSearchParams()
+  const searchParams = useSearchParams();
 
-  const Starting = searchParams?.get('Starting');
-  const Destination = searchParams?.get('Destination');
-
-
+  const Starting = searchParams?.get("Starting");
+  const Destination = searchParams?.get("Destination");
 
   const formattedTime = currentDate.toLocaleTimeString([], {
     hour: "2-digit",
@@ -101,14 +99,14 @@ const DashBoard = () => {
 
       <div className="flex justify-center items-center mt-20 w-full h-3/4  flex-row space-x-5 px-10">
         <div className="w-1/3 rounded-xl bg-slate-800 h-full flex flex-col p-5 space-y-5">
-          <div className="flex h-1/3 w-full bg-black justify-center items-center rounded-lg">
+          <div className="flex h-1/3 w-full  justify-center items-center rounded-lg">
             {" "}
             <Image
               alt="car"
               src={darknexon}
               height={400}
               width={400}
-              className="bg-black"
+              className=""
             ></Image>
           </div>
           <div className="flex flex-row space-x-5 ">
@@ -160,7 +158,7 @@ const DashBoard = () => {
         </div>
         <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-5 space-y-5">
           <div className="flex h-3/4 w-full bg-black rounded-lg  justify-center items-center">
-            <Maps  origin="Trivandrum" destination="Kochi"/>
+            <Maps origin="Trivandrum" destination="Kochi" />
           </div>
           <div className="flex flex-row space-x-5 h-full">
             {" "}
@@ -170,8 +168,10 @@ const DashBoard = () => {
                   icon
                 </div>
                 <div className="flex flex-col">
-                  <div className="text-sm">Car Name</div>
-                  <div className="text-sm text-gray-500">Car name detailed</div>
+                  <div className="text-sm">Nexon EV</div>
+                  <div className="text-sm text-gray-500">
+                    Nexon EV Empowered Plus LR
+                  </div>
                 </div>
               </div>
               <hr className="w-2/3 h-1 mx-auto my-4 bg-gray-100 border-0 rounded "></hr>
