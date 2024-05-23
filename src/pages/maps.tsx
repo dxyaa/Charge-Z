@@ -1,4 +1,3 @@
-"use client";
 import {
   Box,
   Button,
@@ -12,7 +11,7 @@ import {
 import { FaLocationArrow, FaTimes } from "react-icons/fa";
 import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } from "@react-google-maps/api";
 import { useEffect, useRef, useState } from "react";
-
+import { debounce } from 'lodash';
 const center = { lat: 48.8584, lng: 2.2945 };
 
 interface Location {
@@ -21,11 +20,13 @@ interface Location {
   onDistanceDurationChange?: (distance: string, duration: string) => void;
 }
 
-function Maps({ origin = '', destination = '',onDistanceDurationChange }: Location) {
+function Maps({ origin = '', destination = '', onDistanceDurationChange }: Location) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
     libraries: ["places"],
   });
+
+
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [directionsResponse, setDirectionsResponse] = useState<google.maps.DirectionsResult | null>(null);
@@ -34,19 +35,15 @@ function Maps({ origin = '', destination = '',onDistanceDurationChange }: Locati
   const originRef = useRef<HTMLInputElement>(null);
   const destinationRef = useRef<HTMLInputElement>(null);
 
-  useEffect(() => {
-    console.log("useEffect triggered", { origin, destination, isLoaded });
 
+
+  useEffect(() => {
     if (origin && destination && originRef.current && destinationRef.current) {
-      console.log("Setting origin and destination values");
       originRef.current.value = origin;
       destinationRef.current.value = destination;
       calculateRoute(origin, destination);
-      
-      
     }
   }, [origin, destination, isLoaded]);
-
 
   useEffect(() => {
     if (onDistanceDurationChange) {
@@ -64,19 +61,7 @@ function Maps({ origin = '', destination = '',onDistanceDurationChange }: Locati
     return <div>Loading...</div>;
   }
 
-
-  if (!isLoaded) {
-    return <div>Loading...</div>;
-  }
-
   async function calculateRoute(origin: string, destination: string) {
-    console.log("Calculating route", { origin, destination });
-
-    if (!origin || !destination) {
-      console.log("Missing origin or destination");
-      return;
-    }
-
     const directionsService = new google.maps.DirectionsService();
     const results = await directionsService.route({
       origin,
@@ -87,21 +72,16 @@ function Maps({ origin = '', destination = '',onDistanceDurationChange }: Locati
     if (results.routes && results.routes.length > 0 && results.routes[0].legs && results.routes[0].legs.length > 0) {
       const leg = results.routes[0].legs[0];
       setDirectionsResponse(results);
-
       setDistance(leg.distance?.text || "");
       setDuration(leg.duration?.text || "");
-      console.log("Route calculated", { distance: leg.distance?.text, duration: leg.duration?.text });
-     
     } else {
       setDirectionsResponse(null);
       setDistance("");
       setDuration("");
-      console.log("No route found");
     }
   }
 
   async function getCurrentLocation() {
-
     if (!duration) {
       alert("Please calculate a route first before getting the current location.");
       return;
@@ -139,13 +119,12 @@ function Maps({ origin = '', destination = '',onDistanceDurationChange }: Locati
 
     if (probableLocation) {
       map?.panTo(probableLocation);
-      console.log("Remaining Distance:", (totalDistance - accumulatedDistance) / 1000, "km");
-      displayNearbyEVChargingStations();
+      displayNearbyEVChargingStations(probableLocation.lat, probableLocation.lng);
       map?.setZoom(15);
     }
   }
 
-  async function displayNearbyEVChargingStations() {
+  async function displayNearbyEVChargingStations(lat: number, lng: number) {
     let markers: google.maps.Marker[] = [];
 
     if (!map) {
@@ -153,7 +132,7 @@ function Maps({ origin = '', destination = '',onDistanceDurationChange }: Locati
     }
 
     const request: google.maps.places.PlaceSearchRequest = {
-      location: map.getCenter(),
+      location: new google.maps.LatLng(lat, lng),
       radius: 5000,
       type: "charging_station",
       keyword: "electric vehicle charging",
@@ -172,7 +151,7 @@ function Maps({ origin = '', destination = '',onDistanceDurationChange }: Locati
               position: place.geometry.location,
               map: map,
               title: place.name,
-              clickable:true
+              clickable: true
             });
             markers.push(marker);
           }
@@ -192,13 +171,7 @@ function Maps({ origin = '', destination = '',onDistanceDurationChange }: Locati
   }
 
   return (
-    <Flex
-      position="relative"
-      flexDirection="column"
-      alignItems="center"
-      h="50vh"
-      w="75vw"
-    >
+    <Flex position="relative" flexDirection="column" alignItems="center" h="50vh" w="75vw">
       <Box position="absolute" left={0} top={0} h="50vh" borderRadius={7} w="60.5vw">
         <GoogleMap
           center={center}
@@ -216,17 +189,7 @@ function Maps({ origin = '', destination = '',onDistanceDurationChange }: Locati
           {directionsResponse && <DirectionsRenderer directions={directionsResponse} />}
         </GoogleMap>
       </Box>
-      <Box
-        p={4}
-        borderRadius="lg"
-        m={4}
-        bgColor="white"
-        shadow="base"
-        minW="container.md"
-        zIndex="1"
-        display="none"
-      >
-        
+      <Box p={4} borderRadius="lg" m={4} bgColor="white" shadow="base" minW="container.md" zIndex="1" display="none">
         <HStack spacing={2} className="text-black" justifyContent="space-between">
           
           <Box flexGrow={1}>
@@ -244,7 +207,7 @@ function Maps({ origin = '', destination = '',onDistanceDurationChange }: Locati
               Calculate Route
             </Button>
             <IconButton aria-label="center back" icon={<FaTimes />} onClick={clearRoute} />
-            <Button colorScheme="pink" type="submit">
+            <Button colorScheme="pink" type="submit" onClick={() => getCurrentLocation()}>
               Get Current Location
             </Button>
           </ButtonGroup>
@@ -261,7 +224,6 @@ function Maps({ origin = '', destination = '',onDistanceDurationChange }: Locati
               map?.setZoom(15);
             }}
           />
-           
         </HStack>
       </Box>
     </Flex>
