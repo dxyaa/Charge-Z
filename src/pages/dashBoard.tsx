@@ -9,7 +9,6 @@ import { FaWifi, FaBluetoothB } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { RiBatteryChargeLine } from "react-icons/ri";
 import { IoPauseCircle } from "react-icons/io5";
-import { IoPlayForward, IoPlayBack } from "react-icons/io5";
 import Link from "next/link";
 import { IoPlayForward } from "react-icons/io5";
 import { IoPlayBack } from "react-icons/io5";
