@@ -10,7 +10,7 @@ interface Props {
 const CircularProgressBar: FC<Props> = (props) => {
   const { strokeWidth = 1, sqSize = 160, progress = 100 } = props;
   const radius = (sqSize - strokeWidth) / 2;
-  const padding = 20; //increases length of rays
+  const padding = 15; //increases length of rays
 
   const viewBoxSize = sqSize + strokeWidth;
   const viewBox = `-${strokeWidth / 2} -${

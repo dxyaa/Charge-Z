@@ -114,7 +114,7 @@ const HomePage = () => {
             }}
             className={` ${
               poppins.variable
-            } flex justify-center items-center text-center text-white font-extralight text-7xl pt-14 transition-opacity duration-1000 ${
+            } flex justify-center items-center text-center text-white font-thin text-7xl pt-14 transition-opacity duration-1000 ${
               videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
             }`}
           >
@@ -130,7 +130,7 @@ const HomePage = () => {
                 <circle
                   cx="150"
                   cy="150"
-                  r="120"
+                  r="80"
                   fill="transparent"
                   stroke="#36454F"
                   strokeWidth="4"
@@ -142,14 +142,14 @@ const HomePage = () => {
                   dominantBaseline="central"
                   fill="#FFFFFF"
                 >
-                  <tspan className="flex flex-col font-extralight text-9xl">
-                    <tspan className="font-extralight">80</tspan>
+                  <tspan className="flex flex-col font-extralight text-7xl">
+                    <tspan className="font-light">80</tspan>
                   </tspan>
                 </text>
               </svg>
-            {/* <div className="text-xs text-gray-600 pt-1">km/h</div>*/}
+              {/* <div className="text-xs text-gray-600 pt-1">km/h</div>*/}
             </div>
-            <CircularProgressBar strokeWidth={2} sqSize={300} progress={60} />
+            <CircularProgressBar strokeWidth={2} sqSize={220} progress={60} />
           </div>
         </div>
       </div>
