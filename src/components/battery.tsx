@@ -1,5 +1,5 @@
-import { FC } from 'react';
-import '../CSS/circle.css';
+import { FC } from "react";
+import "../CSS/circle.css";
 
 interface Props {
   strokeWidth?: number;
@@ -9,7 +9,12 @@ interface Props {
 }
 
 const CircularProgressBar: FC<Props> = (props) => {
-  const { strokeWidth = 1, sqSize = 160, rayCount = 100, rayLength = 10 } = props;
+  const {
+    strokeWidth = 1,
+    sqSize = 160,
+    rayCount = 100,
+    rayLength = 10,
+  } = props;
   const radius = (sqSize - strokeWidth) / 2;
   const viewBox = `0 0 ${sqSize} ${sqSize}`;
   const rays = [];
@@ -18,8 +23,12 @@ const CircularProgressBar: FC<Props> = (props) => {
     const angle = (i / rayCount) * 360;
     const x1 = sqSize / 2 + radius * Math.cos((angle - 90) * (Math.PI / 180));
     const y1 = sqSize / 2 + radius * Math.sin((angle - 90) * (Math.PI / 180));
-    const x2 = sqSize / 2 + (radius - rayLength) * Math.cos((angle - 90) * (Math.PI / 180));
-    const y2 = sqSize / 2 + (radius - rayLength) * Math.sin((angle - 90) * (Math.PI / 180));
+    const x2 =
+      sqSize / 2 +
+      (radius - rayLength) * Math.cos((angle - 90) * (Math.PI / 180));
+    const y2 =
+      sqSize / 2 +
+      (radius - rayLength) * Math.sin((angle - 90) * (Math.PI / 180));
     rays.push(
       <line
         key={i}
@@ -45,6 +54,6 @@ const CircularProgressBar: FC<Props> = (props) => {
       {rays}
     </svg>
   );
-}
+};
 
 export default CircularProgressBar;
