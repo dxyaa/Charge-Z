@@ -46,7 +46,7 @@ const CircularProgressBar: FC<Props> = (props) => {
   return (
     <svg width={sqSize} height={sqSize} viewBox={viewBox}>
       <circle
-        className="fill-none stroke-gray-400 "
+        className="fill-none stroke-transparent "
         cx={sqSize / 2}
         cy={sqSize / 2}
         r={radius}

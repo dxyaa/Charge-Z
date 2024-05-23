@@ -35,7 +35,7 @@ const poppins = Poppins({
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
 const roboto = Roboto({
-  weight: "400",
+  weight: "300",
   subsets: ["latin"],
 });
 const HomePage = () => {
@@ -112,7 +112,7 @@ const HomePage = () => {
             }}
             className={` ${
               poppins.variable
-            } flex justify-center items-center text-center text-white text-7xl font-bold pt-14 transition-opacity duration-1000 ${
+            } flex justify-center items-center text-center text-white text-7xl pt-14 transition-opacity duration-1000 ${
               videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
             }`}
           >
@@ -123,12 +123,27 @@ const HomePage = () => {
         `}
           >
             {/* <FaCar className="absolute  " size={iconSize} />*/}
-            <div className="flex flex-col absolute ">
-              <div className={`${roboto.className} text-white text-7xl`}>
-                80
-              </div>
-
-              <div className="text-xs text-gray-500">km/h</div>
+            <div className="flex flex-col absolute">
+              <svg width="100" height="100">
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="transparent"
+                  stroke="#36454F"
+                  strokeWidth="4"
+                />
+                <text
+                  x="50"
+                  y="50"
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  className={`${roboto.className} text-white`}
+                >
+                  80
+                </text>
+              </svg>
+              <div className="text-xs text-gray-600">km/h</div>
             </div>
             <CircularProgressBar strokeWidth={2} sqSize={200} progress={60} />
           </div>
