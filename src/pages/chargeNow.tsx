@@ -21,7 +21,7 @@ import { IoPlayForward } from "react-icons/io5";
 import { IoPlayBack } from "react-icons/io5";
 import "../app/globals.css";
 import darknexon from "./../../public/darknexon.png";
-
+import nexonside2 from "./../../public/nexonside2.png";
 /*imports end*/
 const ChargeNow = () => {
   const currentDate = new Date();
@@ -90,39 +90,15 @@ const ChargeNow = () => {
 
       <div className="flex justify-center items-center mt-20 w-full h-3/4  flex-row space-x-5 px-10">
         <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-8 space-y-5">
-          <div className="flex h-1/3 w-full flex-row justify-between rounded-lg">
+          <div className="flex h-1/3 w-full flex-row justify-center rounded-lg">
             {" "}
             <Image
               alt="car"
               src={darknexon}
-              height={400}
+              height={500}
               width={400}
               className=""
             ></Image>
-            {/*<div className="bg-black h-full w-1/5 rounded-lg flex flex-col  space-y-2 justify-center items-center">
-              <div className="flex flex-row space-x-3 justify-center items-center">
-                <div className="text-7xl">60</div>
-                <div className=" flex text-sm mt-10">%</div>
-              </div>
-              <div className=" text-sm text-gray-400">Charge Remaining</div>
-          </div>*/}
-            {/* <div className="flex flex-col w-full justify-end items-center space-y-5">
-              <Link
-                href={{
-                  pathname: "/dashBoard",
-                  query: { Starting: "", Destination: "string" },
-                }}
-                className=" w-1/3 h-1/2 flex justify-center items-center bg-blue-700  rounded-xl hover:bg-blue-600 "
-              >
-                Find nearest station
-              </Link>
-              <Link
-                href="/"
-                className=" w-1/3 h-1/2 flex justify-center items-center bg-red-800 rounded-xl hover:bg-red-700 "
-              >
-                Cancel
-              </Link>
-              </div>*/}
           </div>
 
           <div className="flex justify-start flex-row space-x-7">
@@ -130,7 +106,7 @@ const ChargeNow = () => {
               icon
             </div>
             <div className="flex flex-col">
-              <div className="text-sm">Nexon EV</div>
+              <div className="text-md font-semibold">Nexon EV</div>
               <div className="text-sm text-gray-500">
                 Nexon EV Empowered Plus LR
               </div>
