@@ -136,9 +136,9 @@ const DashBoard = () => {
           <div className="flex h-3/4 w-full bg-black rounded-lg  justify-center items-center">
             <Maps />
           </div>
-          <div>
+          <div className="flex flex-row space-x-5 h-full">
             {" "}
-            <div className="bg-black h-1/4 flex flex-col rounded-lg p-5 w-4/5">
+            <div className="bg-black h-full flex flex-col rounded-lg p-5 w-4/5">
               <div className="flex justify-start flex-row space-x-7">
                 <div className="rounded-sm bg-gray-700 w-10 h-10 flex justify-center items-center">
                   icon
@@ -164,10 +164,10 @@ const DashBoard = () => {
                 </div>
               </div>
             </div>
-            <div className="flex flex-col bg-black space-y-5 w-1/5">
+            <div className="flex flex-col bg-black space-y-5 w-1/5 rounded-lg p-5">
               <Link
                 href="/"
-                className="w-full bg-yellow-600 h-1/3 rounded-md text-center items-center flex justify-center hover:bg-yellow-500"
+                className="w-full bg-yellow-600 h-1/3 rounded-md text-center items-center text-sm flex justify-center hover:bg-yellow-500 "
               >
                 {" "}
                 Find Another Station
