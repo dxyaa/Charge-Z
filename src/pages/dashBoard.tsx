@@ -19,6 +19,9 @@ import { IoPauseCircle } from "react-icons/io5";
 import Link from "next/link";
 import { IoPlayForward } from "react-icons/io5";
 import { IoPlayBack } from "react-icons/io5";
+import "../app/globals.css";
+import darknexon from "./../../public/darknexon.png";
+
 /* end of imports*/
 const DashBoard = () => {
   const currentDate = new Date();
@@ -88,14 +91,28 @@ const DashBoard = () => {
         <div className="w-1/3 rounded-xl bg-slate-800 h-full flex flex-col p-5 space-y-5">
           <div className="flex h-1/3 w-full bg-black justify-center items-center rounded-lg">
             {" "}
-            car image here
+            <Image
+              alt="car"
+              src={darknexon}
+              height={400}
+              width={400}
+              className="bg-black"
+            ></Image>
           </div>
           <div className="flex flex-row space-x-5 ">
-            <div className="bg-blue-700 h-32 w-1/2 rounded-md flex justify-center items-center">
-              speed
+            <div className="bg-blue-700 h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
+              <div className=" text-sm pl-5 pt-4 ">Speed</div>
+              <div className="flex flex-row space-x-3 justify-center items-center">
+                <div className="text-7xl">80</div>
+                <div className=" flex text-sm mt-10 font-thin">km/h</div>
+              </div>
             </div>
-            <div className="bg-blue-700 h-32 w-1/2 rounded-md flex justify-center items-center">
-              charge
+            <div className="bg-blue-700 h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
+              <div className=" text-sm pl-5 pt-4 ">Charge</div>
+              <div className="flex flex-row space-x-3 justify-center items-center">
+                <div className="text-7xl">60</div>
+                <div className=" flex text-sm mt-10 font-thin">%</div>
+              </div>
             </div>
           </div>
           <div className="flex h-1/3 bg-black rounded-lg flex-col">
