@@ -136,27 +136,49 @@ const DashBoard = () => {
           <div className="flex h-3/4 w-full bg-black rounded-lg  justify-center items-center">
             <Maps />
           </div>
-          <div className="bg-black h-1/4 flex flex-col rounded-lg p-5">
-            <div className="flex justify-start flex-row space-x-7">
-              <div className="rounded-sm bg-gray-700 w-10 h-10 flex justify-center items-center">
-                icon
+          <div>
+            {" "}
+            <div className="bg-black h-1/4 flex flex-col rounded-lg p-5 w-4/5">
+              <div className="flex justify-start flex-row space-x-7">
+                <div className="rounded-sm bg-gray-700 w-10 h-10 flex justify-center items-center">
+                  icon
+                </div>
+                <div className="flex flex-col">
+                  <div className="text-sm">Car Name</div>
+                  <div className="text-sm text-gray-500">Car name detailed</div>
+                </div>
               </div>
-              <div className="flex flex-col">
-                <div className="text-sm">Car Name</div>
-                <div className="text-sm text-gray-500">Car name detailed</div>
+              <hr className="w-2/3 h-1 mx-auto my-4 bg-gray-100 border-0 rounded "></hr>
+              <div className="flex justify-between">
+                <div className="flex flex-row space-x-2">
+                  <div>x km</div>
+                  <div>•</div>
+                  <div className="text-blue-600">y min</div>
+                </div>
+                <div className="flex flex-row space-x-2">
+                  <div className="text-sm text-gray-500 mt-1">
+                    {" "}
+                    Arrival Time
+                  </div>
+                  <div className="text-xl"> 00:00 PM</div>
+                </div>
               </div>
             </div>
-            <hr className="w-2/3 h-1 mx-auto my-4 bg-gray-100 border-0 rounded "></hr>
-            <div className="flex justify-between">
-              <div className="flex flex-row space-x-2">
-                <div>x km</div>
-                <div>•</div>
-                <div className="text-blue-600">y min</div>
-              </div>
-              <div className="flex flex-row space-x-2">
-                <div className="text-sm text-gray-500 mt-1"> Arrival Time</div>
-                <div className="text-xl"> 00:00 PM</div>
-              </div>
+            <div className="flex flex-col bg-black space-y-5 w-1/5">
+              <Link
+                href="/"
+                className="w-full bg-yellow-600 h-1/3 rounded-md text-center items-center flex justify-center hover:bg-yellow-500"
+              >
+                {" "}
+                Find Another Station
+              </Link>
+              <Link
+                href="/"
+                className="w-full bg-red-800 h-1/3 rounded-md text-center items-center flex justify-center hover:bg-red-700"
+              >
+                {" "}
+                Cancel
+              </Link>
             </div>
           </div>
         </div>

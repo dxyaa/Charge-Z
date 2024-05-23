@@ -97,7 +97,7 @@ const HomePage = () => {
                 : "opacity-100 ease-in-out-back" // Smoother easing
             }`}
           >
-            <source src="/charge-z-2.m4" type="video/mp4" />
+            <source src="/charge-z-2.mp4" type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         )}
