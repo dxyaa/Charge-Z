@@ -89,8 +89,8 @@ const ChargeNow = () => {
       </div>
 
       <div className="flex justify-center items-center mt-20 w-full h-3/4  flex-row space-x-5 px-10">
-        <div className="w-1/3 rounded-xl bg-slate-800 h-full flex flex-col p-5 space-y-5">
-          <div className="flex h-1/3 w-full  justify-center items-center rounded-lg">
+        <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-8 space-y-5">
+          <div className="flex h-1/3 w-full flex-row justify-between rounded-lg">
             {" "}
             <Image
               alt="car"
@@ -99,71 +99,111 @@ const ChargeNow = () => {
               width={400}
               className=""
             ></Image>
+            {/*<div className="bg-black h-full w-1/5 rounded-lg flex flex-col  space-y-2 justify-center items-center">
+              <div className="flex flex-row space-x-3 justify-center items-center">
+                <div className="text-7xl">60</div>
+                <div className=" flex text-sm mt-10">%</div>
+              </div>
+              <div className=" text-sm text-gray-400">Charge Remaining</div>
+          </div>*/}
+            {/* <div className="flex flex-col w-full justify-end items-center space-y-5">
+              <Link
+                href={{
+                  pathname: "/dashBoard",
+                  query: { Starting: "", Destination: "string" },
+                }}
+                className=" w-1/3 h-1/2 flex justify-center items-center bg-blue-700  rounded-xl hover:bg-blue-600 "
+              >
+                Find nearest station
+              </Link>
+              <Link
+                href="/"
+                className=" w-1/3 h-1/2 flex justify-center items-center bg-red-800 rounded-xl hover:bg-red-700 "
+              >
+                Cancel
+              </Link>
+              </div>*/}
           </div>
+
+          <div className="flex justify-start flex-row space-x-7">
+            <div className="rounded-sm bg-gray-700 w-10 h-10 flex justify-center items-center">
+              icon
+            </div>
+            <div className="flex flex-col">
+              <div className="text-sm">Nexon EV</div>
+              <div className="text-sm text-gray-500">
+                Nexon EV Empowered Plus LR
+              </div>
+            </div>
+          </div>
+          <hr className="w-full h-1 mx-auto my-4 bg-gray-700 border-0 rounded  "></hr>
           <div className="flex flex-row space-x-5 ">
-            <div className="bg-blue-700 h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
+            <div className="bg-black h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
               <div className=" text-sm pl-5 pt-4 ">Speed</div>
               <div className="flex flex-row space-x-3 justify-center items-center">
                 <div className="text-7xl">80</div>
                 <div className=" flex text-sm mt-10 font-thin">km/h</div>
               </div>
             </div>
-            <div className="bg-blue-700 h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
+
+            <div className="bg-black h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
+              <div className=" text-sm pl-5 pt-4 ">Kms left</div>
+              <div className="flex flex-row space-x-3 justify-center items-center">
+                <div className="text-7xl">43 </div>
+                <div className=" flex text-sm mt-10 font-thin">km</div>
+              </div>
+            </div>
+            <div className="bg-black h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
               <div className=" text-sm pl-5 pt-4 ">Charge</div>
               <div className="flex flex-row space-x-3 justify-center items-center">
                 <div className="text-7xl">60</div>
                 <div className=" flex text-sm mt-10 font-thin">%</div>
               </div>
             </div>
-          </div>
-          <div className="flex h-1/3 bg-black rounded-lg flex-col">
-            <div className="">
-              <div className="flex justify-center text-xl pt-4 font-semibold ">
-                Starboy
-              </div>
-              <div className="flex text-gray-500 text-md justify-center text-sm">
-                Weekend
+            <div className="bg-black h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
+              <div className=" text-sm pl-5 pt-4 ">Range</div>
+              <div className="flex flex-row space-x-3 justify-center items-center">
+                <div className="text-7xl">350</div>
+                <div className=" flex text-sm mt-10 font-thin">km</div>
               </div>
             </div>
-            <div className="flex justify-around fkex-row pt-5">
-              <div>
-                <IoPlayBack size={30} color={"#475569"} className="pt-1" />
-              </div>
-              <div>
-                <IoPauseCircle size={40} color={"#475569"} />
-              </div>
-              <div>
-                <IoPlayForward size={30} color={"#475569"} className="pt-1" />
-              </div>
-            </div>
-            <div className="px-5 text-gray-600 pt-3">
-              <input
-                type="range"
-                min="0"
-                max={3000 / 1000}
-                value={2}
-                className="text-gray-600 bg-gray-600 w-full "
-              />
-            </div>
           </div>
-        </div>
-
-        <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-5 space-y-5">
-          <div className="flex  w-full bg-transparent  justify-center items-center">
-            <p className="text-5xl p-7 mt-7 font-light w-full  text-center">
-              Charge Now
-            </p>
-          </div>
-          <div className="flex h-full w-full bg-black rounded-xl  justify-center items-center">
+          <div className="flex flex-row w-full h-1/2 justify-between items-center ">
+            <Link
+              href="/"
+              className=" w-1/4 h-1/2 flex justify-center items-center bg-red-800 rounded-xl hover:bg-red-700 "
+            >
+              Cancel
+            </Link>
             <Link
               href={{
                 pathname: "/dashBoard",
                 query: { Starting: "", Destination: "string" },
               }}
+              className=" w-1/4 h-1/2 flex justify-center items-center bg-blue-700  rounded-xl hover:bg-blue-600 "
             >
-              <button className=" p-11 bg-slate-800  rounded-xl ">
-                Find Nearest Station
-              </button>
+              <div className="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-white transition duration-300 ease-out rounded-full group">
+                <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full  group-hover:translate-x-0 ease">
+                  <svg
+                    className="w-6 h-6"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M14 5l7 7m0 0l-7 7m7-7H3"
+                    ></path>
+                  </svg>
+                </span>
+                <span className="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">
+                  Find nearest station
+                </span>
+                <span className="relative invisible">Find nearest station</span>
+              </div>
             </Link>
           </div>
         </div>
