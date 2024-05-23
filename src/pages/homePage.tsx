@@ -22,13 +22,16 @@ import { Cursor } from "@/components/cursor";
 import CircularProgressBar from "@/components/battery";
 import { Poppins } from "next/font/google";
 import { FaCar } from "react-icons/fa";
-
+import { Roboto } from "next/font/google";
 const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-inter",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
-
+const roboto = Roboto({
+  weight: "400",
+  subsets: ["latin"],
+});
 const HomePage = () => {
   const currentDate = new Date();
   const formattedTime = currentDate.toLocaleTimeString([], {
@@ -113,9 +116,20 @@ const HomePage = () => {
             className={` flex justify-center items-center pt-14  transition-opacity duration-1000 
         `}
           >
-            <FaCar className="absolute  " size={iconSize} />
-            <CircularProgressBar strokeWidth={2} sqSize={200} rayCount={100} rayLength={15} />
+            {/* <FaCar className="absolute  " size={iconSize} />*/}
+            <div className="flex flex-col absolute ">
+              <div className={`${roboto.className} text-white text-7xl`}>
+                80
+              </div>
 
+              <div className="text-xs text-gray-500">km/h</div>
+            </div>
+            <CircularProgressBar
+              strokeWidth={2}
+              sqSize={200}
+              rayCount={100}
+              rayLength={15}
+            />
           </div>
         </div>
       </div>
