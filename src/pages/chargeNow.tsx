@@ -146,10 +146,7 @@ const ChargeNow = () => {
             >
               Cancel
             </Link>
-            <Link
-              href="/"
-              className=" w-1/4 h-1/2 flex justify-center items-center bg-blue-700  rounded-xl hover:bg-blue-600 "
-            >
+            <button className=" w-1/4 h-1/2 flex justify-center items-center bg-blue-700  rounded-xl hover:bg-blue-600 ">
               <div className="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-white transition duration-300 ease-out rounded-full group">
                 <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full  group-hover:translate-x-0 ease">
                   <svg
@@ -172,7 +169,7 @@ const ChargeNow = () => {
                 </span>
                 <span className="relative invisible">Find nearest station</span>
               </div>
-            </Link>
+            </button>
             <Link
               href={{
                 pathname: "/dashBoard",
