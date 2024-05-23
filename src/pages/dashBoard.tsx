@@ -17,7 +17,8 @@ import { FaRegPauseCircle } from "react-icons/fa";
 import starboy from "../../public/starboy.png";
 import { IoPauseCircle } from "react-icons/io5";
 import Link from "next/link";
-
+import { IoPlayForward } from "react-icons/io5";
+import { IoPlayBack } from "react-icons/io5";
 /* end of imports*/
 const DashBoard = () => {
   const currentDate = new Date();
@@ -103,6 +104,26 @@ const DashBoard = () => {
               <div className="flex text-gray-500 text-md justify-center text-sm">
                 Weekend
               </div>
+            </div>
+            <div className="flex justify-around fkex-row pt-5">
+              <div>
+                <IoPlayBack size={30} color={"#475569"} className="pt-1" />
+              </div>
+              <div>
+                <IoPauseCircle size={40} color={"#475569"} />
+              </div>
+              <div>
+                <IoPlayForward size={30} color={"#475569"} className="pt-1" />
+              </div>
+            </div>
+            <div className="px-5 text-gray-600 pt-3">
+              <input
+                type="range"
+                min="0"
+                max={3000 / 1000}
+                value={2}
+                className="text-gray-600 bg-gray-600 w-full "
+              />
             </div>
           </div>
         </div>
