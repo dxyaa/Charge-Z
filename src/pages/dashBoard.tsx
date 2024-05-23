@@ -117,7 +117,9 @@ const DashBoard = () => {
           </div>
           <div className="flex h-1/3 bg-black rounded-lg flex-col">
             <div className="">
-              <div className="flex justify-center text-xl pt-4 ">Starboy</div>
+              <div className="flex justify-center text-xl pt-4 font-semibold ">
+                Starboy
+              </div>
               <div className="flex text-gray-500 text-md justify-center text-sm">
                 Weekend
               </div>
