@@ -128,7 +128,7 @@ const HomePage = () => {
                 <circle
                   cx="50"
                   cy="50"
-                  r="45"
+                  r="48"
                   fill="transparent"
                   stroke="#36454F"
                   strokeWidth="4"
@@ -138,12 +138,14 @@ const HomePage = () => {
                   y="50"
                   textAnchor="middle"
                   dominantBaseline="central"
-                  className={`${roboto.className} text-white`}
+                  fill="#FFFFFF"
                 >
-                  80
+                  <tspan className="flex flex-col text-5xl">
+                    <tspan>80</tspan>
+                  </tspan>
                 </text>
               </svg>
-              <div className="text-xs text-gray-600">km/h</div>
+              <div className="text-xs text-gray-600 pt-1">km/h</div>
             </div>
             <CircularProgressBar strokeWidth={2} sqSize={200} progress={60} />
           </div>
