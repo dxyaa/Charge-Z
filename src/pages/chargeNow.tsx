@@ -136,7 +136,6 @@ const ChargeNow = () => {
                 <Link
                   href={{
                     pathname: "/dashBoard",
-                    query: { Starting: "", Destination: "string" },
                   }}
                   className=" w-1/4 p-2 flex justify-center items-center bg-blue-700 rounded-xl hover:bg-blue-600 "
                 >
