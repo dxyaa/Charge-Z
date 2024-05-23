@@ -1,47 +1,50 @@
-import { FC } from 'react'
-import { FaCar } from "react-icons/fa";
+import { FC } from 'react';
+import '../CSS/circle.css';
 
 interface Props {
-  strokeWidth?: number
-  sqSize?: number
-  percentage: number
+  strokeWidth?: number;
+  sqSize?: number;
+  rayCount?: number;
+  rayLength?: number;
 }
 
 const CircularProgressBar: FC<Props> = (props) => {
-  const { strokeWidth = 8, sqSize = 160, percentage } = props
-  const radius = (sqSize - strokeWidth) / 2
-  const viewBox = `0 0 ${sqSize} ${sqSize}`
-  const dashArray = radius * Math.PI * 2
-  const dashOffset = dashArray - (dashArray * (percentage || 0)) / 100
-  const iconSize = 60; // Adjust icon size as needed
+  const { strokeWidth = 1, sqSize = 160, rayCount = 100, rayLength = 10 } = props;
+  const radius = (sqSize - strokeWidth) / 2;
+  const viewBox = `0 0 ${sqSize} ${sqSize}`;
+  const rays = [];
+
+  for (let i = 0; i < rayCount; i++) {
+    const angle = (i / rayCount) * 360;
+    const x1 = sqSize / 2 + radius * Math.cos((angle - 90) * (Math.PI / 180));
+    const y1 = sqSize / 2 + radius * Math.sin((angle - 90) * (Math.PI / 180));
+    const x2 = sqSize / 2 + (radius - rayLength) * Math.cos((angle - 90) * (Math.PI / 180));
+    const y2 = sqSize / 2 + (radius - rayLength) * Math.sin((angle - 90) * (Math.PI / 180));
+    rays.push(
+      <line
+        key={i}
+        x1={x1}
+        y1={y1}
+        x2={x2}
+        y2={y2}
+        className="ray animated-progress"
+        strokeWidth={strokeWidth}
+      />
+    );
+  }
 
   return (
-  
     <svg width={sqSize} height={sqSize} viewBox={viewBox}>
       <circle
         className="fill-none stroke-gray-200"
         cx={sqSize / 2}
         cy={sqSize / 2}
         r={radius}
-        strokeWidth={`${strokeWidth}px`}
+        strokeWidth={`${strokeWidth * 3}px`}
       />
-     
-      <circle
-        className="fill-none stroke-[#0044AA] transition-all ease-in delay-200"
-        cx={sqSize / 2}
-        cy={sqSize / 2}
-        r={radius}
-        strokeLinecap="round"
-        strokeWidth={`${strokeWidth}px`}
-        transform={`rotate(-270 ${sqSize / 2} ${sqSize / 2})`}
-        style={{
-          strokeDasharray: dashArray,
-          strokeDashoffset: dashOffset,
-        }}
-      />
+      {rays}
     </svg>
- 
-  )
+  );
 }
 
-export default CircularProgressBar
+export default CircularProgressBar;
