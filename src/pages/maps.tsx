@@ -18,9 +18,10 @@ const center = { lat: 48.8584, lng: 2.2945 };
 interface Location {
   origin: string;
   destination: string;
+  onDistanceDurationChange?: (distance: string, duration: string) => void;
 }
 
-function Maps({ origin = '', destination = '' }: Location) {
+function Maps({ origin = '', destination = '',onDistanceDurationChange }: Location) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
     libraries: ["places"],
@@ -42,8 +43,27 @@ function Maps({ origin = '', destination = '' }: Location) {
       destinationRef.current.value = destination;
       calculateRoute(origin, destination);
       
+      
     }
   }, [origin, destination, isLoaded]);
+
+
+  useEffect(() => {
+    if (onDistanceDurationChange) {
+      onDistanceDurationChange(distance, duration);
+    }
+  }, [distance, duration, onDistanceDurationChange]);
+
+  useEffect(() => {
+    if (duration) {
+      getCurrentLocation();
+    }
+  }, [duration]);
+
+  if (!isLoaded) {
+    return <div>Loading...</div>;
+  }
+
 
   if (!isLoaded) {
     return <div>Loading...</div>;
@@ -67,9 +87,11 @@ function Maps({ origin = '', destination = '' }: Location) {
     if (results.routes && results.routes.length > 0 && results.routes[0].legs && results.routes[0].legs.length > 0) {
       const leg = results.routes[0].legs[0];
       setDirectionsResponse(results);
+
       setDistance(leg.distance?.text || "");
       setDuration(leg.duration?.text || "");
       console.log("Route calculated", { distance: leg.distance?.text, duration: leg.duration?.text });
+     
     } else {
       setDirectionsResponse(null);
       setDistance("");
@@ -79,6 +101,7 @@ function Maps({ origin = '', destination = '' }: Location) {
   }
 
   async function getCurrentLocation() {
+
     if (!duration) {
       alert("Please calculate a route first before getting the current location.");
       return;
@@ -149,6 +172,7 @@ function Maps({ origin = '', destination = '' }: Location) {
               position: place.geometry.location,
               map: map,
               title: place.name,
+              clickable:true
             });
             markers.push(marker);
           }
@@ -184,7 +208,7 @@ function Maps({ origin = '', destination = '' }: Location) {
             zoomControl: false,
             streetViewControl: false,
             mapTypeControl: false,
-            fullscreenControl: false,
+            fullscreenControl: true,
           }}
           onLoad={(map) => setMap(map || null)}
         >
@@ -200,9 +224,11 @@ function Maps({ origin = '', destination = '' }: Location) {
         shadow="base"
         minW="container.md"
         zIndex="1"
+        display="none"
       >
-        {/**/ }
+        
         <HStack spacing={2} className="text-black" justifyContent="space-between">
+          
           <Box flexGrow={1}>
             <Autocomplete>
               <Input type="text" placeholder="Origin" ref={originRef} />
@@ -218,7 +244,7 @@ function Maps({ origin = '', destination = '' }: Location) {
               Calculate Route
             </Button>
             <IconButton aria-label="center back" icon={<FaTimes />} onClick={clearRoute} />
-            <Button colorScheme="pink" type="submit" onClick={getCurrentLocation}>
+            <Button colorScheme="pink" type="submit">
               Get Current Location
             </Button>
           </ButtonGroup>
@@ -235,6 +261,7 @@ function Maps({ origin = '', destination = '' }: Location) {
               map?.setZoom(15);
             }}
           />
+           
         </HStack>
       </Box>
     </Flex>
