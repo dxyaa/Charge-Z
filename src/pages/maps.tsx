@@ -1,4 +1,3 @@
-"use client";
 import {
   Box,
   Button,
@@ -12,19 +11,22 @@ import {
 import { FaLocationArrow, FaTimes } from "react-icons/fa";
 import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } from "@react-google-maps/api";
 import { useEffect, useRef, useState } from "react";
-
+import { debounce } from 'lodash';
 const center = { lat: 48.8584, lng: 2.2945 };
 
 interface Location {
   origin: string;
   destination: string;
+  onDistanceDurationChange?: (distance: string, duration: string) => void;
 }
 
-function Maps({ origin = '', destination = '' }: Location) {
+function Maps({ origin = '', destination = '', onDistanceDurationChange }: Location) {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
     libraries: ["places"],
   });
+
+
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const [directionsResponse, setDirectionsResponse] = useState<google.maps.DirectionsResult | null>(null);
@@ -33,32 +35,37 @@ function Maps({ origin = '', destination = '' }: Location) {
   const originRef = useRef<HTMLInputElement>(null);
   const destinationRef = useRef<HTMLInputElement>(null);
 
+
+
   useEffect(() => {
     if (origin && destination && originRef.current && destinationRef.current) {
       originRef.current.value = origin;
-      
       destinationRef.current.value = destination;
-      calculateRoute();
+      calculateRoute(origin, destination);
     }
-  }, [origin, destination]);
+  }, [origin, destination, isLoaded]);
+
+  useEffect(() => {
+    if (onDistanceDurationChange) {
+      onDistanceDurationChange(distance, duration);
+    }
+  }, [distance, duration, onDistanceDurationChange]);
+
+  useEffect(() => {
+    if (duration) {
+      getCurrentLocation();
+    }
+  }, [duration]);
 
   if (!isLoaded) {
     return <div>Loading...</div>;
   }
 
-  async function calculateRoute() {
-    const originValue = originRef.current?.value;
-    console.log(originRef.current?.value)
-    const destinationValue = destinationRef.current?.value;
-
-    if (!originValue || !destinationValue) {
-      return;
-    }
-
+  async function calculateRoute(origin: string, destination: string) {
     const directionsService = new google.maps.DirectionsService();
     const results = await directionsService.route({
-      origin: originValue,
-      destination: destinationValue,
+      origin,
+      destination,
       travelMode: google.maps.TravelMode.DRIVING,
     });
 
@@ -112,21 +119,20 @@ function Maps({ origin = '', destination = '' }: Location) {
 
     if (probableLocation) {
       map?.panTo(probableLocation);
-      console.log("Remaining Distance:", (totalDistance - accumulatedDistance) / 1000, "km");
-      displayNearbyEVChargingStations();
+      displayNearbyEVChargingStations(probableLocation.lat, probableLocation.lng);
       map?.setZoom(15);
     }
   }
 
-  async function displayNearbyEVChargingStations() {
-    let markers: google.maps.marker.AdvancedMarkerElement[] = [];
+  async function displayNearbyEVChargingStations(lat: number, lng: number) {
+    let markers: google.maps.Marker[] = [];
 
     if (!map) {
       return;
     }
 
     const request: google.maps.places.PlaceSearchRequest = {
-      location: map.getCenter(),
+      location: new google.maps.LatLng(lat, lng),
       radius: 5000,
       type: "charging_station",
       keyword: "electric vehicle charging",
@@ -145,6 +151,7 @@ function Maps({ origin = '', destination = '' }: Location) {
               position: place.geometry.location,
               map: map,
               title: place.name,
+              clickable: true
             });
             markers.push(marker);
           }
@@ -164,13 +171,7 @@ function Maps({ origin = '', destination = '' }: Location) {
   }
 
   return (
-    <Flex
-      position="relative"
-      flexDirection="column"
-      alignItems="center"
-      h="50vh"
-      w="75vw"
-    >
+    <Flex position="relative" flexDirection="column" alignItems="center" h="50vh" w="75vw">
       <Box position="absolute" left={0} top={0} h="50vh" borderRadius={7} w="60.5vw">
         <GoogleMap
           center={center}
@@ -180,7 +181,7 @@ function Maps({ origin = '', destination = '' }: Location) {
             zoomControl: false,
             streetViewControl: false,
             mapTypeControl: false,
-            fullscreenControl: false,
+            fullscreenControl: true,
           }}
           onLoad={(map) => setMap(map || null)}
         >
@@ -188,16 +189,9 @@ function Maps({ origin = '', destination = '' }: Location) {
           {directionsResponse && <DirectionsRenderer directions={directionsResponse} />}
         </GoogleMap>
       </Box>
-      <Box
-        p={4}
-        borderRadius="lg"
-        m={4}
-        bgColor="white"
-        shadow="base"
-        minW="container.md"
-        zIndex="1"
-      >
+      <Box p={4} borderRadius="lg" m={4} bgColor="white" shadow="base" minW="container.md" zIndex="1" display="none">
         <HStack spacing={2} className="text-black" justifyContent="space-between">
+          
           <Box flexGrow={1}>
             <Autocomplete>
               <Input type="text" placeholder="Origin" ref={originRef} />
@@ -209,11 +203,11 @@ function Maps({ origin = '', destination = '' }: Location) {
             </Autocomplete>
           </Box>
           <ButtonGroup className="text-black">
-            <Button colorScheme="pink" type="submit" onClick={calculateRoute}>
+            <Button colorScheme="pink" type="submit" onClick={() => calculateRoute(originRef.current?.value || '', destinationRef.current?.value || '')}>
               Calculate Route
             </Button>
             <IconButton aria-label="center back" icon={<FaTimes />} onClick={clearRoute} />
-            <Button colorScheme="pink" type="submit" onClick={getCurrentLocation}>
+            <Button colorScheme="pink" type="submit" onClick={() => getCurrentLocation()}>
               Get Current Location
             </Button>
           </ButtonGroup>

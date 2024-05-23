@@ -195,7 +195,7 @@ const HomePage = () => {
          </div>*/}
           </div>
         </div>
-        <div className="absolute bottom-5 w-full p-5 ">
+        <div className={`absolute bottom-5 w-full px-48    ${videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"}`}  >
           <div className="rounded-md bg-gray-800 flex justify-center items-center h-16 flex-row space-x-2">
             <Link
               href="/"
