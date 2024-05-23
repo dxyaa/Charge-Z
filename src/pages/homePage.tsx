@@ -22,6 +22,7 @@ import { Cursor } from "@/components/cursor";
 import CircularProgressBar from "@/components/battery";
 import { Poppins } from "next/font/google";
 import { FaCar } from "react-icons/fa";
+import {animate, motion, useMotionTemplate, useMotionValue} from "framer-motion"
 
 import {
   CircularProgressbar,
@@ -73,6 +74,9 @@ const HomePage = () => {
     };
   }, []);
 
+
+
+
   const handleVideoEnded = () => {
     setVideoFinished(true);
   };
@@ -86,9 +90,27 @@ const HomePage = () => {
   const onChangeProgress = () => {
     setProgress((prev) => prev + 20);
   };
+
+  const COLORS = ["#1E67C6","#ADD8E6"];
+  const color = useMotionValue(COLORS[0]);
+  const backgroundImage = useMotionTemplate`radial-gradient(150% 150% at 50% 0%, #020617 50%,${color})`;
+  
+  useEffect(() => {
+    animate(color,COLORS,{
+      ease:'easeInOut',
+      duration:10,
+      repeat:Infinity,
+      repeatType:"mirror"
+    })
+  },[])
+
+  const border = useMotionTemplate`1px  ${color}`
+  const boxShadow = useMotionTemplate`8px 4px 24px ${color}`
+
   return (
-    <div className="relative h-screen overflow-hidden w-screen bg-black">
-      <div className="relative h-screen overflow-hidden w-screen bg-black">
+
+    <motion.section style={{backgroundImage,}} className="relative h-screen overflow-hidden w-screen bg-black">
+      <div className="relative h-screen overflow-hidden w-screen">
         {!videoFinished && (
           <video
             autoPlay
@@ -104,7 +126,7 @@ const HomePage = () => {
           </video>
         )}
 
-        <div className="z-50 flex flex-col gap-7 justify-center items-center text-center text-white  text-4xl font-bold pt-36">
+        <motion.div style={{border,}} className="z-50 flex flex-col gap-7 justify-center items-center text-center text-white  text-4xl font-bold pt-36">
           <div
             onMouseOver={() => {
               setIsActive(true);
@@ -151,7 +173,7 @@ const HomePage = () => {
             </div>
             <CircularProgressBar strokeWidth={2} sqSize={220} progress={60} />
           </div>
-        </div>
+        </motion.div>
       </div>
       <div className=" flex justify-center text-white z-10 w-full">
         <div className="flex justify-center z-10 w-full absolute top-0">
@@ -233,7 +255,7 @@ const HomePage = () => {
         </div>
       </div>
       <Cursor isActive={isActive} />
-    </div>
+    </motion.section>
   );
 };
 
