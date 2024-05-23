@@ -23,12 +23,21 @@ import CircularProgressBar from "@/components/battery";
 import { Poppins } from "next/font/google";
 import { FaCar } from "react-icons/fa";
 
+import {
+  CircularProgressbar,
+  CircularProgressbarWithChildren,
+  buildStyles,
+} from "react-circular-progressbar";
+import { Roboto } from "next/font/google";
 const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-inter",
   weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
 });
-
+const roboto = Roboto({
+  weight: "300",
+  subsets: ["latin"],
+});
 const HomePage = () => {
   const currentDate = new Date();
   const formattedTime = currentDate.toLocaleTimeString([], {
@@ -103,7 +112,7 @@ const HomePage = () => {
             }}
             className={` ${
               poppins.variable
-            } flex justify-center items-center text-center text-white text-7xl font-bold pt-14 transition-opacity duration-1000 ${
+            } flex justify-center items-center text-center text-white text-7xl pt-14 transition-opacity duration-1000 ${
               videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
             }`}
           >
@@ -113,9 +122,30 @@ const HomePage = () => {
             className={` flex justify-center items-center pt-14  transition-opacity duration-1000 
         `}
           >
-            <FaCar className="absolute  " size={iconSize} />
-            <CircularProgressBar strokeWidth={2} sqSize={200} rayCount={100} rayLength={15} />
-
+            {/* <FaCar className="absolute  " size={iconSize} />*/}
+            <div className="flex flex-col absolute">
+              <svg width="100" height="100">
+                <circle
+                  cx="50"
+                  cy="50"
+                  r="45"
+                  fill="transparent"
+                  stroke="#36454F"
+                  strokeWidth="4"
+                />
+                <text
+                  x="50"
+                  y="50"
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  className={`${roboto.className} text-white`}
+                >
+                  80
+                </text>
+              </svg>
+              <div className="text-xs text-gray-600">km/h</div>
+            </div>
+            <CircularProgressBar strokeWidth={2} sqSize={200} progress={60} />
           </div>
         </div>
       </div>

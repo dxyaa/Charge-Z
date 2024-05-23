@@ -1,12 +1,18 @@
 @keyframes colorTransition {
   0% {
-    stroke: rgb(0, 0, 255); /* Blue at 100% */
+    stroke: rgb(0, 0, 255); /* Dark Blue */
   }
-  80% {
-    stroke: rgb(255, 0, 0); /* Red at 20% */
+  25% {
+    stroke: rgb(0, 128, 255); /* Mid Blue */
+  }
+  50% {
+    stroke: rgb(173, 216, 230); /* Light Blue */
+  }
+  75% {
+    stroke: rgb(0, 128, 255); /* Mid Blue */
   }
   100% {
-    stroke: rgb(0, 0, 255); /* Blue at 100% */
+    stroke: rgb(0, 0, 255); /* Dark Blue */
   }
 }
 
@@ -23,7 +29,8 @@
 }
 
 .animated-progress {
-  animation: colorTransition 4s linear infinite, dashTransition 4s linear infinite;
+  animation: colorTransition 4s linear infinite,
+    dashTransition 4s linear infinite;
 }
 
 .ray {
