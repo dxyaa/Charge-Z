@@ -25,6 +25,11 @@ import { useRef, useState } from "react";
 
 const center = { lat: 48.8584, lng: 2.2945 };
 
+interface Location {
+  Starting:string;
+  Destination:string;
+}
+
 function Maps() {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
@@ -45,6 +50,8 @@ function Maps() {
   if (!isLoaded) {
     return <div>Loading...</div>;
   }
+
+  
 
   async function calculateRoute() {
     const origin = originRef.current?.value;
