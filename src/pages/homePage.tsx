@@ -22,6 +22,12 @@ import { Cursor } from "@/components/cursor";
 import CircularProgressBar from "@/components/battery";
 import { Poppins } from "next/font/google";
 import { FaCar } from "react-icons/fa";
+
+import {
+  CircularProgressbar,
+  CircularProgressbarWithChildren,
+  buildStyles,
+} from "react-circular-progressbar";
 import { Roboto } from "next/font/google";
 const poppins = Poppins({
   subsets: ["latin"],
