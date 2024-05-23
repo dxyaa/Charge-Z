@@ -107,14 +107,16 @@ const ChargeNow = () => {
           <Carousel
             activeIndex={index}
             onSelect={(selectedIndex) => setIndex(selectedIndex)}
-            fade // Enable fade effect
-            interval={null}
+            fade
+            interval={1500}
             controls={false}
-            className="h-full carousel slide" // Disable automatic sliding
+            className="h-full carousel slide"
           >
-            {/* Slide 1 */}
             {index === 0 && (
-              <Carousel.Item className="flex justify-center items-center bg-red-200">
+              <Carousel.Item
+                interval={1500}
+                className="flex justify-center items-center bg-red-200"
+              >
                 <Image
                   src={darknexon}
                   alt="Dark Nexon"
@@ -124,9 +126,12 @@ const ChargeNow = () => {
                 />
               </Carousel.Item>
             )}
-            {/* Slide 2 (conditionally rendered) */}
+
             {index === 1 && (
-              <Carousel.Item className="h-60 flex justify-center items-center flex-col space-y-4">
+              <Carousel.Item
+                interval={1500}
+                className="h-60 flex justify-center items-center flex-col space-y-4"
+              >
                 <div className=" ">Your nearest charging station is : </div>
                 <div>Sasthamangalam</div>
                 <Link
