@@ -130,12 +130,7 @@ const HomePage = () => {
 
               <div className="text-xs text-gray-500">km/h</div>
             </div>
-            <CircularProgressBar
-              strokeWidth={2}
-              sqSize={200}
-              rayCount={100}
-              rayLength={15}
-            />
+            <CircularProgressBar strokeWidth={2} sqSize={200} progress={60} />
           </div>
         </div>
       </div>

@@ -4,34 +4,28 @@ import "../CSS/circle.css";
 interface Props {
   strokeWidth?: number;
   sqSize?: number;
-  rayCount?: number;
-  rayLength?: number;
+  progress?: number; // Add a new prop for progress
 }
 
 const CircularProgressBar: FC<Props> = (props) => {
-  const {
-    strokeWidth = 1,
-    sqSize = 160,
-    rayCount = 100,
-    rayLength = 10,
-  } = props;
+  const { strokeWidth = 1, sqSize = 160, progress = 100 } = props;
   const radius = (sqSize - strokeWidth) / 2;
   const viewBox = `0 0 ${sqSize} ${sqSize}`;
+  const startAngle = 0; // Angle to start drawing rays from
+  const endAngle = startAngle + (progress / 100) * 360; // Calculate end angle based on progress
+
   const rays = [];
 
-  for (let i = 0; i < rayCount; i++) {
-    const angle = (i / rayCount) * 360;
+  for (let angle = startAngle; angle < endAngle; angle += 3.6) {
     const x1 = sqSize / 2 + radius * Math.cos((angle - 90) * (Math.PI / 180));
     const y1 = sqSize / 2 + radius * Math.sin((angle - 90) * (Math.PI / 180));
     const x2 =
-      sqSize / 2 +
-      (radius - rayLength) * Math.cos((angle - 90) * (Math.PI / 180));
+      sqSize / 2 + (radius - 15) * Math.cos((angle - 90) * (Math.PI / 180));
     const y2 =
-      sqSize / 2 +
-      (radius - rayLength) * Math.sin((angle - 90) * (Math.PI / 180));
+      sqSize / 2 + (radius - 15) * Math.sin((angle - 90) * (Math.PI / 180));
     rays.push(
       <line
-        key={i}
+        key={angle}
         x1={x1}
         y1={y1}
         x2={x2}
