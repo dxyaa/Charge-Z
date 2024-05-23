@@ -29,6 +29,8 @@ import {
   buildStyles,
 } from "react-circular-progressbar";
 import { Roboto } from "next/font/google";
+
+/*end of imports*/
 const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-inter",

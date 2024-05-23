@@ -15,7 +15,10 @@ import App from "next/app";
 import Maps from "./maps";
 import { FaRegPauseCircle } from "react-icons/fa";
 import starboy from "../../public/starboy.png";
+import { IoPauseCircle } from "react-icons/io5";
 import Link from "next/link";
+
+/* end of imports*/
 const DashBoard = () => {
   const currentDate = new Date();
   const formattedTime = currentDate.toLocaleTimeString([], {
@@ -87,48 +90,19 @@ const DashBoard = () => {
             car image here
           </div>
           <div className="flex flex-row space-x-5 ">
-            <div className="bg-blue-600 h-32 w-1/2 rounded-md flex justify-center items-center">
+            <div className="bg-blue-700 h-32 w-1/2 rounded-md flex justify-center items-center">
               speed
             </div>
-            <div className="bg-blue-600 h-32 w-1/2 rounded-md flex justify-center items-center">
+            <div className="bg-blue-700 h-32 w-1/2 rounded-md flex justify-center items-center">
               charge
             </div>
           </div>
-          <div className="flex flex-row space-x-5 h-1/3">
-            <div className=" h-full w-1/2 rounded-md flex justify-center items-center flex-col">
-              <Image
-                alt="starboy"
-                src={starboy}
-                height={200}
-                width={150}
-              ></Image>
-              <div className="flex justify-between space-x-20">
-                {" "}
-                <div className="text-sm text-white mt-1 flex flex-col">
-                  {" "}
-                  <div>Starboy</div>
-                  <div className="text-xs text-gray-400">Weekend</div>
-                </div>
-                <button>
-                  <FaRegPauseCircle className="mt-2" size={24} />
-                </button>
+          <div className="flex h-1/3 bg-black rounded-lg flex-col">
+            <div className="">
+              <div className="flex justify-center text-xl pt-4 ">Starboy</div>
+              <div className="flex text-gray-500 text-md justify-center text-sm">
+                Weekend
               </div>
-            </div>
-            <div className=" h-full w-1/2 rounded-md flex justify-center items-center flex-col space-y-5">
-              <Link
-                href="/"
-                className="w-full bg-yellow-600 h-1/3 rounded-md text-center items-center flex justify-center hover:bg-yellow-500"
-              >
-                {" "}
-                Find Another Station
-              </Link>
-              <Link
-                href="/"
-                className="w-full bg-red-800 h-1/3 rounded-md text-center items-center flex justify-center hover:bg-red-700"
-              >
-                {" "}
-                Cancel
-              </Link>
             </div>
           </div>
         </div>
@@ -153,7 +127,7 @@ const DashBoard = () => {
                 <div className="flex flex-row space-x-2">
                   <div>x km</div>
                   <div>•</div>
-                  <div className="text-blue-600">y min</div>
+                  <div className="text-blue-500">y min</div>
                 </div>
                 <div className="flex flex-row space-x-2">
                   <div className="text-sm text-gray-500 mt-1">
@@ -167,14 +141,14 @@ const DashBoard = () => {
             <div className="flex flex-col bg-black space-y-5 w-1/5 rounded-lg p-5">
               <Link
                 href="/"
-                className="w-full bg-yellow-600 h-1/3 rounded-md text-center items-center text-sm flex justify-center hover:bg-yellow-500 "
+                className="w-full bg-blue-700 h-1/2 rounded-md text-center items-center text-sm flex justify-center hover:bg-blue-600 "
               >
                 {" "}
                 Find Another Station
               </Link>
               <Link
                 href="/"
-                className="w-full bg-red-800 h-1/3 rounded-md text-center items-center flex justify-center hover:bg-red-700"
+                className="w-full bg-red-800 h-1/2 rounded-md text-center items-center flex justify-center hover:bg-red-700"
               >
                 {" "}
                 Cancel
