@@ -21,7 +21,9 @@ import { IoPlayForward } from "react-icons/io5";
 import { IoPlayBack } from "react-icons/io5";
 import "../app/globals.css";
 import darknexon from "./../../public/darknexon.png";
-import nexonside2 from "./../../public/nexonside2.png";
+import nexon from "../../public/nexon.png";
+import { Carousel } from "react-bootstrap";
+
 /*imports end*/
 const ChargeNow = () => {
   const currentDate = new Date();
@@ -43,7 +45,19 @@ const ChargeNow = () => {
     month: "short",
     day: "numeric",
   });
+  const [index, setIndex] = useState(0);
 
+  const handleNext = () => {
+    if (index === 0) {
+      setIndex(1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (index === 1) {
+      setIndex(0);
+    }
+  };
   return (
     <div className="h-screen bg-black text-white w-screen">
       <div className="flex justify-center">
@@ -90,11 +104,49 @@ const ChargeNow = () => {
 
       <div className="flex justify-center items-center mt-20 w-full h-3/4  flex-row space-x-5 px-10">
         <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-8 space-y-5">
-          <div className="flex h-1/3 w-full flex-row justify-center rounded-lg">
-            {" "}
-            <Image alt="car" src={darknexon} height={500} width={400}></Image>
-          </div>
-
+          <Carousel
+            activeIndex={index}
+            onSelect={(selectedIndex) => setIndex(selectedIndex)}
+            fade // Enable fade effect
+            interval={null}
+            controls={false}
+            className="h-full carousel slide" // Disable automatic sliding
+          >
+            {/* Slide 1 */}
+            {index === 0 && (
+              <Carousel.Item className="flex justify-center items-center bg-red-200">
+                <Image
+                  src={darknexon}
+                  alt="Dark Nexon"
+                  width={500}
+                  height={400}
+                  className=" transition-opacity"
+                />
+              </Carousel.Item>
+            )}
+            {/* Slide 2 (conditionally rendered) */}
+            {index === 1 && (
+              <Carousel.Item className="h-60 flex justify-center items-center flex-col space-y-4">
+                <div className=" ">Your nearest charging station is : </div>
+                <div>Sasthamangalam</div>
+                <Link
+                  href={{
+                    pathname: "/dashBoard",
+                    query: { Starting: "", Destination: "string" },
+                  }}
+                  className=" w-1/4 p-2 flex justify-center items-center bg-blue-700 rounded-xl hover:bg-blue-600 "
+                >
+                  Confirm
+                </Link>
+              </Carousel.Item>
+            )}
+          </Carousel>
+          {/* <Image
+                    alt="car"
+                    src={darknexon}
+                    height={500}
+                    width={400}
+              ></Image>*/}
           <div className="flex justify-start flex-row space-x-7">
             <div className="rounded-sm bg-gray-700 w-10 h-10 flex justify-center items-center">
               icon
@@ -142,11 +194,15 @@ const ChargeNow = () => {
           <div className="flex flex-row w-full h-1/2 justify-between items-center ">
             <Link
               href="/"
-              className=" w-1/4 h-1/2 flex justify-center items-center bg-red-800 rounded-xl hover:bg-red-700 "
+              className=" w-1/4 h-full flex justify-center items-center bg-red-800 rounded-xl hover:bg-red-700 "
             >
               Cancel
             </Link>
-            <button className=" w-1/4 h-1/2 flex justify-center items-center bg-blue-700  rounded-xl hover:bg-blue-600 ">
+            <button
+              onClick={handleNext}
+              disabled={index === 1}
+              className=" w-1/4 h-full flex justify-center items-center bg-blue-700  rounded-xl hover:bg-blue-600 "
+            >
               <div className="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-white transition duration-300 ease-out rounded-full group">
                 <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full  group-hover:translate-x-0 ease">
                   <svg
@@ -170,14 +226,6 @@ const ChargeNow = () => {
                 <span className="relative invisible">Find nearest station</span>
               </div>
             </button>
-            <Link
-              href={{
-                pathname: "/dashBoard",
-                query: { Starting: "", Destination: "string" },
-              }}
-            >
-              confirm
-            </Link>
           </div>
         </div>
       </div>
