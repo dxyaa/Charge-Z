@@ -34,31 +34,33 @@ function Maps({ origin = '', destination = '' }: Location) {
   const destinationRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
+    console.log("useEffect triggered", { origin, destination, isLoaded });
+
     if (origin && destination && originRef.current && destinationRef.current) {
+      console.log("Setting origin and destination values");
       originRef.current.value = origin;
-      
       destinationRef.current.value = destination;
-      calculateRoute();
+      calculateRoute(origin, destination);
+      
     }
-  }, [origin, destination]);
+  }, [origin, destination, isLoaded]);
 
   if (!isLoaded) {
     return <div>Loading...</div>;
   }
 
-  async function calculateRoute() {
-    const originValue = originRef.current?.value;
-    console.log(originRef.current?.value)
-    const destinationValue = destinationRef.current?.value;
+  async function calculateRoute(origin: string, destination: string) {
+    console.log("Calculating route", { origin, destination });
 
-    if (!originValue || !destinationValue) {
+    if (!origin || !destination) {
+      console.log("Missing origin or destination");
       return;
     }
 
     const directionsService = new google.maps.DirectionsService();
     const results = await directionsService.route({
-      origin: originValue,
-      destination: destinationValue,
+      origin,
+      destination,
       travelMode: google.maps.TravelMode.DRIVING,
     });
 
@@ -67,10 +69,12 @@ function Maps({ origin = '', destination = '' }: Location) {
       setDirectionsResponse(results);
       setDistance(leg.distance?.text || "");
       setDuration(leg.duration?.text || "");
+      console.log("Route calculated", { distance: leg.distance?.text, duration: leg.duration?.text });
     } else {
       setDirectionsResponse(null);
       setDistance("");
       setDuration("");
+      console.log("No route found");
     }
   }
 
@@ -119,7 +123,7 @@ function Maps({ origin = '', destination = '' }: Location) {
   }
 
   async function displayNearbyEVChargingStations() {
-    let markers: google.maps.marker.AdvancedMarkerElement[] = [];
+    let markers: google.maps.Marker[] = [];
 
     if (!map) {
       return;
@@ -197,6 +201,7 @@ function Maps({ origin = '', destination = '' }: Location) {
         minW="container.md"
         zIndex="1"
       >
+        {/**/ }
         <HStack spacing={2} className="text-black" justifyContent="space-between">
           <Box flexGrow={1}>
             <Autocomplete>
@@ -209,7 +214,7 @@ function Maps({ origin = '', destination = '' }: Location) {
             </Autocomplete>
           </Box>
           <ButtonGroup className="text-black">
-            <Button colorScheme="pink" type="submit" onClick={calculateRoute}>
+            <Button colorScheme="pink" type="submit" onClick={() => calculateRoute(originRef.current?.value || '', destinationRef.current?.value || '')}>
               Calculate Route
             </Button>
             <IconButton aria-label="center back" icon={<FaTimes />} onClick={clearRoute} />
