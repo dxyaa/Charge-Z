@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import React from "react";
 import "tailwindcss/tailwind.css";
 import { TiWeatherPartlySunny } from "react-icons/ti";
@@ -12,17 +13,16 @@ import { RiBatteryChargeLine } from "react-icons/ri";
 import { FaBluetoothB } from "react-icons/fa";
 import App from "next/app";
 import Maps from "./maps";
-
-
-
-
+import { FaRegPauseCircle } from "react-icons/fa";
+import starboy from "../../public/starboy.png";
+import Link from "next/link";
 const DashBoard = () => {
   const currentDate = new Date();
   const formattedTime = currentDate.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
-  
+
   const formattedDate = currentDate.toLocaleDateString(undefined, {
     weekday: "long",
     year: "numeric",
@@ -94,14 +94,47 @@ const DashBoard = () => {
               charge
             </div>
           </div>
-          <div className="bg-blue-600 flex justify-center items-center w-full rounded-lg h-1/3">
-            {" "}
-            graph here
+          <div className="flex flex-row space-x-5 h-1/3">
+            <div className=" h-full w-1/2 rounded-md flex justify-center items-center flex-col">
+              <Image
+                alt="starboy"
+                src={starboy}
+                height={200}
+                width={150}
+              ></Image>
+              <div className="flex justify-between space-x-20">
+                {" "}
+                <div className="text-sm text-white mt-1 flex flex-col">
+                  {" "}
+                  <div>Starboy</div>
+                  <div className="text-xs text-gray-400">Weekend</div>
+                </div>
+                <button>
+                  <FaRegPauseCircle className="mt-2" size={24} />
+                </button>
+              </div>
+            </div>
+            <div className=" h-full w-1/2 rounded-md flex justify-center items-center flex-col space-y-5">
+              <Link
+                href="/"
+                className="w-full bg-yellow-600 h-1/3 rounded-md text-center items-center flex justify-center hover:bg-yellow-500"
+              >
+                {" "}
+                Find Another Station
+              </Link>
+              <Link
+                href="/"
+                className="w-full bg-red-800 h-1/3 rounded-md text-center items-center flex justify-center hover:bg-red-700"
+              >
+                {" "}
+                Cancel
+              </Link>
+            </div>
           </div>
         </div>
         <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-5 space-y-5">
           <div className="flex h-3/4 w-full bg-black rounded-lg  justify-center items-center">
-             <Maps/>
+            <Maps />
           </div>
           <div className="bg-black h-1/4 flex flex-col rounded-lg p-5">
             <div className="flex justify-start flex-row space-x-7">
