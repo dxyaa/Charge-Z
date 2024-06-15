@@ -23,7 +23,7 @@ import "../app/globals.css";
 import darknexon from "./../../public/darknexon.png";
 import nexon from "../../public/nexon.png";
 import { Carousel } from "react-bootstrap";
-
+import { FaCar } from "react-icons/fa";
 /*imports end*/
 const ChargeNow = () => {
   const currentDate = new Date();
@@ -132,7 +132,7 @@ const ChargeNow = () => {
                 className="h-60 flex justify-center items-center flex-col space-y-4 swap"
               >
                 <div className=" ">Your nearest charging station is : </div>
-                <div>Sasthamangalam</div>
+                <div>Kochi</div>
                 <Link
                   href={{
                     pathname: "/dashBoard",
@@ -152,7 +152,7 @@ const ChargeNow = () => {
               ></Image>*/}
           <div className="flex justify-start flex-row space-x-7">
             <div className="rounded-sm bg-gray-700 w-10 h-10 flex justify-center items-center">
-              icon
+              <FaCar size={20} />
             </div>
             <div className="flex flex-col">
               <div className="text-md font-semibold">Nexon EV</div>

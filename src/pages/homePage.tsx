@@ -22,7 +22,12 @@ import { Cursor } from "@/components/cursor";
 import CircularProgressBar from "@/components/battery";
 import { Poppins } from "next/font/google";
 import { FaCar } from "react-icons/fa";
-import {animate, motion, useMotionTemplate, useMotionValue} from "framer-motion"
+import {
+  animate,
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+} from "framer-motion";
 
 import {
   CircularProgressbar,
@@ -74,9 +79,6 @@ const HomePage = () => {
     };
   }, []);
 
-
-
-
   const handleVideoEnded = () => {
     setVideoFinished(true);
   };
@@ -91,25 +93,27 @@ const HomePage = () => {
     setProgress((prev) => prev + 20);
   };
 
-  const COLORS = ["#1E67C6","#ADD8E6"];
+  const COLORS = ["#1E67C6", "#ADD8E6"];
   const color = useMotionValue(COLORS[0]);
   const backgroundImage = useMotionTemplate`radial-gradient(150% 150% at 50% 0%, #020617 50%,${color})`;
-  
-  useEffect(() => {
-    animate(color,COLORS,{
-      ease:'easeInOut',
-      duration:10,
-      repeat:Infinity,
-      repeatType:"mirror"
-    })
-  },[])
 
-  const border = useMotionTemplate`1px  ${color}`
-  const boxShadow = useMotionTemplate`8px 4px 24px ${color}`
+  useEffect(() => {
+    animate(color, COLORS, {
+      ease: "easeInOut",
+      duration: 10,
+      repeat: Infinity,
+      repeatType: "mirror",
+    });
+  }, []);
+
+  const border = useMotionTemplate`1px  ${color}`;
+  const boxShadow = useMotionTemplate`8px 4px 24px ${color}`;
 
   return (
-
-    <motion.section style={{backgroundImage,}} className="relative h-screen overflow-hidden w-screen bg-black">
+    <motion.section
+      style={{ backgroundImage }}
+      className="relative h-screen overflow-hidden w-screen bg-black"
+    >
       <div className="relative h-screen overflow-hidden w-screen">
         {!videoFinished && (
           <video
@@ -126,14 +130,11 @@ const HomePage = () => {
           </video>
         )}
 
-        <motion.div style={{border,}} className="z-50 flex flex-col gap-7 justify-center items-center text-center text-white  text-4xl font-bold pt-36">
+        <motion.div
+          style={{ border }}
+          className="z-50 flex flex-col gap-7 justify-center items-center text-center text-white  text-4xl font-bold pt-36"
+        >
           <div
-            onMouseOver={() => {
-              setIsActive(true);
-            }}
-            onMouseLeave={() => {
-              setIsActive(false);
-            }}
             className={` ${
               poppins.variable
             } flex justify-center items-center text-center text-white font-light text-7xl pt-14 transition-opacity duration-1000 ${
@@ -147,7 +148,15 @@ const HomePage = () => {
             ${videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"}`}
           >
             {/* <FaCar className="absolute  " size={iconSize} />*/}
-            <div className="flex flex-col  absolute">
+            <div
+              onMouseOver={() => {
+                setIsActive(true);
+              }}
+              onMouseLeave={() => {
+                setIsActive(false);
+              }}
+              className="flex flex-col  absolute"
+            >
               <svg width="300" height="300">
                 <circle
                   cx="150"

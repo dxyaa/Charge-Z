@@ -16,9 +16,9 @@ import "../app/globals.css";
 import darknexon from "./../../public/darknexon.png";
 import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
-
-/* end of imports*/
+import { FaCar } from "react-icons/fa";
 import Maps from "./maps";
+/* end of imports*/
 
 interface Trip {
   distance: string;
@@ -188,7 +188,7 @@ const DashBoard = () => {
             <div className="bg-black h-full flex flex-col rounded-lg p-5 w-4/5">
               <div className="flex justify-start flex-row space-x-7">
                 <div className="rounded-sm bg-gray-700 w-10 h-10 flex justify-center items-center">
-                  icon
+                  <FaCar size={20} />
                 </div>
                 <div className="flex flex-col">
                   <div className="text-sm">Nexon EV</div>
