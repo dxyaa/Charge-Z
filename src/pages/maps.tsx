@@ -126,41 +126,52 @@ function Maps({ origin = '', destination = '', onDistanceDurationChange }: Locat
 
   async function displayNearbyEVChargingStations(lat: number, lng: number) {
     let markers: google.maps.Marker[] = [];
+    let chargingStations: any[] = [];
 
     if (!map) {
-      return;
+        return;
     }
 
     const request: google.maps.places.PlaceSearchRequest = {
-      location: new google.maps.LatLng(lat, lng),
-      radius: 5000,
-      type: "charging_station",
-      keyword: "electric vehicle charging",
+        location: new google.maps.LatLng(lat, lng),
+        radius: 5000,
+        type: "charging_station",
+        keyword: "electric vehicle charging",
     };
 
     const placesService = new google.maps.places.PlacesService(map);
 
     placesService.nearbySearch(request, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-        markers.forEach((marker) => marker.setMap(null));
-        markers = [];
-
-        results.forEach((place) => {
-          if (place.geometry) {
-            const marker = new google.maps.Marker({
-              position: place.geometry.location,
-              map: map,
-              title: place.name,
-              clickable: true
-            });
-            markers.push(marker);
-          }
-        });
+          markers.forEach((marker) => marker.setMap(null));
+          markers = [];
+  
+          chargingStations = results.map(place => ({
+              name: `${place.name}, ${place.vicinity}`,
+              location: place.geometry && place.geometry.location ? {
+                  lat: place.geometry.location.lat(),
+                  lng: place.geometry.location.lng()
+              } : null
+          }));
+            console.log(chargingStations);
+          results.forEach((place) => {
+              if (place.geometry) {
+                  const marker = new google.maps.Marker({
+                      position: place.geometry.location,
+                      map: map,
+                      title: place.name,
+                      clickable: true
+                  });
+                  markers.push(marker);
+              }
+          });
       } else {
-        console.error("Places Nearby Search request failed:", status);
+          console.error("Places Nearby Search request failed:", status);
       }
-    });
-  }
+  });
+  return chargingStations
+}
+
 
   function clearRoute() {
     setDirectionsResponse(null);
@@ -189,7 +200,7 @@ function Maps({ origin = '', destination = '', onDistanceDurationChange }: Locat
           {directionsResponse && <DirectionsRenderer directions={directionsResponse} />}
         </GoogleMap>
       </Box>
-      <Box p={4} borderRadius="lg" m={4} bgColor="white" shadow="base" minW="container.md" zIndex="1" display="none">
+      <Box p={4} borderRadius="lg" m={4} bgColor="white" shadow="base" minW="container.md" zIndex="1" >
         <HStack spacing={2} className="text-black" justifyContent="space-between">
           
           <Box flexGrow={1}>
