@@ -22,6 +22,9 @@ import { Cursor } from "@/components/cursor";
 import CircularProgressBar from "@/components/battery";
 import { Poppins } from "next/font/google";
 import { FaCar } from "react-icons/fa";
+
+import Typewriter from "typewriter-effect";
+
 import {
   animate,
   motion,
@@ -37,6 +40,11 @@ import {
 import { Roboto } from "next/font/google";
 
 /*end of imports*/
+/*const typewriter = new Typewriter("#typewriter", {
+  strings: ["Hello", "World"],
+  autoStart: true,
+});*/
+
 const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -137,14 +145,24 @@ const HomePage = () => {
           <div
             className={` ${
               poppins.variable
-            } flex justify-center items-center text-center text-white font-light text-7xl pt-14 transition-opacity duration-1000 ${
+            } flex justify-center items-center text-center text-white font-light text-6xl pt-14 transition-opacity duration-1000 ${
               videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
             }`}
           >
-            Charge-Z
+            Welcome Back, Adlu :D
           </div>
+          <div className="font-light text-gray-400 text-lg">
+            <Typewriter
+              options={{
+                strings: ["Some ev stuff!", "Ev stuff pnem"],
+                autoStart: true,
+                loop: true,
+              }}
+            />
+          </div>
+
           <div
-            className={` flex justify-center items-center pt-14  transition-opacity duration-1000 
+            className={` flex justify-center items-center    transition-opacity duration-1000 
             ${videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"}`}
           >
             {/* <FaCar className="absolute  " size={iconSize} />*/}
@@ -218,9 +236,7 @@ const HomePage = () => {
             <div>
               <FaWifi size={20} />
             </div>
-            <div>
-              <RiBatteryChargeLine size={24} />
-            </div>
+
             {/*<div>
            <GiNetworkBars />
          </div>*/}

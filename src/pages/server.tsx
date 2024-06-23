@@ -74,6 +74,8 @@ const Server = () => {
               newTimers[car.id] -= parseFloat(car.DrainRate);
               if (newTimers[car.id] <= 20) {
                 setIsRunning(false);
+                console.log("this car : ", car.id);
+                //send car.id to car
                 break;
               }
             }
