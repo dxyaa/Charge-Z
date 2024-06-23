@@ -54,7 +54,7 @@ export const Cursor: React.FC<CursorProps> = ({ isActive }) => {
     };
   }, []);
 
-  const size = isActive ? 200 : 30;
+  const size = isActive ? 100 : 30;
 
   useEffect(() => {
     const handleMouseOver = (event: MouseEvent) => {

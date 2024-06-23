@@ -16,14 +16,14 @@ import "../app/globals.css";
 import darknexon from "./../../public/darknexon.png";
 import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
-
-/* end of imports*/
+import { FaCar } from "react-icons/fa";
 import Maps from "./maps";
+/* end of imports*/
 
 interface Trip {
   distance: string;
   duration: string;
-  arrivaltime:string;
+  arrivaltime: string;
 }
 
 const DashBoard = () => {
@@ -35,9 +35,6 @@ const DashBoard = () => {
 
   const Starting = searchParams?.get("Starting");
   const Destination = searchParams?.get("Destination");
-
-
-
 
   const formattedTime = currentDate.toLocaleTimeString([], {
     hour: "2-digit",
@@ -60,13 +57,17 @@ const DashBoard = () => {
     day: "numeric",
   });
 
-  const [trip, setTrip] = useState<Trip>({ distance: "", duration: "" ,arrivaltime:""});
+  const [trip, setTrip] = useState<Trip>({
+    distance: "",
+    duration: "",
+    arrivaltime: "",
+  });
 
   const handleDistanceDurationChange = (distance: string, duration: string) => {
     // Parse duration into hours and minutes
     const durationParts = duration.split(" ");
     let totalMinutes = 0;
-  
+
     for (let i = 0; i < durationParts.length; i++) {
       if (durationParts[i].includes("hour")) {
         totalMinutes += parseInt(durationParts[i - 1]) * 60;
@@ -74,23 +75,23 @@ const DashBoard = () => {
         totalMinutes += parseInt(durationParts[i - 1]);
       }
     }
-  
+
     // Get current time
     const now = new Date();
-    
+
     // Add the duration to the current time
     now.setMinutes(now.getMinutes() + totalMinutes);
-  
+
     // Format the arrival time
     const arrivaltime = now.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
-  
+
     // Update the trip state
     setTrip({ distance, duration, arrivaltime });
   };
-  
+
   return (
     <div className="h-screen bg-black text-white w-screen">
       <div className="flex justify-center">
@@ -176,16 +177,18 @@ const DashBoard = () => {
           </div>
         </div>
         <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-5 space-y-5">
-
           <div className="flex h-3/4 w-full bg-black rounded-lg justify-center items-center">
-            <Maps origin="Trivandrum" destination="Kochi" onDistanceDurationChange={handleDistanceDurationChange} />
-
+            <Maps
+              origin="Trivandrum"
+              destination="Kochi"
+              onDistanceDurationChange={handleDistanceDurationChange}
+            />
           </div>
           <div className="flex flex-row space-x-5 h-full">
             <div className="bg-black h-full flex flex-col rounded-lg p-5 w-4/5">
               <div className="flex justify-start flex-row space-x-7">
                 <div className="rounded-sm bg-gray-700 w-10 h-10 flex justify-center items-center">
-                  icon
+                  <FaCar size={20} />
                 </div>
                 <div className="flex flex-col">
                   <div className="text-sm">Nexon EV</div>
