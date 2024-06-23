@@ -13,6 +13,7 @@
     "@react-google-maps/api": "^2.19.3",
     "autoprefixer": "^10.4.19",
     "firebase": "^10.11.1",
+    "flowbite": "^2.3.0",
     "framer-motion": "^11.2.6",
     "gsap": "^3.12.5",
     "next": "14.2.3",
@@ -22,6 +23,7 @@
     "react-datepicker": "^6.9.0",
     "react-dom": "^18",
     "react-icons": "^5.2.1",
+    "react-tailwindcss-datepicker": "^1.6.6",
     "typewriter-effect": "^2.21.0"
   },
   "devDependencies": {
