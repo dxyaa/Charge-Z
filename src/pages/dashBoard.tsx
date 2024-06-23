@@ -119,7 +119,6 @@ const DashBoard = () => {
           <FaBluetoothB size={20} />
           <FaLocationDot size={18} />
           <FaWifi size={20} />
-          <RiBatteryChargeLine size={24} />
         </div>
       </div>
 

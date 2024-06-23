@@ -8,7 +8,12 @@ import { FaWifi, FaBluetoothB } from "react-icons/fa";
 import { FaLocationDot } from "react-icons/fa6";
 import { RiBatteryChargeLine } from "react-icons/ri";
 import { IoPauseCircle } from "react-icons/io5";
+import { IoHomeSharp } from "react-icons/io5";
+import { FaBolt } from "react-icons/fa6";
+import { RiCalendarScheduleFill } from "react-icons/ri";
+import { IoPersonCircle } from "react-icons/io5";
 import Link from "next/link";
+import Calendar from "@/components/calender";
 const BookLater = () => {
   const currentDate = new Date();
   const formattedTime = currentDate.toLocaleTimeString([], {
@@ -59,11 +64,45 @@ const BookLater = () => {
           <FaBluetoothB size={20} />
           <FaLocationDot size={18} />
           <FaWifi size={20} />
-          <RiBatteryChargeLine size={24} />
         </div>
       </div>
-      <div className="flex justify-center items-center mt-20 w-full h-3/4 flex-row space-x-5 px-10">
-        book-later
+      <div className="flex justify-center items-center mt-20 w-full h-3/4 flex-row space-x-5 bg-gray-800 px-10">
+        <div>
+          hi
+          <Calendar />
+        </div>
+      </div>
+      <div className="absolute bottom-5 w-full px-48  ">
+        <div className="rounded-md bg-gray-800 flex justify-center items-center h-16 flex-row space-x-2">
+          <Link
+            href="/"
+            className="p-2 rounded-md flex items-center group hover:bg-gray-700"
+          >
+            <IoHomeSharp size={24} className="mr-2" />
+            <span className="hidden group-hover:inline  ">Home</span>
+          </Link>
+          <Link
+            href="/chargeNow"
+            className="p-2 rounded-md flex items-center group hover:bg-gray-700"
+          >
+            <FaBolt size={24} className="mr-2" />
+            <span className="hidden group-hover:inline  ">Charge Now</span>
+          </Link>
+          <Link
+            href="/bookLater"
+            className="p-2 rounded-md flex items-center group hover:bg-gray-700"
+          >
+            <RiCalendarScheduleFill size={24} className="mr-2" />
+            <span className="hidden group-hover:inline  ">Book Later</span>
+          </Link>
+          <Link
+            href="/profile"
+            className="p-2 rounded-md flex items-center group hover:bg-gray-700"
+          >
+            <IoPersonCircle size={24} className="mr-2" />
+            <span className="hidden group-hover:inline  ">Profile</span>
+          </Link>
+        </div>
       </div>
     </div>
   );
