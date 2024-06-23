@@ -13,13 +13,17 @@ import { FaBolt } from "react-icons/fa6";
 import { RiCalendarScheduleFill } from "react-icons/ri";
 import { IoPersonCircle } from "react-icons/io5";
 import Link from "next/link";
-
+import TimePicker from "react-time-picker";
+import "react-time-picker/dist/TimePicker.css";
 import { useEffect, useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import { format } from "date-fns";
+/*end of imports */
 const BookLater = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const currentDate = new Date();
+
   const formattedTime = currentDate.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -83,9 +87,9 @@ const BookLater = () => {
         </div>
       </div>
       <div className="flex justify-center items-center mt-20 w-full h-3/4 flex-row   px-10">
-        <div className="w-1/2  h-full p-4">
+        <div className="w-1/2  h-full p-4 flex flex-col space-y-5">
           {/*<Calendar />*/}{" "}
-          <div className="w-1/2 h-full">
+          <div className="w-1/2 ">
             <Datepicker
               minDate={currentDate}
               asSingle={true}
@@ -93,6 +97,7 @@ const BookLater = () => {
               onChange={handleValueChange}
             />
           </div>
+          <div className="w-1/2 ">{/*timepicker here*/}</div>
         </div>
       </div>
       <div className="absolute bottom-5 w-full px-48  ">
