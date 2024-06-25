@@ -89,12 +89,13 @@ const BookLater = () => {
       <div className="flex justify-center items-center mt-20 w-full h-3/4 flex-row   px-10">
         <div className="w-1/2  h-full p-4 flex flex-col space-y-5">
           {/*<Calendar />*/}{" "}
-          <div className="w-1/2 ">
+          <div className="w-1/2 text-black">
             <Datepicker
               minDate={currentDate}
               asSingle={true}
               value={value}
               onChange={handleValueChange}
+              inputClassName="text-black w-full rounded-lg"
             />
           </div>
           <div className="w-1/2 ">
