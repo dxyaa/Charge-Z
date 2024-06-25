@@ -243,11 +243,11 @@ const HomePage = () => {
           </div>
         </div>
         <div
-          className={`absolute bottom-5 w-full px-48    ${
+          className={`absolute bottom-5 w-1/2 px-48    ${
             videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
           }`}
         >
-          <div className="rounded-md bg-gray-800 flex justify-center items-center h-16 flex-row space-x-2">
+          <div className="rounded-xl bg-gray-800 flex justify-center items-center h-16 flex-row space-x-2">
             <Link
               href="/"
               className="p-2 rounded-md flex items-center group hover:bg-gray-700"
@@ -269,13 +269,13 @@ const HomePage = () => {
               <RiCalendarScheduleFill size={24} className="mr-2" />
               <span className="hidden group-hover:inline  ">Book Later</span>
             </Link>
-            <Link
+            {/*<Link
               href="/profile"
               className="p-2 rounded-md flex items-center group hover:bg-gray-700"
             >
               <IoPersonCircle size={24} className="mr-2" />
               <span className="hidden group-hover:inline  ">Profile</span>
-            </Link>
+            </Link>*/}
           </div>
         </div>
       </div>

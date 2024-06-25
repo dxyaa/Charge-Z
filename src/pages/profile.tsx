@@ -7,5 +7,5 @@ import { Cursor } from "@/components/cursor";
 import { useState } from "react";
 
 export default function Profile() {
-  return <div>profile</div>;
+  return <div className="w-full">profile</div>;
 }
