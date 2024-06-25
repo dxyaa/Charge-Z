@@ -1,127 +1,51 @@
 import {
   Box,
   Button,
-  ButtonGroup,
   Flex,
   HStack,
   IconButton,
   Input,
   Text,
 } from "@chakra-ui/react";
-import { FaLocationArrow, FaTimes } from "react-icons/fa";
-import { useJsApiLoader, GoogleMap, Marker, Autocomplete, DirectionsRenderer } from "@react-google-maps/api";
+import { FaLocationArrow } from "react-icons/fa";
+import { useJsApiLoader, GoogleMap, Marker, Autocomplete } from "@react-google-maps/api";
 import { useEffect, useRef, useState } from "react";
-import { debounce } from 'lodash';
-const center = { lat: 48.8584, lng: 2.2945 };
 
-interface Location {
-  origin: string;
-  destination: string;
-  onDistanceDurationChange?: (distance: string, duration: string) => void;
+interface MapsProps {
+  location: string;
+  onChargingStationsFound?: (stations: any[]) => void;
 }
 
-function Maps({ origin = '', destination = '', onDistanceDurationChange }: Location) {
-  const { isLoaded } = useJsApiLoader({
+const center = { lat: 48.8584, lng: 2.2945 };
+
+function Maps({ location, onChargingStationsFound }: MapsProps) {
+  const { isLoaded, loadError } = useJsApiLoader({
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
     libraries: ["places"],
   });
 
-
-
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const [directionsResponse, setDirectionsResponse] = useState<google.maps.DirectionsResult | null>(null);
-  const [distance, setDistance] = useState("");
-  const [duration, setDuration] = useState("");
-  const originRef = useRef<HTMLInputElement>(null);
-  const destinationRef = useRef<HTMLInputElement>(null);
-
-
+  const locationRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (origin && destination && originRef.current && destinationRef.current) {
-      originRef.current.value = origin;
-      destinationRef.current.value = destination;
-      calculateRoute(origin, destination);
+    if (isLoaded && location) {
+      geocodeLocation(location);
     }
-  }, [origin, destination, isLoaded]);
+  }, [isLoaded, location]);
 
-  useEffect(() => {
-    if (onDistanceDurationChange) {
-      onDistanceDurationChange(distance, duration);
-    }
-  }, [distance, duration, onDistanceDurationChange]);
+  async function geocodeLocation(location: string) {
+    const geocoder = new google.maps.Geocoder();
 
-  useEffect(() => {
-    if (duration) {
-      getCurrentLocation();
-    }
-  }, [duration]);
-
-  if (!isLoaded) {
-    return <div>Loading...</div>;
-  }
-
-  async function calculateRoute(origin: string, destination: string) {
-    const directionsService = new google.maps.DirectionsService();
-    const results = await directionsService.route({
-      origin,
-      destination,
-      travelMode: google.maps.TravelMode.DRIVING,
-    });
-
-    if (results.routes && results.routes.length > 0 && results.routes[0].legs && results.routes[0].legs.length > 0) {
-      const leg = results.routes[0].legs[0];
-      setDirectionsResponse(results);
-      setDistance(leg.distance?.text || "");
-      setDuration(leg.duration?.text || "");
-    } else {
-      setDirectionsResponse(null);
-      setDistance("");
-      setDuration("");
-    }
-  }
-
-  async function getCurrentLocation() {
-    if (!duration) {
-      alert("Please calculate a route first before getting the current location.");
-      return;
-    }
-
-    const durationInSeconds = parseInt(duration.split(" ")[0]);
-    const remainingDuration = durationInSeconds - durationInSeconds * 0.4;
-    const portionCompleted = remainingDuration / durationInSeconds;
-
-    if (!directionsResponse || !directionsResponse.routes) {
-      return;
-    }
-
-    const route = directionsResponse.routes[0];
-    const leg = route.legs[0];
-    const totalDistance = leg.distance?.value || 0;
-    const distanceCompleted = totalDistance * (1 - portionCompleted);
-
-    let accumulatedDistance = 0;
-    let probableLocation = null;
-
-    for (const step of leg.steps) {
-      if (step.distance && step.distance.value) {
-        const stepDistance = step.distance.value;
-        if (accumulatedDistance + stepDistance >= distanceCompleted) {
-          const ratio = (distanceCompleted - accumulatedDistance) / stepDistance;
-          const lat = step.start_location.lat() + (step.end_location.lat() - step.start_location.lat()) * ratio;
-          const lng = step.start_location.lng() + (step.end_location.lng() - step.start_location.lng()) * ratio;
-          probableLocation = { lat, lng };
-          break;
-        }
-        accumulatedDistance += stepDistance;
+    geocoder.geocode({ address: location }, (results, status) => {
+      if (status === google.maps.GeocoderStatus.OK && results && results[0].geometry.location) {
+        const location = results[0].geometry.location;
+        map?.panTo(location);
+        map?.setZoom(15);
+        displayNearbyEVChargingStations(location.lat(), location.lng());
+      } else {
+        alert("Geocode was not successful for the following reason: " + status);
       }
-    }
-
-    if (probableLocation) {
-      map?.panTo(probableLocation);
-      displayNearbyEVChargingStations(probableLocation.lat, probableLocation.lng);
-      map?.setZoom(15);
-    }
+    });
   }
 
   async function displayNearbyEVChargingStations(lat: number, lng: number) {
@@ -129,56 +53,104 @@ function Maps({ origin = '', destination = '', onDistanceDurationChange }: Locat
     let chargingStations: any[] = [];
 
     if (!map) {
-        return;
+      return;
     }
 
     const request: google.maps.places.PlaceSearchRequest = {
-        location: new google.maps.LatLng(lat, lng),
-        radius: 5000,
-        type: "charging_station",
-        keyword: "electric vehicle charging",
+      location: new google.maps.LatLng(lat, lng),
+      radius: 1000,
+      type: "charging_station",
+      keyword: "electric vehicle charging",
     };
 
     const placesService = new google.maps.places.PlacesService(map);
 
     placesService.nearbySearch(request, (results, status) => {
       if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-          markers.forEach((marker) => marker.setMap(null));
-          markers = [];
-  
-          chargingStations = results.map(place => ({
-              name: `${place.name}, ${place.vicinity}`,
-              location: place.geometry && place.geometry.location ? {
-                  lat: place.geometry.location.lat(),
-                  lng: place.geometry.location.lng()
-              } : null
-          }));
-            console.log(chargingStations);
-          results.forEach((place) => {
-              if (place.geometry) {
-                  const marker = new google.maps.Marker({
-                      position: place.geometry.location,
-                      map: map,
-                      title: place.name,
-                      clickable: true
-                  });
-                  markers.push(marker);
-              }
-          });
+        markers.forEach((marker) => marker.setMap(null));
+        markers = [];
+
+        chargingStations = results.map((place) => ({
+          name: `${place.name}, ${place.vicinity}`,
+          location: place.geometry && place.geometry.location ? {
+            lat: place.geometry.location.lat(),
+            lng: place.geometry.location.lng()
+          } : null
+        }));
+
+        results.forEach((place) => {
+          if (place.geometry) {
+            const marker = new google.maps.Marker({
+              position: place.geometry.location,
+              map: map,
+              title: place.name,
+              clickable: true
+            });
+            markers.push(marker);
+          }
+        });
+
+        calculateDistances(new google.maps.LatLng(lat, lng), chargingStations);
+
+        if (onChargingStationsFound) {
+          onChargingStationsFound(chargingStations);
+        }
       } else {
-          console.error("Places Nearby Search request failed:", status);
+        console.error("Places Nearby Search request failed:", status);
       }
-  });
-  return chargingStations
-}
+    });
+  }
 
+  async function calculateDistances(origin: google.maps.LatLng, stations: any[]) {
+    const distanceService = new google.maps.DistanceMatrixService();
+    const destinations = stations.map((station) => new google.maps.LatLng(station.location.lat, station.location.lng));
 
-  function clearRoute() {
-    setDirectionsResponse(null);
-    setDistance("");
-    setDuration("");
-    if (originRef.current) originRef.current.value = "";
-    if (destinationRef.current) destinationRef.current.value = "";
+    distanceService.getDistanceMatrix({
+      origins: [origin],
+      destinations: destinations,
+      travelMode: google.maps.TravelMode.DRIVING,
+    }, (response, status) => {
+      if (status === google.maps.DistanceMatrixStatus.OK && response) {
+        response.rows[0].elements.forEach((element, index) => {
+          if (element.status === "OK") {
+            stations[index].distance = element.distance.text;
+            stations[index].duration = element.duration.text;
+          }
+        });
+        console.log("Charging Stations with Distance and Duration: ", stations);
+      } else {
+        console.error("Distance Matrix request failed:", status);
+      }
+    });
+  }
+
+  async function searchLocation() {
+    if (!locationRef.current || !locationRef.current.value) {
+      alert("Please enter a location.");
+      return;
+    }
+
+    const geocoder = new google.maps.Geocoder();
+    const address = locationRef.current.value;
+
+    geocoder.geocode({ address }, (results, status) => {
+      if (status === google.maps.GeocoderStatus.OK && results && results[0].geometry.location) {
+        const location = results[0].geometry.location;
+        map?.panTo(location);
+        map?.setZoom(15);
+        displayNearbyEVChargingStations(location.lat(), location.lng());
+      } else {
+        alert("Geocode was not successful for the following reason: " + status);
+      }
+    });
+  }
+
+  if (loadError) {
+    return <div>Error loading Google Maps API!</div>;
+  }
+
+  if (!isLoaded) {
+    return <div>Loading...</div>;
   }
 
   return (
@@ -197,35 +169,21 @@ function Maps({ origin = '', destination = '', onDistanceDurationChange }: Locat
           onLoad={(map) => setMap(map || null)}
         >
           <Marker position={center} />
-          {directionsResponse && <DirectionsRenderer directions={directionsResponse} />}
         </GoogleMap>
       </Box>
-      <Box p={4} borderRadius="lg" m={4} bgColor="white" shadow="base" minW="container.md" zIndex="1" >
-        <HStack spacing={2} className="text-black" justifyContent="space-between">
-          
-          <Box flexGrow={1}>
-            <Autocomplete>
-              <Input type="text" placeholder="Origin" ref={originRef} />
+      <Box p={4} borderRadius="lg"  m={4} bgColor="white" shadow="base" minW="container.md" zIndex="1" >
+        <HStack spacing={2} className="text-black"  justifyContent="space-between" >
+          <Box flexGrow={1} >
+            <Autocomplete >
+              <Input type="text" placeholder="Enter location" ref={locationRef} />
             </Autocomplete>
           </Box>
-          <Box flexGrow={1}>
-            <Autocomplete>
-              <Input type="text" placeholder="Destination" ref={destinationRef} />
-            </Autocomplete>
-          </Box>
-          <ButtonGroup className="text-black">
-            <Button colorScheme="pink" type="submit" onClick={() => calculateRoute(originRef.current?.value || '', destinationRef.current?.value || '')}>
-              Calculate Route
-            </Button>
-            <IconButton aria-label="center back" icon={<FaTimes />} onClick={clearRoute} />
-            <Button colorScheme="pink" type="submit" onClick={() => getCurrentLocation()}>
-              Get Current Location
-            </Button>
-          </ButtonGroup>
+          <Button colorScheme="pink" type="submit" onClick={searchLocation}>
+            Find EV Charging Stations
+          </Button>
         </HStack>
         <HStack spacing={4} mt={4} className="text-black" justifyContent="space-between">
-          <Text>Distance: {distance} </Text>
-          <Text>Duration: {duration} </Text>
+          <Text>Search for nearby EV Charging Stations by entering a location above.</Text>
           <IconButton
             aria-label="center back"
             icon={<FaLocationArrow />}
