@@ -18,7 +18,9 @@ import "react-time-picker/dist/TimePicker.css";
 import { useEffect, useState } from "react";
 import Datepicker from "react-tailwindcss-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
+import Image from "next/image";
 import { format } from "date-fns";
+import darknexon from "./../../public/darknexon.png";
 /*end of imports */
 const BookLater = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
@@ -86,48 +88,74 @@ const BookLater = () => {
           <FaWifi size={20} />
         </div>
       </div>
-      <div className="flex justify-center items-center mt-20 w-full h-3/4 flex-row   px-10">
-        <div className="w-1/2  h-full p-4 flex flex-col space-y-5">
+      <div className="flex justify-center items-center mt-20 w-full h-2/3 flex-row   px-10">
+        <div className="w-full  h-full  flex flex-row  justify-center space-x-10">
           {/*<Calendar />*/}{" "}
-          <div className="w-1/2 text-black">
-            <Datepicker
-              minDate={currentDate}
-              asSingle={true}
-              value={value}
-              onChange={handleValueChange}
-              inputClassName="text-black w-full rounded-lg"
-            />
-          </div>
-          <div className="w-1/2 ">
-            {/*timepicker here*/}{" "}
-            <form className="">
-              <div className="relative">
-                <div className="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none">
-                  <svg
-                    className="w-4 h-4  "
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M2 12C2 6.477 6.477 2 12 2s10 4.477 10 10-4.477 10-10 10S2 17.523 2 12Zm11-4a1 1 0 1 0-2 0v4a1 1 0 0 0 .293.707l3 3a1 1 0 0 0 1.414-1.414L13 11.586V8Z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+          <div className="bg-slate-800 flex flex-col w-1/3 items-center rounded-lg space-y-5 p-5">
+            {" "}
+            <div className="w-2/3 text-black">
+              <Datepicker
+                minDate={currentDate}
+                asSingle={true}
+                value={value}
+                onChange={handleValueChange}
+                inputClassName="text-black w-full rounded-lg"
+              />
+            </div>
+            <div className="w-2/3 ">
+              {/*timepicker here*/}{" "}
+              <form className="">
+                <div className="relative">
+                  <div className="absolute inset-y-0 end-0 top-0 flex items-center pe-3.5 pointer-events-none"></div>
+                  <input
+                    type="time"
+                    id="time"
+                    className="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg  block w-full p-2.5 "
+                    min="09:00"
+                    max="18:00"
+                    defaultValue="00:00"
+                    required
+                  />
                 </div>
-                <input
-                  type="time"
-                  id="time"
-                  className="bg-gray-50 border leading-none border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
-                  min="09:00"
-                  max="18:00"
-                  defaultValue="00:00"
-                  required
-                />
+              </form>
+            </div>
+          </div>
+          <div className="bg-slate-800 rounded-lg w-1/3 p-4 space-y-8">
+            <div className="flex h-1/3 w-full  justify-center items-center rounded-lg">
+              {" "}
+              <Image
+                alt="car"
+                src={darknexon}
+                height={400}
+                width={400}
+                className=""
+              ></Image>
+            </div>
+            <div className="space-y-4">
+              <div className="flex flex-row space-x-5  ">
+                <div className="bg-black h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
+                  <div className=" text-sm pl-5 pt-4 text-gray-500">Speed</div>
+                  <div className="flex flex-row space-x-3 justify-center items-center ">
+                    <div className="text-6xl">80</div>
+                    <div className=" flex text-sm mt-10 font-thin">km/h</div>
+                  </div>
+                </div>
+                <div className="bg-black h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
+                  <div className=" text-sm pl-5 pt-4 text-gray-500">Charge</div>
+                  <div className="flex flex-row space-x-3 justify-center items-center p-2">
+                    <div className="text-6xl">60</div>
+                    <div className=" flex text-sm mt-10 font-thin">%</div>
+                  </div>
+                </div>
+                <div className="bg-black h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
+                  <div className=" text-sm pl-5 pt-4 text-gray-500">Range</div>
+                  <div className="flex flex-row space-x-3 justify-center items-center p-2">
+                    <div className="text-6xl">440</div>
+                    <div className=" flex text-sm mt-10 font-thin">km</div>
+                  </div>
+                </div>
               </div>
-            </form>
+            </div>
           </div>
         </div>
       </div>
