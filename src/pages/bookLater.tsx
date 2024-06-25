@@ -100,36 +100,38 @@ const BookLater = () => {
           <div className="w-1/2 ">{/*timepicker here*/}</div>
         </div>
       </div>
-      <div className="absolute bottom-5 w-full px-48  ">
-        <div className="rounded-md bg-gray-800 flex justify-center items-center h-16 flex-row space-x-2">
-          <Link
-            href="/"
-            className="p-2 rounded-md flex items-center group hover:bg-gray-700"
-          >
-            <IoHomeSharp size={24} className="mr-2" />
-            <span className="hidden group-hover:inline  ">Home</span>
-          </Link>
-          <Link
-            href="/chargeNow"
-            className="p-2 rounded-md flex items-center group hover:bg-gray-700"
-          >
-            <FaBolt size={24} className="mr-2" />
-            <span className="hidden group-hover:inline  ">Charge Now</span>
-          </Link>
-          <Link
-            href="/bookLater"
-            className="p-2 rounded-md flex items-center group hover:bg-gray-700"
-          >
-            <RiCalendarScheduleFill size={24} className="mr-2" />
-            <span className="hidden group-hover:inline  ">Book Later</span>
-          </Link>
-          <Link
+      <div className="flex justify-center">
+        <div className="absolute bottom-5 w-1/2 px-48  ">
+          <div className="rounded-xl bg-gray-800 flex justify-center items-center h-16 flex-row space-x-2">
+            <Link
+              href="/"
+              className="p-2 rounded-md flex items-center group hover:bg-gray-700"
+            >
+              <IoHomeSharp size={24} className="mr-2" />
+              <span className="hidden group-hover:inline  ">Home</span>
+            </Link>
+            <Link
+              href="/chargeNow"
+              className="p-2 rounded-md flex items-center group hover:bg-gray-700"
+            >
+              <FaBolt size={24} className="mr-2" />
+              <span className="hidden group-hover:inline  ">Charge Now</span>
+            </Link>
+            <Link
+              href="/bookLater"
+              className="p-2 rounded-md flex items-center group hover:bg-gray-700"
+            >
+              <RiCalendarScheduleFill size={24} className="mr-2" />
+              <span className="hidden group-hover:inline  ">Book Later</span>
+            </Link>
+            {/*<Link
             href="/profile"
             className="p-2 rounded-md flex items-center group hover:bg-gray-700"
           >
             <IoPersonCircle size={24} className="mr-2" />
             <span className="hidden group-hover:inline  ">Profile</span>
-          </Link>
+          </Link>*/}
+          </div>
         </div>
       </div>
     </div>
