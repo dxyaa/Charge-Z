@@ -14,11 +14,11 @@ interface Car {
   Capacity: string;
 }
 
-interface AutocompleteProps {
+interface CarsearchProps {
   onSelect: (selectedName: string) => void; // Callback function prop
 }
 
-const Autocomplete: React.FC<AutocompleteProps> = ({ onSelect }) => {
+const Carsearch: React.FC<CarsearchProps> = ({ onSelect }) => {
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [selectedItem, setSelectedItem] = useState<SearchResult | null>(null); // State to hold the selected item
@@ -108,4 +108,4 @@ const Autocomplete: React.FC<AutocompleteProps> = ({ onSelect }) => {
   );
 };
 
-export default Autocomplete;
+export default Carsearch;
