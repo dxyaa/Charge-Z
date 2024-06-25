@@ -9,6 +9,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { RiBatteryChargeLine } from "react-icons/ri";
 import { IoPauseCircle } from "react-icons/io5";
 import { IoHomeSharp } from "react-icons/io5";
+
 import { FaBolt } from "react-icons/fa6";
 import { RiCalendarScheduleFill } from "react-icons/ri";
 import { IoPersonCircle } from "react-icons/io5";
@@ -88,12 +89,12 @@ const BookLater = () => {
           <FaWifi size={20} />
         </div>
       </div>
-      <div className="flex justify-center items-center mt-20 w-full h-2/3 flex-row   px-10">
-        <div className="w-full  h-full  flex flex-row  justify-center space-x-10">
+      <div className="flex justify-center items-center mt-20 w-full h-3/4   px-10">
+        <div className="w-full  h-full space-y-4 flex flex-col justify-center items-center p-4">
           {/*<Calendar />*/}{" "}
-          <div className="bg-slate-800 flex flex-col w-1/3 items-center rounded-lg space-y-5 p-5">
+          <div className="bg-slate-800 flex flex-col w-1/2 h-1/2 items-center rounded-lg  p-5 space-y-4">
             {" "}
-            <div className="w-2/3 text-black">
+            <div className="w-1/2 text-black">
               <Datepicker
                 minDate={currentDate}
                 asSingle={true}
@@ -102,7 +103,7 @@ const BookLater = () => {
                 inputClassName="text-black w-full rounded-lg"
               />
             </div>
-            <div className="w-2/3 ">
+            <div className="w-1/2 ">
               {/*timepicker here*/}{" "}
               <form className="">
                 <div className="relative">
@@ -119,8 +120,24 @@ const BookLater = () => {
                 </div>
               </form>
             </div>
+            <div className="w-1/2 text-black">
+              {/*F O R   A B H I S H E K : change this datepicker to station dropdown */}
+              <Datepicker
+                minDate={currentDate}
+                asSingle={true}
+                value={value}
+                onChange={handleValueChange}
+                inputClassName="text-black w-full rounded-lg"
+              />
+            </div>
+            <Link
+              href="/"
+              className="bg-black w-1/3 hover:bg-gray-900 rounded-lg p-2 flex text-center justify-center items-center"
+            >
+              <p> Confirm Booking</p>
+            </Link>
           </div>
-          <div className="bg-slate-800 rounded-lg w-1/3 p-4 space-y-8">
+          <div className="bg-slate-800 rounded-lg w-1/2 p-2 h-1/2 space-y-14 flex justify-center flex-col ">
             <div className="flex h-1/3 w-full  justify-center items-center rounded-lg">
               {" "}
               <Image
@@ -128,30 +145,32 @@ const BookLater = () => {
                 src={darknexon}
                 height={400}
                 width={400}
-                className=""
+                className="pt-4"
               ></Image>
             </div>
-            <div className="space-y-4">
-              <div className="flex flex-row space-x-5  ">
-                <div className="bg-black h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
-                  <div className=" text-sm pl-5 pt-4 text-gray-500">Speed</div>
+            <div className="">
+              <div className="flex flex-row space-x-3  ">
+                <div className="bg-black h-24 w-1/2 rounded-lg flex flex-col  ">
+                  <div className=" text-xs  text-gray-500 pt-2 pl-2">Speed</div>
                   <div className="flex flex-row space-x-3 justify-center items-center ">
-                    <div className="text-6xl">80</div>
-                    <div className=" flex text-sm mt-10 font-thin">km/h</div>
+                    <div className="text-5xl">80</div>
+                    <div className=" flex text-sm mt-4 font-thin ">km/h</div>
                   </div>
                 </div>
-                <div className="bg-black h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
-                  <div className=" text-sm pl-5 pt-4 text-gray-500">Charge</div>
-                  <div className="flex flex-row space-x-3 justify-center items-center p-2">
-                    <div className="text-6xl">60</div>
-                    <div className=" flex text-sm mt-10 font-thin">%</div>
+                <div className="bg-black h-24 w-1/2 rounded-lg flex flex-col  ">
+                  <div className=" text-xs  text-gray-500 pt-2 pl-2">
+                    Charge
+                  </div>
+                  <div className="flex flex-row space-x-3 justify-center items-center ">
+                    <div className="text-5xl">60</div>
+                    <div className=" flex text-sm mt-4 font-thin ">%</div>
                   </div>
                 </div>
-                <div className="bg-black h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
-                  <div className=" text-sm pl-5 pt-4 text-gray-500">Range</div>
-                  <div className="flex flex-row space-x-3 justify-center items-center p-2">
-                    <div className="text-6xl">440</div>
-                    <div className=" flex text-sm mt-10 font-thin">km</div>
+                <div className="bg-black h-24 w-1/2 rounded-lg flex flex-col  ">
+                  <div className=" text-xs  text-gray-500 pt-2 pl-2">Range</div>
+                  <div className="flex flex-row space-x-3 justify-center items-center ">
+                    <div className="text-5xl">440</div>
+                    <div className=" flex text-sm mt-4 font-thin ">km</div>
                   </div>
                 </div>
               </div>
