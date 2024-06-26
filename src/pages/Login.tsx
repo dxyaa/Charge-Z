@@ -6,7 +6,8 @@ import "tailwindcss/tailwind.css";
 import Carsearch from "@/components/carSearch";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { Input, Button } from "@chakra-ui/react";
-import Maps from "./maps";
+import { useRouter } from "next/router";
+import Link from "next/link";
 
 interface Login {
   id: string;
@@ -26,6 +27,7 @@ const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
     Car: "",
     Location: "",
   });
+  const [putdocID, setDocID] = useState<string | null>(null); // State to hold the document ID
   const [location, setLocation] = useState<string>("");
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const locationRef = useRef<HTMLInputElement>(null);
@@ -34,6 +36,8 @@ const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
     googleMapsApiKey: process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY as string,
     libraries: ["places"],
   });
+
+  const router = useRouter();
 
   useEffect(() => {
     if (loadError) {
@@ -83,6 +87,9 @@ const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
 
       const docRef = await addDoc(userCollectionRef, userData);
       console.log("Document ID:", docRef.id); // Log the generated document ID
+      setDocID(docRef.id);
+
+      router.push(`/homePage/${docRef.id}`); // Navigate to the HomePage with the userID
     } catch (error) {
       console.error("Error adding user data:", error);
     }
@@ -125,7 +132,9 @@ const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
         </Autocomplete>
 
         <Button onClick={searchLocation}>Search Charging Stations</Button>
+      
         <Button onClick={addUserData}>Add User</Button>
+        
       </div>
     </>
   );
