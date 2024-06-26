@@ -20,6 +20,12 @@ interface Car {
   CurrentCharge: number;
 }
 
+interface Users {
+  id:string;
+  Name:string;
+  Car:string;
+}
+
 const Server = () => {
   const [formData, setFormData] = useState<Car>({
     id: "",
@@ -34,34 +40,51 @@ const Server = () => {
   const [carList, setCarList] = useState<Car[]>([]);
   const [timers, setTimers] = useState<{ [key: string]: number }>({});
   const [isRunning, setIsRunning] = useState(false);
+  const [userList,setUserList] = useState<Users[]>([]);
 
   useEffect(() => {
-    const fetchCarList = async () => {
+    const fetchCars = async () => {
       try {
         const db = getFirestore(app);
-        const carCollectionRef = collection(db, "Cars");
-        const querySnapshot = await getDocs(carCollectionRef);
-
+  
+        // Fetch users first
+        const userCollectionRef = collection(db, "Users");
+        const querySnapshot = await getDocs(userCollectionRef);
+  
         const cars: Car[] = [];
-        querySnapshot.forEach((doc) => {
-          const carData = doc.data() as Car;
-          const carWithId = { ...carData, id: doc.id };
-          cars.push(carWithId);
+        const users: Users[] = [];
+  
+        querySnapshot.forEach(async (userDoc) => {
+          const userData = userDoc.data() as Users;
+          const userWithId = { ...userData, id: userDoc.id }; // Access id directly
+          users.push(userWithId);
+          setUserList(users);
+  
+          // Check if userData.Car exists
+          if (userData.Car) {
+            const carDocRef = doc(db, `Cars/${userData.Car}`);
+            const carDocSnap = await getDoc(carDocRef);
+  
+            if (carDocSnap.exists()) {
+              const carData = carDocSnap.data() as Car;
+              cars.push(carData);
+            } // Handle case where Car document doesn't exist for a user (optional)
+          }
         });
+  
+        // Update car state with fetched data
         setCarList(cars);
-        // Initialize timers with CurrentCharge values
-        const initialTimers = cars.reduce((acc, car) => {
-          acc[car.id] = car.CurrentCharge;
-          return acc;
-        }, {} as { [key: string]: number });
-        setTimers(initialTimers);
       } catch (error) {
-        console.error("Error fetching car list:", error);
+        console.error("Error fetching user or car data:", error);
       }
     };
-
-    fetchCarList();
+  
+    fetchCars();
   }, []);
+  
+  
+
+
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
