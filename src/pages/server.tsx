@@ -77,7 +77,6 @@ const Server = () => {
           return acc;
         }, {} as { [key: string]: number });
         setTimers(initialTimers);
-
       } catch (error) {
         console.error("Error fetching user or car data:", error);
       }
@@ -127,21 +126,27 @@ const Server = () => {
           {isRunning ? "Pause" : "Start"}
         </button>
       </div>
-      
-      <div className="flex flex-row justify-around">
+
+      <div className="grid grid-cols-5 gap-4 bg-black p-2">
         {userList.map(
           (user) =>
             user.Car && ( // Check if user has Car property
-              <li key={user.id} className="list-none">
-                <p>User: {user.Name}</p>
+              <li
+                key={user.id}
+                className="list-none bg-gray-800 p-4 rounded-lg shadow-md"
+              >
+                <p className="text-white">User: {user.Name}</p>
                 {/* Find the matching car based on user.Car */}
                 {carList.find((car) => car.id === user.Car) && ( // Check if car is found
-                  <div>
+                  <div className="text-gray-300">
                     <p>
                       Car: {carList.find((car) => car.id === user.Car)?.Name}
                     </p>
                     <p>Charge: {timers[user.Car]}</p>
-                    <p>DrainRate: {carList.find((car) => car.id === user.Car)?.DrainRate}</p>
+                    <p>
+                      DrainRate:{" "}
+                      {carList.find((car) => car.id === user.Car)?.DrainRate}
+                    </p>
                   </div>
                 )}
               </li>

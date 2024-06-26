@@ -202,6 +202,7 @@ const HomePage = () => {
           </div>
         </motion.div>
       </div>
+
       <div className=" flex justify-center text-white z-10 w-full">
         <div className="flex justify-center z-10 w-full absolute top-0">
           <div className="flex justify-center  items-center rounded-b-lg bg-gradient-to-r from-gray-900 to-gray-800 w-1/6 h-9 p-1 z-10">

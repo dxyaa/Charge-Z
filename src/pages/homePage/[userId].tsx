@@ -1,36 +1,39 @@
-  
-  import React from "react";
-  import "tailwindcss/tailwind.css";
-  import { TiWeatherPartlySunny } from "react-icons/ti";
-  import { useEffect } from "react";
-  import { useState } from "react";
-  import { RxDividerVertical } from "react-icons/rx";
-  import { GiNetworkBars } from "react-icons/gi";
-  import { FaWifi } from "react-icons/fa";
-  import { FaLocationDot } from "react-icons/fa6";
-  import { RiBatteryChargeLine } from "react-icons/ri";
-  import { FaBluetoothB } from "react-icons/fa";
-  import { IoHomeSharp } from "react-icons/io5";
-  import Link from "next/link";
-  import { FaBolt } from "react-icons/fa6";
-  import { RiCalendarScheduleFill } from "react-icons/ri";
-  import { IoPersonCircle } from "react-icons/io5";
-  import BookLater from "../bookLater";
-  import ChargeNow from "../chargeNow";
-  import Profile from "../profile";
-  import { Cursor } from "@/components/cursor";
-  import CircularProgressBar from "@/components/battery";
-  import { Poppins } from "next/font/google";
-  import { FaCar } from "react-icons/fa";
-  import { useRouter } from "next/router";
-  import Typewriter from "typewriter-effect";
 
-  import {
-    animate,
-    motion,
-    useMotionTemplate,
-    useMotionValue,
-  } from "framer-motion";
+
+"use client";
+import React from "react";
+import "tailwindcss/tailwind.css";
+import { TiWeatherPartlySunny } from "react-icons/ti";
+import { useEffect } from "react";
+import { useState } from "react";
+import { RxDividerVertical } from "react-icons/rx";
+import { GiNetworkBars } from "react-icons/gi";
+import { FaWifi } from "react-icons/fa";
+import { FaLocationDot } from "react-icons/fa6";
+import { RiBatteryChargeLine } from "react-icons/ri";
+import { FaBluetoothB } from "react-icons/fa";
+import { IoHomeSharp } from "react-icons/io5";
+import Link from "next/link";
+import { FaBolt } from "react-icons/fa6";
+import { RiCalendarScheduleFill } from "react-icons/ri";
+import { IoPersonCircle } from "react-icons/io5";
+import BookLater from "../bookLater";
+import ChargeNow from "../chargeNow";
+import Profile from "../profile";
+import { Cursor } from "@/components/cursor";
+import CircularProgressBar from "@/components/battery";
+import { Poppins } from "next/font/google";
+import { FaCar } from "react-icons/fa";
+import { useRouter } from "next/router";
+import Typewriter from "typewriter-effect";
+import ImmCharge from "../immCharge";
+import {
+  animate,
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+} from "framer-motion";
+
 
   import {
     CircularProgressbar,
@@ -137,6 +140,7 @@
     const border = useMotionTemplate`1px  ${color}`;
     const boxShadow = useMotionTemplate`8px 4px 24px ${color}`;
 
+
     useEffect(() => {
       const fetchUserData = async () => {
         try {
@@ -156,35 +160,57 @@
             } else {
               console.log("No such document!");
             }
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const db = getFirestore(app);
+        const userCollectionRef = collection(db, "Users");
+        console.log("starting fetch using  ", userId);
+
+        if (userId) {
+          const userDocRef = doc(db, `Users/${userId}`);
+          const userDoc = await getDoc(userDocRef);
+
+          if (userDoc.exists()) {
+            const userData = { ...userDoc.data(), id: userDoc.id } as Users;
+            setUserData([userData]);
+            setUserName(userData.Name);
+            console.log(userData);
+          } else {
+            console.log("No such document!");
           }
-        } catch (error) {
-          console.error("Error fetching user data:", error); // Log any errors that occur during fetching
-        }
-      };
+      
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
 
-      fetchUserData(); // Call the function to fetch user data
-    }, [userId]); // The empty dependency array means this useEffect runs only once when the component mounts
+    fetchUserData();
+  }, [userId]);
+  //modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  return (
+    <motion.section
+      style={{ backgroundImage }}
+      className="relative h-screen overflow-hidden w-screen bg-black"
+    >
+      <div className="relative h-screen overflow-hidden w-screen">
+        {!videoFinished && (
+          <video
+            autoPlay
+            muted
+            className={`absolute inset-0 z-0 w-full h-full object-cover mr-12 transform scale-200 transition-opacity duration-1500 ${
+              videoFinished
+                ? "opacity-0 ease-in-out-back"
+                : "opacity-100 ease-in-out-back" // Smoother easing
+            }`}
+          >
+            <source src="/charge-z-2.mp4" type="video/mp4" />
+            Your browser does not support the video tag.
+          </video>
+        )}
 
-    return (
-      <motion.section
-        style={{ backgroundImage }}
-        className="relative h-screen overflow-hidden w-screen bg-black"
-      >
-        <div className="relative h-screen overflow-hidden w-screen">
-          {!videoFinished && (
-            <video
-              autoPlay
-              muted
-              className={`absolute inset-0 z-0 w-full h-full object-cover mr-12 transform scale-200 transition-opacity duration-1500 ${
-                videoFinished
-                  ? "opacity-0 ease-in-out-back"
-                  : "opacity-100 ease-in-out-back" // Smoother easing
-              }`}
-            >
-              <source src="/charge-z-2.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
-          )}
 
           <motion.div
             style={{ border }}
@@ -258,7 +284,25 @@
               <p className="ml-2 text-sm  font-bold">24°C</p>
             </div>
           </div>
-          <div className="absolute top-5 left-5">
+
+      
+
+          <div>
+            <button
+              className="p-2 bg-black text-white"
+              onClick={() => setIsModalOpen(true)}
+            >
+              {" "}
+              open
+            </button>
+          </div>
+        </motion.div>
+      </div>
+
+      <div className=" flex justify-center text-white z-10 w-full">
+        <div className="flex justify-center z-10 w-full absolute top-0">
+          <div className="flex justify-center  items-center rounded-b-lg bg-gradient-to-r from-gray-900 to-gray-800 w-1/6 h-9 p-1 z-10">
+
             {" "}
             <div className="flex flex-col">
               <div className="text-3xl ">{formattedTime}</div>
@@ -329,9 +373,42 @@
             </div>
           </div>
         </div>
+
         <Cursor isActive={isActive} />
-      </motion.section>
-    );
-  };
+ 
+
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center w-screen h-screen  justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-black text-white w-1/2 h-2/5 p-6 rounded-lg shadow-lg flex-flex-col">
+            <div className="h-4/5">
+              <div className="">
+                <p className="text-md text-gray-500 p-4 ">Your charge is at</p>
+                <div className="text-8xl text-center">20%</div>
+                <p className="text-gray-500 text-center mt-4">
+                  We recommend you to charge now for best effeciency.
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-center h-1/5 flex-col space-y-2 items-center">
+              <Link
+                href="/immCharge"
+                className="bg-green-500 hover:bg-green-400 text-white w-1/4 p-2 rounded-md flex h-32 justify-center items-center"
+              >
+                Charge Now
+              </Link>
+              <button
+                className="bg-white text-black hover:bg-gray-300 w-1/4 p-2 flex rounded-md h-32 justify-center items-center"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Remind me later
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </motion.section>
+  );
+};
+
 
   export default HomePage;
