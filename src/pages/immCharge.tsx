@@ -197,7 +197,7 @@ const ImmCharge = () => {
                   </svg>
                 </span>
                 <span className="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">
-                  Find nearest station
+                  Next nearest station
                 </span>
                 <span className="relative invisible">Next nearest station</span>
               </div>

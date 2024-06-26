@@ -21,7 +21,7 @@ interface LoginProps {
   onLocationEntered: (location: string) => void;
 }
 
-const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
+const Login: React.FC = ({}) => {
   const [formData, setFormData] = useState<Login>({
     id: "",
     Name: "",
