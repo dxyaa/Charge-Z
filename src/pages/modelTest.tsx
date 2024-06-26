@@ -3,7 +3,7 @@ import "tailwindcss/tailwind.css";
 
 // types.ts (or any relevant file)
 export interface CarData {
-  car_id: number;
+  car_id: string;
   remaining_battery: string;
   drain_rate: string;
   remaining_range: string;
@@ -35,18 +35,25 @@ const CarPriority = () => {
 
     try {
       // Prepare car data for submission
-      const formattedData = carDataList.map((carData: CarData) => {
-        return {
-          car_id: carData.car_id,
-          remaining_battery: parseFloat(carData.remaining_battery),
-          drain_rate: parseFloat(carData.drain_rate),
-          remaining_range: parseFloat(carData.remaining_range),
-          estimated_time_left: parseFloat(carData.estimated_time_left),
-          time_to_station: parseFloat(carData.time_to_station),
-          distance_to_station: parseFloat(carData.distance_to_station),
-        };
-      });
+      const carIds = carDataList.map((car) => parseInt(car.car_id));
+      const carData = carDataList.map((car) => ({
+        remaining_battery: parseFloat(car.remaining_battery),
+        drain_rate: parseFloat(car.drain_rate),
+        remaining_range: parseFloat(car.remaining_range),
+        estimated_time_left: parseFloat(car.estimated_time_left),
+        time_to_station: parseFloat(car.time_to_station),
+        distance_to_station: parseFloat(car.distance_to_station),
+      }));
 
+      const formattedData = {
+        car_ids: carIds,
+        car_data: carData,
+      };
+      console.log(formattedData);
+      if (carDataList.length === 0) {
+        throw new Error("No valid car data to submit");
+      }
+      console.log("sending data to backend");
       // Send formattedData to backend for prediction
       const response = await fetch("/api/predict", {
         method: "POST",
@@ -61,22 +68,11 @@ const CarPriority = () => {
       }
 
       const result = await response.json();
-      setPredictedPriorities(result.predicted_priorities); // Update predictedPriorities state with the response
-
-      // Find car ID with maximum priority
-      const maxPriorityIndex = result.predicted_priorities.indexOf(
-        Math.max(
-          ...result.predicted_priorities.map(
-            (car: CarPrediction) => car.predicted_priority
-          )
-        )
-      );
-      setMaxPriorityCarId(formattedData[maxPriorityIndex].car_id);
+      setMaxPriorityCarId(result.car_id); // Update maxPriorityCarId state with the car ID with maximum priority
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
   const handleChangeCar = (
     index: number,
     event: React.ChangeEvent<HTMLInputElement>

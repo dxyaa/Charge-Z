@@ -1,4 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import fetch from "node-fetch";
+
 interface CarData {
   car_id: number;
   remaining_battery: number;
@@ -7,7 +9,7 @@ interface CarData {
   estimated_time_left: number;
   time_to_station: number;
   distance_to_station: number;
-} // Adjust the import path based on your project structure
+}
 
 export default async function handler(
   req: NextApiRequest,
@@ -15,31 +17,39 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const data: CarData[] = req.body; // Specify that req.body is an array of CarData objects
+      const data: CarData[] = req.body; // Array of CarData objects from frontend
 
-      // Processing logic here...
-      const predictions = data.map((carData) => {
-        // Example of accessing properties safely with type checking
-        const {
-          car_id,
-          remaining_battery,
-          drain_rate,
-          remaining_range,
-          estimated_time_left,
-          time_to_station,
-          distance_to_station,
-        } = carData;
+      // Format data for sending to model server
+      const formattedData = data.map((carData) => ({
+        remaining_battery: carData.remaining_battery,
+        drain_rate: carData.drain_rate,
+        remaining_range: carData.remaining_range,
+        estimated_time_left: carData.estimated_time_left,
+        time_to_station: carData.time_to_station,
+        distance_to_station: carData.distance_to_station,
+      }));
 
-        // Perform prediction logic for each car
-        const predicted_priority = Math.random() * 100; // Replace with actual prediction logic
-
-        return {
-          car_id,
-          predicted_priority,
-        };
+      // Call your machine learning model endpoint
+      const modelEndpoint = "http://localhost:5000/predict"; // Replace with your model endpoint
+      const modelResponse = await fetch(modelEndpoint, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formattedData),
       });
 
-      res.status(200).json({ predicted_priorities: predictions });
+      if (!modelResponse.ok) {
+        throw new Error("Failed to get predictions from model server");
+      }
+
+      const result = await modelResponse.json();
+
+      // Determine car_id with maximum priority
+      const maxPriorityCarId = result.car_id; // Adjust based on how your model server returns the data
+
+      // Return the car_id with maximum priority to the frontend
+      res.status(200).json({ max_priority_car_id: maxPriorityCarId });
     } catch (error: any) {
       res.status(500).json({ error: error.message });
     }
