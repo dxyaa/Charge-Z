@@ -22,15 +22,34 @@ import "react-datepicker/dist/react-datepicker.css";
 import Image from "next/image";
 import { format } from "date-fns";
 import darknexon from "./../../public/darknexon.png";
+import Stationsearch from "@/components/stationSearch";
 /*end of imports */
+
+interface Station {
+  Name:string
+}
+
 const BookLater = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [formData, setFormData] = useState<Station>({
+  Name:""
+  });
   const currentDate = new Date();
 
   const formattedTime = currentDate.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
+
+
+  const handleSelect = (selectedName: string) => {
+    setFormData((prevData) => ({
+      ...prevData,
+      Name : selectedName,
+    }));
+  };
+
+
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
   };
@@ -95,6 +114,10 @@ const BookLater = () => {
           <div className="bg-slate-800 flex flex-col w-1/2 h-1/2 items-center rounded-lg  p-5 space-y-4">
             {" "}
             <div className="w-1/2 text-black">
+              {/*F O R   A B H I S H E K : change this datepicker to station dropdown */}
+           <Stationsearch onSelect={handleSelect}/>
+            </div>
+            <div className="w-1/2 text-black">
               <Datepicker
                 minDate={currentDate}
                 asSingle={true}
@@ -120,16 +143,7 @@ const BookLater = () => {
                 </div>
               </form>
             </div>
-            <div className="w-1/2 text-black">
-              {/*F O R   A B H I S H E K : change this datepicker to station dropdown */}
-              <Datepicker
-                minDate={currentDate}
-                asSingle={true}
-                value={value}
-                onChange={handleValueChange}
-                inputClassName="text-black w-full rounded-lg"
-              />
-            </div>
+           
             <Link
               href="/"
               className="bg-black w-1/3 hover:bg-gray-900 rounded-lg p-2 flex text-center justify-center items-center"
