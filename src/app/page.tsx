@@ -10,7 +10,7 @@ export default function main() {
     <CarChargeProvider>
       <div className="flex flex-col w-screen min-h-screen">
         <div id="1">
-          <Server />
+          {/*<Server />*/}
           <Login />
         </div>
         {/*<div id="2">
