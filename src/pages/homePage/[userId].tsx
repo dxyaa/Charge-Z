@@ -25,6 +25,7 @@ import { FaCar } from "react-icons/fa";
 import { useRouter } from "next/router";
 import Typewriter from "typewriter-effect";
 import ImmCharge from "../immCharge";
+import { useCarChargeContext } from "@/components/carChargeContext";
 import {
   animate,
   motion,
@@ -165,6 +166,28 @@ const HomePage = () => {
   }, [userId]);
   //modal
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // context from server
+  const { charge } = useCarChargeContext();
+  const carCharges: { [carId: string]: number } = {};
+  const handleChargeUpdate = (carId: string, charge: number) => {
+    if (charge < 20) {
+      // Show modal or take action
+      console.log(`Car ${carId} charge is below 20%!`);
+      setIsActive(true);
+    }
+  };
+  useEffect(() => {
+    const carIds = Object.keys(carCharges);
+
+    carIds.forEach((carId) => {
+      // Subscribe to charge updates for each car
+      const charge = carCharges[carId];
+      handleChargeUpdate(carId, charge); // Handle initial charge state
+
+      // Example: Listen for charge updates
+      // Replace with your logic to subscribe to charge updates
+    });
+  }, [carCharges]);
   return (
     <motion.section
       style={{ backgroundImage }}
@@ -251,7 +274,7 @@ const HomePage = () => {
           <div>
             <button
               className="p-2 bg-black text-white"
-              onClick={() => setIsModalOpen(true)}
+              onClick={() => setIsActive(true)}
             >
               {" "}
               open
@@ -314,16 +337,20 @@ const HomePage = () => {
               <span className="hidden group-hover:inline  ">Home</span>
             </Link>
             <Link
-              href={{pathname: `/chargeNow/${userId}`,query: {car: userData[0]?.Car},
-            }}
+              href={{
+                pathname: `/chargeNow/${userId}`,
+                query: { car: userData[0]?.Car },
+              }}
               className="p-2 rounded-md flex items-center group hover:bg-gray-700"
             >
               <FaBolt size={24} className="mr-2" />
               <span className="hidden group-hover:inline  ">Charge Now</span>
             </Link>
             <Link
-              href={{ pathname: `/bookLater/${userId}`,query: { car: userData[0]?.Car },
-            }}
+              href={{
+                pathname: `/bookLater/${userId}`,
+                query: { car: userData[0]?.Car },
+              }}
               className="p-2 rounded-md flex items-center group hover:bg-gray-700"
             >
               <RiCalendarScheduleFill size={24} className="mr-2" />
@@ -340,7 +367,7 @@ const HomePage = () => {
         </div>
       </div>
       <Cursor isActive={isActive} />
-      {isModalOpen && (
+      {isActive && (
         <div className="fixed inset-0 flex items-center w-screen h-screen  justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-black text-white w-1/2 h-2/5 p-6 rounded-lg shadow-lg flex-flex-col">
             <div className="h-4/5">
@@ -361,7 +388,7 @@ const HomePage = () => {
               </Link>
               <button
                 className="bg-white text-black hover:bg-gray-300 w-1/4 p-2 flex rounded-md h-32 justify-center items-center"
-                onClick={() => setIsModalOpen(false)}
+                onClick={() => setIsActive(false)}
               >
                 Remind me later
               </button>
