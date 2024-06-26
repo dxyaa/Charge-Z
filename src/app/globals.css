@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+@import "flowbite";
 .neonColor {
   color: #fff;
   text-shadow: 0 0 7px #fff, 0 0 10px #fff, 0 0 21px #fff, 0 0 42px #00f,
