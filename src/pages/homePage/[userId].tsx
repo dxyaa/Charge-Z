@@ -24,7 +24,7 @@ import { Poppins } from "next/font/google";
 import { FaCar } from "react-icons/fa";
 import { useRouter } from "next/router";
 import Typewriter from "typewriter-effect";
-
+import ImmCharge from "../immCharge";
 import {
   animate,
   motion,
@@ -351,9 +351,12 @@ const HomePage = () => {
               </div>
             </div>
             <div className="flex justify-center h-1/5 flex-col space-y-2 items-center">
-              <button className="bg-green-500 hover:bg-green-400 text-white w-1/4 p-2 rounded-md flex h-32 justify-center items-center">
+              <Link
+                href="/immCharge"
+                className="bg-green-500 hover:bg-green-400 text-white w-1/4 p-2 rounded-md flex h-32 justify-center items-center"
+              >
                 Charge Now
-              </button>
+              </Link>
               <button
                 className="bg-white text-black hover:bg-gray-300 w-1/4 p-2 flex rounded-md h-32 justify-center items-center"
                 onClick={() => setIsModalOpen(false)}
