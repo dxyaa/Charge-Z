@@ -303,14 +303,16 @@ const HomePage = () => {
               <span className="hidden group-hover:inline  ">Home</span>
             </Link>
             <Link
-              href="/chargeNow"
+              href={{pathname: `/chargeNow/${userId}`,query: {car: userData[0]?.Car},
+            }}
               className="p-2 rounded-md flex items-center group hover:bg-gray-700"
             >
               <FaBolt size={24} className="mr-2" />
               <span className="hidden group-hover:inline  ">Charge Now</span>
             </Link>
             <Link
-              href="/bookLater"
+              href={{ pathname: `/bookLater/${userId}`,query: { car: userData[0]?.Car },
+            }}
               className="p-2 rounded-md flex items-center group hover:bg-gray-700"
             >
               <RiCalendarScheduleFill size={24} className="mr-2" />
