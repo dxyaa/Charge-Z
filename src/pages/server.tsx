@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 import app from "@/app/firebase";
 import "tailwindcss/tailwind.css";
+import { useCarChargeContext } from "@/components/carChargeContext";
 
 interface Car {
   id: string;
@@ -26,6 +27,7 @@ interface Users {
 }
 
 const Server = () => {
+  const { setCharge } = useCarChargeContext(); // Accessing charge from context
   const [carList, setCarList] = useState<Car[]>([]);
   const [timers, setTimers] = useState<{ [key: string]: number }>({});
   const [isRunning, setIsRunning] = useState(false);
@@ -70,7 +72,9 @@ const Server = () => {
         // Update state with fetched data
         setUserList(users);
         setCarList(cars);
-
+        if (cars.length > 0) {
+          setCharge(cars[0].CurrentCharge); // Example: Setting charge from first car
+        }
         // Initialize timers with CurrentCharge values
         const initialTimers = cars.reduce((acc, car) => {
           acc[car.id] = car.CurrentCharge;
@@ -83,7 +87,7 @@ const Server = () => {
     };
 
     fetchCars();
-  }, []);
+  }, [setCharge]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
@@ -97,7 +101,7 @@ const Server = () => {
               if (newTimers[car.id] <= 20) {
                 setIsRunning(false);
                 console.log("This car:", car.id);
-                // Send car.id to car (implement as needed)
+
                 break;
               }
             }
@@ -109,7 +113,7 @@ const Server = () => {
       clearInterval(interval);
     }
     return () => clearInterval(interval!);
-  }, [isRunning, carList]);
+  }, [isRunning, carList, userList]);
 
   const handleStartPause = () => {
     setIsRunning((prevState) => !prevState);
@@ -130,14 +134,13 @@ const Server = () => {
       <div className="grid grid-cols-5 gap-4 bg-black p-2">
         {userList.map(
           (user) =>
-            user.Car && ( // Check if user has Car property
+            user.Car && (
               <li
                 key={user.id}
                 className="list-none bg-gray-800 p-4 rounded-lg shadow-md"
               >
                 <p className="text-white">User: {user.Name}</p>
-                {/* Find the matching car based on user.Car */}
-                {carList.find((car) => car.id === user.Car) && ( // Check if car is found
+                {carList.find((car) => car.id === user.Car) && (
                   <div className="text-gray-300">
                     <p>
                       Car: {carList.find((car) => car.id === user.Car)?.Name}
