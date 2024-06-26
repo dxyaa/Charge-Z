@@ -93,9 +93,9 @@ const ChargeNow = () => {
           <div>
             <FaWifi size={20} />
           </div>
-          <div>
+          {/* <div>
             <RiBatteryChargeLine size={24} />
-          </div>
+          </div>*/}
           {/*<div>
           <GiNetworkBars />
            </div>*/}

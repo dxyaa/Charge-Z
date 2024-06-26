@@ -1,7 +1,6 @@
 import { useState } from "react";
 import "tailwindcss/tailwind.css";
 
-// types.ts (or any relevant file)
 export interface CarData {
   car_id: string;
   remaining_battery: string;
@@ -12,29 +11,28 @@ export interface CarData {
   distance_to_station: string;
 }
 export interface CarPrediction {
-  predicted_priority: number; // Adjust this type based on your actual data structure
+  predicted_priority: number;
 }
 const CarPriority = () => {
-  const [numCars, setNumCars] = useState(1); // State to manage number of cars
-  const [carDataList, setCarDataList] = useState<Array<any>>([]); // State to hold car data
+  const [numCars, setNumCars] = useState(1);
+  const [carDataList, setCarDataList] = useState<Array<any>>([]);
 
   const [predictedPriorities, setPredictedPriorities] = useState<
     Array<number | null>
-  >([]); // State to hold predicted priorities
-  const [maxPriorityCarId, setMaxPriorityCarId] = useState<number | null>(null); // State to hold car ID with max priority
+  >([]);
+  const [maxPriorityCarId, setMaxPriorityCarId] = useState<number | null>(null);
 
   const handleChangeNumCars = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(event.target.value);
     setNumCars(value);
-    setCarDataList(new Array(value).fill({})); // Initialize carDataList with empty objects
-    setPredictedPriorities(new Array(value).fill(null)); // Initialize predictedPriorities with null values
-    setMaxPriorityCarId(null); // Reset maxPriorityCarId when number of cars changes
+    setCarDataList(new Array(value).fill({}));
+    setPredictedPriorities(new Array(value).fill(null));
+    setMaxPriorityCarId(null);
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     try {
-      // Prepare car data for submission
       const formattedData = carDataList.map((car) => ({
         car_id: parseInt(car.car_id),
         remaining_battery: parseFloat(car.remaining_battery),
@@ -49,9 +47,8 @@ const CarPriority = () => {
         throw new Error("No valid car data to submit");
       }
       console.log("sending to backend ");
-      // Send formattedData to backend for prediction
+
       const response = await fetch("http://localhost:5000/predict", {
-        // Adjust URL as per your Flask development server
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -66,7 +63,6 @@ const CarPriority = () => {
       const result = await response.json();
       console.log(result);
       setMaxPriorityCarId(result.car_id);
-      // Update maxPriorityCarId state with the car ID with maximum priority
     } catch (error) {
       console.error("Error:", error);
     }
@@ -97,7 +93,6 @@ const CarPriority = () => {
         onSubmit={handleSubmit}
         className="flex flex-col text-center items-center space-y-2"
       >
-        {/* Input fields for each car */}
         {carDataList.map((carData, index) => (
           <div key={index} className="flex flex-col space-y-2">
             <h3>Car {index + 1} Details</h3>
@@ -173,7 +168,7 @@ const CarPriority = () => {
           Predict Priorities
         </button>
       </form>
-      {/* Display car ID with maximum priority */}
+
       <div>max priority : </div>
       {maxPriorityCarId && (
         <p>Car ID with Maximum Priority: {maxPriorityCarId}</p>
