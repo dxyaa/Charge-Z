@@ -38,7 +38,6 @@ const Login: React.FC = ({}) => {
     libraries: ["places"],
   });
 
-  const router = useRouter();
 
   useEffect(() => {
     if (loadError) {
