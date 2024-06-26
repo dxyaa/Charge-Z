@@ -139,31 +139,32 @@ const HomePage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const db = getFirestore(app); // Initialize Firestore
-        const userCollectionRef = collection(db, "Users"); // Reference to the "Users" collection
+        const db = getFirestore(app);
+        const userCollectionRef = collection(db, "Users");
         console.log("starting fetch using  ", userId);
 
         if (userId) {
-          const userDocRef = doc(db, `Users/${userId}`); // Reference to the specific user document by ID
-          const userDoc = await getDoc(userDocRef); // Get the document
+          const userDocRef = doc(db, `Users/${userId}`);
+          const userDoc = await getDoc(userDocRef);
 
           if (userDoc.exists()) {
-            const userData = { ...userDoc.data(), id: userDoc.id } as Users; // Create a user object
-            setUserData([userData]); // Update the state with fetched user data
-            setUserName(userData.Name); // Set the user name from the fetched data
-            console.log(userData); // Log the fetched user data
+            const userData = { ...userDoc.data(), id: userDoc.id } as Users;
+            setUserData([userData]);
+            setUserName(userData.Name);
+            console.log(userData);
           } else {
             console.log("No such document!");
           }
         }
       } catch (error) {
-        console.error("Error fetching user data:", error); // Log any errors that occur during fetching
+        console.error("Error fetching user data:", error);
       }
     };
 
-    fetchUserData(); // Call the function to fetch user data
-  }, []); // The empty dependency array means this useEffect runs only once when the component mounts
-
+    fetchUserData();
+  }, []);
+  //modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
   return (
     <motion.section
       style={{ backgroundImage }}
@@ -247,8 +248,18 @@ const HomePage = () => {
             </div>
             <CircularProgressBar strokeWidth={2} sqSize={220} progress={60} />
           </div>
+          <div>
+            <button
+              className="p-2 bg-black text-white"
+              onClick={() => setIsModalOpen(true)}
+            >
+              {" "}
+              open
+            </button>
+          </div>
         </motion.div>
       </div>
+
       <div className=" flex justify-center text-white z-10 w-full">
         <div className="flex justify-center z-10 w-full absolute top-0">
           <div className="flex justify-center  items-center rounded-b-lg bg-gradient-to-r from-gray-900 to-gray-800 w-1/6 h-9 p-1 z-10">
@@ -327,6 +338,32 @@ const HomePage = () => {
         </div>
       </div>
       <Cursor isActive={isActive} />
+      {isModalOpen && (
+        <div className="fixed inset-0 flex items-center w-screen h-screen  justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-black text-white w-1/2 h-2/5 p-6 rounded-lg shadow-lg flex-flex-col">
+            <div className="h-4/5">
+              <div className="">
+                <p className="text-md text-gray-500 p-4 ">Your charge is at</p>
+                <div className="text-8xl text-center">20%</div>
+                <p className="text-gray-500 text-center mt-4">
+                  We recommend you to charge now for best effeciency.
+                </p>
+              </div>
+            </div>
+            <div className="flex justify-center h-1/5 flex-col space-y-2 items-center">
+              <button className="bg-green-500 hover:bg-green-400 text-white w-1/4 p-2 rounded-md flex h-32 justify-center items-center">
+                Charge Now
+              </button>
+              <button
+                className="bg-white text-black hover:bg-gray-300 w-1/4 p-2 flex rounded-md h-32 justify-center items-center"
+                onClick={() => setIsModalOpen(false)}
+              >
+                Remind me later
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </motion.section>
   );
 };
