@@ -149,7 +149,7 @@ const HomePage = () => {
               videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
             }`}
           >
-            Welcome Back, Adlu :D
+            Welcome Back, Adlu
           </div>
           <div className="font-light text-gray-400 text-lg">
             <Typewriter

@@ -17,12 +17,12 @@ import { RiCalendarScheduleFill } from "react-icons/ri";
 import { IoPersonCircle } from "react-icons/io5";
 import BookLater from "../bookLater";
 import ChargeNow from "../chargeNow";
-import Profile from "../profile"
+import Profile from "../profile";
 import { Cursor } from "@/components/cursor";
 import CircularProgressBar from "@/components/battery";
 import { Poppins } from "next/font/google";
 import { FaCar } from "react-icons/fa";
-import { useRouter }from "next/router"
+import { useRouter } from "next/router";
 import Typewriter from "typewriter-effect";
 
 import {
@@ -38,7 +38,15 @@ import {
   buildStyles,
 } from "react-circular-progressbar";
 import { Roboto } from "next/font/google";
-import { collection, doc, getDoc, getDocs, getFirestore, query, where } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+  query,
+  where,
+} from "firebase/firestore";
 import app from "@/app/firebase";
 
 /*end of imports*/
@@ -47,13 +55,11 @@ import app from "@/app/firebase";
   autoStart: true,
 });*/
 
-
 interface Users {
-    id: string;
-    Name: string;
-    Car: string;
-  }
-  
+  id: string;
+  Name: string;
+  Car: string;
+}
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -65,8 +71,6 @@ const roboto = Roboto({
   subsets: ["latin"],
 });
 const HomePage = () => {
-
-  
   const currentDate = new Date();
   const formattedTime = currentDate.toLocaleTimeString([], {
     hour: "2-digit",
@@ -132,35 +136,33 @@ const HomePage = () => {
   const border = useMotionTemplate`1px  ${color}`;
   const boxShadow = useMotionTemplate`8px 4px 24px ${color}`;
 
-
   useEffect(() => {
     const fetchUserData = async () => {
-        try {
-            const db = getFirestore(app); // Initialize Firestore
-            const userCollectionRef = collection(db, "Users"); // Reference to the "Users" collection
-            console.log("starting fetch using  ", userId);
+      try {
+        const db = getFirestore(app); // Initialize Firestore
+        const userCollectionRef = collection(db, "Users"); // Reference to the "Users" collection
+        console.log("starting fetch using  ", userId);
 
-            if (userId) {
-                const userDocRef = doc(db,`Users/${userId}`); // Reference to the specific user document by ID
-                const userDoc = await getDoc(userDocRef); // Get the document
+        if (userId) {
+          const userDocRef = doc(db, `Users/${userId}`); // Reference to the specific user document by ID
+          const userDoc = await getDoc(userDocRef); // Get the document
 
-                if (userDoc.exists()) {
-                    const userData = { ...userDoc.data(), id: userDoc.id } as Users; // Create a user object
-                    setUserData([userData]); // Update the state with fetched user data
-                    setUserName(userData.Name); // Set the user name from the fetched data
-                    console.log(userData); // Log the fetched user data
-                } else {
-                    console.log("No such document!");
-                }
-            }
-        } catch (error) {
-            console.error("Error fetching user data:", error); // Log any errors that occur during fetching
+          if (userDoc.exists()) {
+            const userData = { ...userDoc.data(), id: userDoc.id } as Users; // Create a user object
+            setUserData([userData]); // Update the state with fetched user data
+            setUserName(userData.Name); // Set the user name from the fetched data
+            console.log(userData); // Log the fetched user data
+          } else {
+            console.log("No such document!");
+          }
         }
+      } catch (error) {
+        console.error("Error fetching user data:", error); // Log any errors that occur during fetching
+      }
     };
 
     fetchUserData(); // Call the function to fetch user data
-}, []); // The empty dependency array means this useEffect runs only once when the component mounts
-
+  }, []); // The empty dependency array means this useEffect runs only once when the component mounts
 
   return (
     <motion.section
@@ -194,7 +196,7 @@ const HomePage = () => {
               videoFinished ? "opacity-100 ease-out" : "opacity-0 ease-in"
             }`}
           >
-            Welcome Back, {userName} :D
+            Welcome Back, {userName}
           </div>
           <div className="font-light text-gray-400 text-lg">
             <Typewriter
