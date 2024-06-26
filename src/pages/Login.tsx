@@ -87,10 +87,9 @@ const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
       };
 
       const docRef = await addDoc(userCollectionRef, userData);
-      console.log("Document ID:", docRef.id); // Log the generated document ID
-      setDocID(docRef.id);
-
-      router.push(`/homePage/${docRef.id}`); // Navigate to the HomePage with the userID
+      console.log("Document ID:", docRef.id); 
+      const userId = docRef.id// Log the generated document ID
+      setDocID(userId);
     } catch (error) {
       console.error("Error adding user data:", error);
     }
@@ -145,12 +144,15 @@ const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
             >
               Search Charging Stations
             </button>*/}
+            <Link
+            href={{pathname:`/homePage/${putdocID}`,query: {loc: formData?.Location}}}>
             <button
               onClick={addUserData}
               className="p-2 bg-blue-600  hover:bg-blue-500 w-1/2 rounded-md "
             >
               Add User
             </button>
+            </Link>
           </div>
         </div>
       </div>
