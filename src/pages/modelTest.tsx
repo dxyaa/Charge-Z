@@ -35,8 +35,8 @@ const CarPriority = () => {
 
     try {
       // Prepare car data for submission
-      const carIds = carDataList.map((car) => parseInt(car.car_id));
-      const carData = carDataList.map((car) => ({
+      const formattedData = carDataList.map((car) => ({
+        car_id: parseInt(car.car_id),
         remaining_battery: parseFloat(car.remaining_battery),
         drain_rate: parseFloat(car.drain_rate),
         remaining_range: parseFloat(car.remaining_range),
@@ -45,17 +45,13 @@ const CarPriority = () => {
         distance_to_station: parseFloat(car.distance_to_station),
       }));
 
-      const formattedData = {
-        car_ids: carIds,
-        car_data: carData,
-      };
-      console.log(formattedData);
-      if (carDataList.length === 0) {
+      if (formattedData.length === 0) {
         throw new Error("No valid car data to submit");
       }
-      console.log("sending data to backend");
+      console.log("sending to backend ");
       // Send formattedData to backend for prediction
-      const response = await fetch("/api/predict", {
+      const response = await fetch("http://localhost:5000/predict", {
+        // Adjust URL as per your Flask development server
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -68,7 +64,9 @@ const CarPriority = () => {
       }
 
       const result = await response.json();
-      setMaxPriorityCarId(result.car_id); // Update maxPriorityCarId state with the car ID with maximum priority
+      console.log(result);
+      setMaxPriorityCarId(result.car_id);
+      // Update maxPriorityCarId state with the car ID with maximum priority
     } catch (error) {
       console.error("Error:", error);
     }
