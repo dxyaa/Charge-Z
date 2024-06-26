@@ -1,28 +1,50 @@
 import { NextApiRequest, NextApiResponse } from "next";
+interface CarData {
+  car_id: number;
+  remaining_battery: number;
+  drain_rate: number;
+  remaining_range: number;
+  estimated_time_left: number;
+  time_to_station: number;
+  distance_to_station: number;
+} // Adjust the import path based on your project structure
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
-  try {
-    const data = req.body;
+  if (req.method === "POST") {
+    try {
+      const data: CarData[] = req.body; // Specify that req.body is an array of CarData objects
 
-    const response = await fetch("http://localhost:5000/predict", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    });
+      // Processing logic here...
+      const predictions = data.map((carData) => {
+        // Example of accessing properties safely with type checking
+        const {
+          car_id,
+          remaining_battery,
+          drain_rate,
+          remaining_range,
+          estimated_time_left,
+          time_to_station,
+          distance_to_station,
+        } = carData;
 
-    if (!response.ok) {
-      throw new Error("Network response was not ok");
+        // Perform prediction logic for each car
+        const predicted_priority = Math.random() * 100; // Replace with actual prediction logic
+
+        return {
+          car_id,
+          predicted_priority,
+        };
+      });
+
+      res.status(200).json({ predicted_priorities: predictions });
+    } catch (error: any) {
+      res.status(500).json({ error: error.message });
     }
-
-    const result = await response.json();
-    res.status(200).json(result);
-  } catch (error: any) {
-    // Explicitly typing error as any
-    res.status(500).json({ error: error.message });
+  } else {
+    res.setHeader("Allow", ["POST"]);
+    res.status(405).end(`Method ${req.method} Not Allowed`);
   }
 }
