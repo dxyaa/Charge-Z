@@ -25,7 +25,7 @@ import nexon from "../../public/nexon.png";
 import { Carousel } from "react-bootstrap";
 import { FaCar } from "react-icons/fa";
 /*imports end*/
-const ChargeNow = () => {
+const ImmCharge = () => {
   const currentDate = new Date();
   const formattedTime = currentDate.toLocaleTimeString([], {
     hour: "2-digit",
@@ -102,48 +102,21 @@ const ChargeNow = () => {
         </div>
       </div>
 
-      <div className="flex justify-center items-center mt-20 w-full h-3/4  flex-row space-x-5 px-10">
+      <div className="flex justify-center items-center mt-20 w-full h-2/3  flex-row space-x-5 px-10">
         <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-8 space-y-5">
-          <Carousel
-            activeIndex={index}
-            onSelect={(selectedIndex) => setIndex(selectedIndex)}
-            interval={1500}
-            controls={false}
-            className="h-full carousel slide"
-          >
-            {index === 0 && (
-              <Carousel.Item
-                interval={1500}
-                className="flex justify-center items-center swap"
-              >
-                <Image
-                  src={darknexon}
-                  alt="Dark Nexon"
-                  width={500}
-                  height={400}
-                  className=" transition-opacity"
-                />
-              </Carousel.Item>
-            )}
+          <div className="h-60 flex justify-center items-center flex-col space-y-4 swap">
+            <div className=" ">Your nearest charging station is : </div>
+            <div>Kochi</div>
+            <Link
+              href={{
+                pathname: "/dashBoard",
+              }}
+              className=" w-1/4 p-2 h-full flex justify-center items-center bg-blue-700 rounded-xl hover:bg-blue-600 "
+            >
+              Confirm
+            </Link>
+          </div>
 
-            {index === 1 && (
-              <Carousel.Item
-                interval={1500}
-                className="h-60 flex justify-center items-center flex-col space-y-4 swap"
-              >
-                <div className=" ">Your nearest charging station is : </div>
-                <div>Kochi</div>
-                <Link
-                  href={{
-                    pathname: "/dashBoard",
-                  }}
-                  className=" w-1/4 p-2 flex justify-center items-center bg-blue-700 rounded-xl hover:bg-blue-600 "
-                >
-                  Confirm
-                </Link>
-              </Carousel.Item>
-            )}
-          </Carousel>
           {/* <Image
                     alt="car"
                     src={darknexon}
@@ -197,14 +170,14 @@ const ChargeNow = () => {
           <div className="flex flex-row w-full h-1/2 justify-between items-center ">
             <Link
               href="/"
-              className=" w-1/4 h-full flex justify-center items-center bg-red-800 rounded-xl hover:bg-red-700 "
+              className=" w-1/4 h-1/2 flex justify-center items-center bg-red-800 rounded-xl hover:bg-red-700 "
             >
               Cancel
             </Link>
             <button
               onClick={handleNext}
               disabled={index === 1}
-              className=" w-1/4 h-full flex justify-center items-center bg-blue-700  rounded-xl hover:bg-blue-600 "
+              className=" w-1/4 h-1/2 flex justify-center items-center bg-blue-700  rounded-xl hover:bg-blue-600 "
             >
               <div className="relative inline-flex items-center justify-center p-4 px-6 py-3 overflow-hidden font-medium text-white transition duration-300 ease-out rounded-full group">
                 <span className="absolute inset-0 flex items-center justify-center w-full h-full text-white duration-300 -translate-x-full  group-hover:translate-x-0 ease">
@@ -226,7 +199,7 @@ const ChargeNow = () => {
                 <span className="absolute flex items-center justify-center w-full h-full text-white transition-all duration-300 transform group-hover:translate-x-full ease">
                   Find nearest station
                 </span>
-                <span className="relative invisible">Find nearest station</span>
+                <span className="relative invisible">Next nearest station</span>
               </div>
             </button>
           </div>
@@ -236,4 +209,4 @@ const ChargeNow = () => {
   );
 };
 
-export default ChargeNow;
+export default ImmCharge;

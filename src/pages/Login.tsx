@@ -1,4 +1,5 @@
 "use client";
+import "tailwindcss/tailwind.css";
 import React, { useRef, useState, useEffect } from "react";
 import { getFirestore, collection, addDoc } from "firebase/firestore";
 import app from "@/app/firebase";
@@ -108,33 +109,50 @@ const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
 
   return (
     <>
-      <div className="flex flex-col h-full gap-lg-5 border-2 lg:w-1/2 align-self-lg-center ml-32">
-        <div>
-          <input
-            type="text"
-            name="Name"
-            className="w-full"
-            onChange={handleFormData}
-            value={formData.Name}
-            placeholder="Name"
-          />
-        </div>
-        <Carsearch onSelect={handleSelect} />
-        <Autocomplete>
-          <Input
-            name="Location"
-            onChange={handleFormData}
-            value={formData.Location}
-            type="text"
-            placeholder="Enter location"
-            ref={locationRef}
-          />
-        </Autocomplete>
+      <div className=" flex h-screen w-screen border-2 justify-center bg-black text-white">
+        <div className="w-1/3  flex flex-col space-y-2 p-5 text-center">
+          <div>
+            <input
+              type="text"
+              name="Name"
+              className="w-full rounded-md text-black"
+              onChange={handleFormData}
+              value={formData.Name}
+              placeholder="Name"
+            />
+          </div>
+          <div>
+            <Carsearch onSelect={handleSelect} />
+          </div>
+          <div>
+            <Autocomplete>
+              <input
+                name="Location"
+                onChange={handleFormData}
+                value={formData.Location}
+                type="text"
+                placeholder="Enter location"
+                ref={locationRef}
+                className="text-black rounded-md w-full"
+              />
+            </Autocomplete>
+          </div>
 
-        <Button onClick={searchLocation}>Search Charging Stations</Button>
-      
-        <Button onClick={addUserData}>Add User</Button>
-        
+          <div className="flex justify-center">
+            {/*<button
+              onClick={searchLocation}
+              className="p-2 bg-blue-600  hover:bg-blue-500 w-1/2 rounded-md  "
+            >
+              Search Charging Stations
+            </button>*/}
+            <button
+              onClick={addUserData}
+              className="p-2 bg-blue-600  hover:bg-blue-500 w-1/2 rounded-md "
+            >
+              Add User
+            </button>
+          </div>
+        </div>
       </div>
     </>
   );
