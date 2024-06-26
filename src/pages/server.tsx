@@ -4,7 +4,6 @@ import {
   getDocs,
   getFirestore,
   doc,
-  setDoc,
   getDoc,
 } from "firebase/firestore";
 import app from "@/app/firebase";
@@ -21,70 +20,71 @@ interface Car {
 }
 
 interface Users {
-  id:string;
-  Name:string;
-  Car:string;
+  id: string;
+  Name: string;
+  Car: string;
 }
 
 const Server = () => {
-  const [formData, setFormData] = useState<Car>({
-    id: "",
-    Name: "",
-    Capacity: "",
-    UserName: "",
-    Mileage: "",
-    DrainRate: "",
-    CurrentCharge: 0,
-  });
-
   const [carList, setCarList] = useState<Car[]>([]);
   const [timers, setTimers] = useState<{ [key: string]: number }>({});
   const [isRunning, setIsRunning] = useState(false);
-  const [userList,setUserList] = useState<Users[]>([]);
+  const [userList, setUserList] = useState<Users[]>([]);
 
   useEffect(() => {
     const fetchCars = async () => {
       try {
         const db = getFirestore(app);
-  
+
         // Fetch users first
         const userCollectionRef = collection(db, "Users");
         const querySnapshot = await getDocs(userCollectionRef);
-  
+
         const cars: Car[] = [];
         const users: Users[] = [];
-  
-        querySnapshot.forEach(async (userDoc) => {
+        const carPromises: Promise<void>[] = [];
+
+        querySnapshot.forEach((userDoc) => {
           const userData = userDoc.data() as Users;
-          const userWithId = { ...userData, id: userDoc.id }; // Access id directly
+          const userWithId = { ...userData, id: userDoc.id };
           users.push(userWithId);
-          setUserList(users);
-  
+
           // Check if userData.Car exists
           if (userData.Car) {
             const carDocRef = doc(db, `Cars/${userData.Car}`);
-            const carDocSnap = await getDoc(carDocRef);
-  
-            if (carDocSnap.exists()) {
-              const carData = carDocSnap.data() as Car;
-              cars.push(carData);
-            } // Handle case where Car document doesn't exist for a user (optional)
+            const carPromise = getDoc(carDocRef).then((carDocSnap) => {
+              if (carDocSnap.exists()) {
+                const carData = carDocSnap.data() as Car;
+                carData.id = carDocSnap.id; // Add the ID to carData
+                cars.push(carData);
+              }
+            });
+
+            carPromises.push(carPromise);
           }
         });
-  
-        // Update car state with fetched data
+
+        // Wait for all car promises to resolve
+        await Promise.all(carPromises);
+
+        // Update state with fetched data
+        setUserList(users);
         setCarList(cars);
+
+        // Initialize timers with CurrentCharge values
+        const initialTimers = cars.reduce((acc, car) => {
+          acc[car.id] = car.CurrentCharge;
+          return acc;
+        }, {} as { [key: string]: number });
+        setTimers(initialTimers);
+
       } catch (error) {
         console.error("Error fetching user or car data:", error);
       }
     };
-  
+
     fetchCars();
   }, []);
-  
-  
-
-
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
@@ -97,8 +97,8 @@ const Server = () => {
               newTimers[car.id] -= parseFloat(car.DrainRate);
               if (newTimers[car.id] <= 20) {
                 setIsRunning(false);
-                console.log("this car : ", car.id);
-                //send car.id to car
+                console.log("This car:", car.id);
+                // Send car.id to car (implement as needed)
                 break;
               }
             }
@@ -127,15 +127,26 @@ const Server = () => {
           {isRunning ? "Pause" : "Start"}
         </button>
       </div>
+      
       <div className="flex flex-row justify-around">
-        {carList.map((car, index) => (
-          <li key={index} className="list-none">
-            <p>User: {car.UserName}</p>
-            <p>Car: {car.Name}</p>
-            <p>Charge: {timers[car.id]}</p>
-            <p>DrainRate: {car.DrainRate}</p>
-          </li>
-        ))}
+        {userList.map(
+          (user) =>
+            user.Car && ( // Check if user has Car property
+              <li key={user.id} className="list-none">
+                <p>User: {user.Name}</p>
+                {/* Find the matching car based on user.Car */}
+                {carList.find((car) => car.id === user.Car) && ( // Check if car is found
+                  <div>
+                    <p>
+                      Car: {carList.find((car) => car.id === user.Car)?.Name}
+                    </p>
+                    <p>Charge: {timers[user.Car]}</p>
+                    <p>DrainRate: {carList.find((car) => car.id === user.Car)?.DrainRate}</p>
+                  </div>
+                )}
+              </li>
+            )
+        )}
       </div>
     </div>
   );
