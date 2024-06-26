@@ -163,7 +163,7 @@ const HomePage = () => {
     };
 
     fetchUserData();
-  }, []);
+  }, [userId]);
   //modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   // context from server
