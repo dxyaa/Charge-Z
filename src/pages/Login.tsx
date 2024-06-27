@@ -160,6 +160,7 @@ const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
             />
           </div>
 
+
           <div className="flex justify-center">
           
               <button
@@ -169,6 +170,7 @@ const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
                 Add User
               </button>
            
+
           </div>
         </div>
       </div>

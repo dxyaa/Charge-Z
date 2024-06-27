@@ -64,7 +64,6 @@ const DashBoard = () => {
   });
 
   const handleDistanceDurationChange = (distance: string, duration: string) => {
-    // Parse duration into hours and minutes
     const durationParts = duration.split(" ");
     let totalMinutes = 0;
 
@@ -76,19 +75,14 @@ const DashBoard = () => {
       }
     }
 
-    // Get current time
     const now = new Date();
-
-    // Add the duration to the current time
     now.setMinutes(now.getMinutes() + totalMinutes);
-
-    // Format the arrival time
     const arrivaltime = now.toLocaleTimeString([], {
       hour: "2-digit",
       minute: "2-digit",
     });
 
-    // Update the trip state
+    // Updating trip state
     setTrip({ distance, duration, arrivaltime });
   };
 

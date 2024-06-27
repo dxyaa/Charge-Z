@@ -167,27 +167,7 @@ const HomePage = () => {
   //modal
   const [isModalOpen, setIsModalOpen] = useState(false);
   // context from server
-  const { charge } = useCarChargeContext();
-  const carCharges: { [carId: string]: number } = {};
-  const handleChargeUpdate = (carId: string, charge: number) => {
-    if (charge < 20) {
-      // Show modal or take action
-      console.log(`Car ${carId} charge is below 20%!`);
-      setIsActive(true);
-    }
-  };
-  useEffect(() => {
-    const carIds = Object.keys(carCharges);
 
-    carIds.forEach((carId) => {
-      // Subscribe to charge updates for each car
-      const charge = carCharges[carId];
-      handleChargeUpdate(carId, charge); // Handle initial charge state
-
-      // Example: Listen for charge updates
-      // Replace with your logic to subscribe to charge updates
-    });
-  }, [carCharges]);
   return (
     <motion.section
       style={{ backgroundImage }}

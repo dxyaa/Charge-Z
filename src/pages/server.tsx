@@ -27,7 +27,6 @@ interface Users {
 }
 
 const Server = () => {
-  const { setCharge } = useCarChargeContext(); // Accessing charge from context
   const [carList, setCarList] = useState<Car[]>([]);
   const [timers, setTimers] = useState<{ [key: string]: number }>({});
   const [isRunning, setIsRunning] = useState(false);
@@ -72,9 +71,7 @@ const Server = () => {
         // Update state with fetched data
         setUserList(users);
         setCarList(cars);
-        if (cars.length > 0) {
-          setCharge(cars[0].CurrentCharge); // Example: Setting charge from first car
-        }
+
         // Initialize timers with CurrentCharge values
         const initialTimers = cars.reduce((acc, car) => {
           acc[car.id] = car.CurrentCharge;
@@ -87,7 +84,7 @@ const Server = () => {
     };
 
     fetchCars();
-  }, [setCharge]);
+  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
