@@ -16,9 +16,8 @@ const Home = () => {
   const [id, setId] = useState<number | null>(null);
 
   useEffect(() => {
-    // Set id to 2 when the component mounts
     setId(2);
-  }, []); // Empty dependency array ensures this effect runs only once on mount
+  }, []);
 
   const handleChargeNowClick = () => {
     setId(2);
@@ -89,28 +88,26 @@ const Home = () => {
           </div>
         </div>
         <div className="absolute bottom-28 py-11 w-full flex items-center  gap-11 justify-evenly">
-  <div className="relative">
-    <Link
-      href={`#${id}`}
-      onClick={handleChargeNowClick}
-      className="font-bold text-gray-700 rounded-3xl w-64 flex items-center justify-center bg-blue-600"
-      style={{ height: 100 }}
-    >
-      Charge Now
-    </Link>
-  </div>
-  <div className="relative">
-    <Link
-      href="/"
-      className="font-bold text-gray-700 rounded-3xl w-64 flex items-center justify-center bg-green-600"
-      style={{ height: 100  }}
-      
-    >
-      Book Later
-    </Link>
-  </div>
-</div>
-
+          <div className="relative">
+            <Link
+              href={`#${id}`}
+              onClick={handleChargeNowClick}
+              className="font-bold text-gray-700 rounded-3xl w-64 flex items-center justify-center bg-blue-600"
+              style={{ height: 100 }}
+            >
+              Charge Now
+            </Link>
+          </div>
+          <div className="relative">
+            <Link
+              href="/"
+              className="font-bold text-gray-700 rounded-3xl w-64 flex items-center justify-center bg-green-600"
+              style={{ height: 100 }}
+            >
+              Book Later
+            </Link>
+          </div>
+        </div>
       </div>
     </div>
   );

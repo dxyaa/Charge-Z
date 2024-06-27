@@ -17,9 +17,8 @@ export default async function handler(
 ) {
   if (req.method === "POST") {
     try {
-      const data: CarData[] = req.body; // Array of CarData objects from frontend
+      const data: CarData[] = req.body;
 
-      // Format data for sending to model server
       const formattedData = data.map((carData) => ({
         remaining_battery: carData.remaining_battery,
         drain_rate: carData.drain_rate,
@@ -29,8 +28,7 @@ export default async function handler(
         distance_to_station: carData.distance_to_station,
       }));
 
-      // Call your machine learning model endpoint
-      const modelEndpoint = "http://localhost:5000/predict"; // Replace with your model endpoint
+      const modelEndpoint = "http://localhost:5000/predict";
       const modelResponse = await fetch(modelEndpoint, {
         method: "POST",
         headers: {
@@ -45,10 +43,8 @@ export default async function handler(
 
       const result = await modelResponse.json();
 
-      // Determine car_id with maximum priority
-      const maxPriorityCarId = result.car_id; // Adjust based on how your model server returns the data
+      const maxPriorityCarId = result.car_id;
 
-      // Return the car_id with maximum priority to the frontend
       res.status(200).json({ max_priority_car_id: maxPriorityCarId });
     } catch (error: any) {
       res.status(500).json({ error: error.message });

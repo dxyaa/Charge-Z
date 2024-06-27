@@ -135,7 +135,7 @@ const Login: React.FC = ({}) => {
             </Autocomplete>
           </div>
 
-          <div className="flex justify-center bg-red-100">
+          <div className="flex justify-center ">
             {/*<button
               onClick={searchLocation}
               className="p-2 bg-blue-600  hover:bg-blue-500 w-1/2 rounded-md  "
