@@ -255,6 +255,10 @@ const HomePage = () => {
   const handleStartPause = () => {
     setIsRunning((prevState) => !prevState);
   };
+
+  //dynamic array
+  const [selectedCarId, setSelectedCarId] = useState<string | null>(null);
+
   return (
     <motion.section
       style={{ backgroundImage }}
