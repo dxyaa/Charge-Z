@@ -7,6 +7,7 @@ import Carsearch from "@/components/carSearch";
 import { useJsApiLoader } from "@react-google-maps/api";
 import { useRouter } from "next/navigation";
 import { Input, Button } from "@chakra-ui/react";
+import useSocket from '../pages/useSocket'
 
 interface Login {
   id: string;
@@ -72,28 +73,50 @@ const Login: React.FC = () => {
     }
   }, [isLoaded]);
 
+  const socket = useSocket("http://localhost:4000")
+
+  useEffect(() => {
+    // Check if socket is already connected, avoid re-connecting unnecessarily
+    if (!socket || !socket.connected) {
+      console.log("Connecting to WebSocket...");
+    }
+  }, [socket]);
+
   const addUserData = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const db = getFirestore(app);
       const userCollectionRef = collection(db, "Users");
-
+  
       const userData = {
         Name: formData.Name,
         Car: formData.Car,
         Location: formData.Location,
       };
-
+  
+      console.log("User data to be added:", userData);
+  
       const docRef = await addDoc(userCollectionRef, userData);
       console.log("Document ID:", docRef.id);
       const userId = docRef.id;
       setDocID(userId);
-
-      router.push(`/homePage/${userId}?loc=${encodeURIComponent(formData.Location)}`);
+  
+      // Check if socket is connected before emitting
+      if (socket && socket.connected) {
+        console.log("Emitting location data via WebSocket:", formData.Location);
+        socket.emit("location", { loc: formData.Location });
+      } else {
+        console.error("WebSocket is not connected.");
+      }
+  
+      const encodedLocation = encodeURIComponent(formData.Location);
+      console.log("Navigating to:", `/homePage/${userId}?loc=${encodedLocation}`);
+      router.push(`/homePage/${userId}?loc=${encodedLocation}`);
     } catch (error) {
       console.error("Error adding user data:", error);
     }
   };
+  
 
   if (!isLoaded) {
     return <div>Loading Google Maps...</div>;

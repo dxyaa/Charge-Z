@@ -26,6 +26,7 @@ import { useRouter } from "next/router";
 import Typewriter from "typewriter-effect";
 import ImmCharge from "../immCharge";
 
+
 import {
   animate,
   motion,
@@ -140,6 +141,22 @@ const HomePage = () => {
     setVideoFinished(true);
   };
 
+  // FOR A B H I S H E K : the video currently disappears after playing has ended,which is handled just above with useeffect above.
+
+  const socket = useSocket();
+
+  const [videoFinished, setVideoFinished] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [userData, setUserData] = useState<Users[]>([]);
+  const onChangeProgress = () => {
+    setProgress((prev) => prev + 20);
+  };
+  const [userName, setUserName] = useState("");
+  const COLORS = ["#1E67C6", "#ADD8E6"];
+  const color = useMotionValue(COLORS[0]);
+  const backgroundImage = useMotionTemplate`radial-gradient(150% 150% at 50% 0%, #020617 50%,${color})`;
+
   useEffect(() => {
     animate(color, COLORS, {
       ease: "easeInOut",
@@ -149,7 +166,19 @@ const HomePage = () => {
     });
   }, []);
 
-  //firebase logic
+
+  const router = useRouter();
+  const { userId } = router.query;
+
+  const locParams = useSearchParams();
+  const loc = locParams?.get("loc");
+ 
+
+
+  const border = useMotionTemplate`1px  ${color}`;
+  const boxShadow = useMotionTemplate`8px 4px 24px ${color}`;
+
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (!userId) return;
@@ -190,9 +219,23 @@ const HomePage = () => {
     };
     fetchUserData();
   }, [userId]);
+
   console.log("user data = ", userData);
   //const currentCharge = carData.length > 0 ? carData[0].CurrentCharge : 0;
   //timer
+
+
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+
+
+  //modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  //websocket
+
+
+  const [message, setMessage] = useState("");
+
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
 
@@ -293,7 +336,9 @@ const HomePage = () => {
                   fill="#FFFFFF"
                 >
                   <tspan className="flex flex-col font-extralight text-7xl">
+
                     <tspan className="font-light">{currentCharge}</tspan>
+
                   </tspan>
                 </text>
               </svg>

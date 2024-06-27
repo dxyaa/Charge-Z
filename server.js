@@ -11,11 +11,17 @@ app.prepare().then(() => {
   const server = express();
   const httpServer = http.createServer(server);
 
-  // Initialize Socket.IO
-  initSocket(httpServer);
 
-  server.all("*", (req, res) => {
-    return handle(req, res);
+ socket.on("location", (data) => {
+    console.log("Received location data:", data);
+
+    
+  io.emit("locationUpdate", data);
+  });
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected");
+
   });
 
   httpServer.listen(3000, (err) => {
