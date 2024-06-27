@@ -95,9 +95,16 @@ const Timers = () => {
               if (newTimers[car.id] <= 20) {
                 setIsRunning(false);
                 //FOR ABHISHEK : CHANGE USERNAME TO USER ID
-                socket?.emit("timerReached", { userId: car.UserName });
-                console.log("This car:", car.id);
-
+                for (const user of userList) 
+                  {
+                    if(car.id === user.Car) {
+                      socket?.emit("timerReached", { userId: user.id });
+                      console.log("This car:", car.id);
+                      console.log("this user",user.id)
+      
+                    }
+                  }
+               
                 break;
               }
             }
