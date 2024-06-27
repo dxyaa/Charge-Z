@@ -11,7 +11,9 @@ import { useRouter } from "next/navigation";
 export default function main() {
   return (
     <div className="flex flex-col w-screen min-h-screen">
-      <div id="1">{/*<Server />*/}</div>
+      <div id="1">
+        {/*<Server />*/} <Login />
+      </div>
       {/*<div id="2">
 =======
           <Login onLocationEntered={function (location: string): void {
