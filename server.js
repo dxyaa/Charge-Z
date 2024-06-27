@@ -13,7 +13,7 @@ io.on("connection", (socket) => {
     console.log("Received location data:", data);
 
     
-  io.emit("locationUpdate", data);
+  io.emit("location", data);
   });
 
   socket.on("timerUpdate",(data) => {

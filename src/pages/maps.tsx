@@ -28,31 +28,39 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
  
   useEffect(() => {
     if (socket) {
-      socket.on("locationUpdate", (data: { loc: string }) => {
-        console.log("Received location update:", data);
+      socket.on("location", (data: { loc: string }) => {
+        console.log("Received location update:", data.loc);
         geocodeLocation(data.loc);
       });
 
       return () => {
-        socket.off("locationUpdate");
+        socket.off("location");
       };
     }
   }, [socket]);
 
-  async function geocodeLocation(location: string) {
+  function geocodeLocation(location: string) {
     const geocoder = new google.maps.Geocoder();
-
+  
     geocoder.geocode({ address: location }, (results, status) => {
-      if (status === google.maps.GeocoderStatus.OK && results && results[0].geometry.location) {
-        const location = results[0].geometry.location;
-        map?.panTo(location);
-        map?.setZoom(15);
-        displayNearbyEVChargingStations(location.lat(), location.lng());
+      if (status === google.maps.GeocoderStatus.OK) {
+        if (results && results.length > 0) {
+          const location = results[0].geometry.location;
+          map?.panTo(location);
+          map?.setZoom(15);
+          displayNearbyEVChargingStations(location.lat(), location.lng());
+        } else {
+          console.warn("Geocode returned no results for:", location);
+          // Optionally handle no results scenario
+        }
       } else {
-        alert("Geocode was not successful for the following reason: " + status);
+        console.error("Geocode was not successful for the following reason:", status);
+        
       }
     });
   }
+  
+  
 
   async function displayNearbyEVChargingStations(lat: number, lng: number) {
     let markers: google.maps.Marker[] = [];
