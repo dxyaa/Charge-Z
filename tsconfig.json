@@ -31,7 +31,8 @@
     ".next/types/**/*.ts",
     "src",
     "src/typewriter-effect.d.ts",
-    "server.js"
+    "server.js",
+    "socket.js"
   ],
   "exclude": ["node_modules"]
 }
