@@ -341,7 +341,7 @@ const HomePage = () => {
             </div>
             <CircularProgressBar strokeWidth={2} sqSize={220} progress={60} />
           </div>
-          <div>
+          {/*<div>
             <button
               className="p-2 bg-black text-white"
               onClick={() => setIsModalOpen(true)}
@@ -349,13 +349,13 @@ const HomePage = () => {
               {" "}
               open
             </button>
-          </div>
-          <div className="flex flex-row justify-center items-center">
+          </div>*/}
+          <div className="flex flex-row justify-center items-center w-1/2">
             <button
               onClick={handleStartPause}
-              className="p-2 bg-blue-500 text-white rounded-md"
+              className="p-2 bg-black hover:bg-gray-800 text-white rounded-md w-1/4 text-sm"
             >
-              {isRunning ? "Pause" : "Start"}
+              {isRunning ? "Pause" : "Start Ride"}
             </button>
           </div>
         </motion.div>
