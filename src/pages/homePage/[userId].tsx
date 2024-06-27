@@ -27,6 +27,7 @@ import Typewriter from "typewriter-effect";
 import ImmCharge from "../immCharge";
 import useSocket from "../useSocket";
 
+
 import {
   animate,
   motion,
@@ -53,6 +54,7 @@ import app from "@/app/firebase";
 
 import { useSearchParams } from "next/navigation";
 
+
 import { createContext, useContext } from "react";
 import io from "socket.io-client";
 
@@ -75,15 +77,7 @@ interface Users {
   Name: string;
   Car: string;
 }
-interface Car {
-  id: string;
-  Name: string;
-  UserName: string;
-  Capacity: string;
-  Mileage: string;
-  DrainRate: number;
-  CurrentCharge: number;
-}
+
 const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -150,9 +144,11 @@ const HomePage = () => {
   const [isActive, setIsActive] = useState(false);
   const [progress, setProgress] = useState(0);
   const [userData, setUserData] = useState<Users[]>([]);
+
   const [currentCharge, setCurrentCharge] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [carData, setCarData] = useState<Car[]>([]);
+
   const onChangeProgress = () => {
     setProgress((prev) => prev + 20);
   };
@@ -176,14 +172,21 @@ const HomePage = () => {
   const locParams = useSearchParams();
   const loc = locParams?.get("loc");
 
+
   const border = useMotionTemplate`1px  ${color}`;
   const boxShadow = useMotionTemplate`8px 4px 24px ${color}`;
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!userId) return;
       try {
         const db = getFirestore(app);
+
+        const userCollectionRef = collection(db, "Users");
+        console.log("starting fetch using  ", userId);
+
+        if (userId) {
+        
+
         const userDocRef = doc(db, `Users/${userId}`);
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
@@ -202,22 +205,29 @@ const HomePage = () => {
           }
         } else {
           console.log("No such document!");
+
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
+
     fetchUserData();
   }, [userId]);
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
+
 
   //modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   //websocket
 
+
+
   const [message, setMessage] = useState("");
+
+
 
   useEffect(() => {
     if (socket) {
@@ -231,6 +241,7 @@ const HomePage = () => {
       };
     }
   }, [socket]);
+
   //timer
 
   useEffect(() => {
@@ -258,6 +269,7 @@ const HomePage = () => {
   const handleStartPause = () => {
     setIsRunning((prevState) => !prevState);
   };
+
   return (
     <motion.section
       style={{ backgroundImage }}
@@ -333,7 +345,7 @@ const HomePage = () => {
                   fill="#FFFFFF"
                 >
                   <tspan className="flex flex-col font-extralight text-7xl">
-                    <tspan className="font-light">{currentCharge}</tspan>
+                    <tspan className="font-light"></tspan>
                   </tspan>
                 </text>
               </svg>
@@ -349,6 +361,7 @@ const HomePage = () => {
               {" "}
               open
             </button>
+
           </div>
           <div className="flex flex-row justify-center items-center">
             <button
@@ -357,6 +370,7 @@ const HomePage = () => {
             >
               {isRunning ? "Pause" : "Start"}
             </button>
+
           </div>
         </motion.div>
       </div>
@@ -459,10 +473,7 @@ const HomePage = () => {
             </div>
             <div className="flex justify-center h-1/5 flex-col space-y-2 items-center">
               <Link
-                href={{
-                  pathname: `/immCharge/${userId}`,
-                  query: { car: userData[0]?.Car },
-                }}
+                href="/immCharge"
                 className="bg-green-500 hover:bg-green-400 hover:text-white text-white w-1/4 p-2 rounded-md flex h-32 justify-center items-center"
               >
                 Charge Now

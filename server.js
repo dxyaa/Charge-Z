@@ -1,16 +1,13 @@
 const express = require("express");
-const next = require("next");
 const http = require("http");
-const { initSocket } = require("./socket");
+const socketIo = require("socket.io");
 
-const dev = process.env.NODE_ENV !== "production";
-const app = next({ dev });
-const handle = app.getRequestHandler();
+const app = express();
+const server = http.createServer(app);
+const io = socketIo(server);
 
-app.prepare().then(() => {
-  const server = express();
-  const httpServer = http.createServer(server);
-
+io.on("connection", (socket) => {
+  console.log("New client connected");
 
  socket.on("location", (data) => {
     console.log("Received location data:", data);
@@ -21,11 +18,9 @@ app.prepare().then(() => {
 
   socket.on("disconnect", () => {
     console.log("Client disconnected");
-
-  });
-
-  httpServer.listen(3000, (err) => {
-    if (err) throw err;
-    console.log("> Ready on http://localhost:3000");
   });
 });
+
+const PORT = process.env.PORT || 4000;
+server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+
