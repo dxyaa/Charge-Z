@@ -105,58 +105,56 @@ const Login: React.FC = ({}) => {
   }
 
   return (
-    <>
-      <div className=" flex h-screen w-screen border-2 justify-center bg-black text-white">
-        <div className="w-1/3  flex flex-col space-y-2 p-5 text-center">
-          <div>
+    <div className=" flex h-screen w-screen border-2 justify-center bg-black text-white">
+      <div className="w-1/3  flex flex-col space-y-2 p-5 text-center">
+        <div>
+          <input
+            type="text"
+            name="Name"
+            className="w-full rounded-md text-black"
+            onChange={handleFormData}
+            value={formData.Name}
+            placeholder="Name"
+          />
+        </div>
+        <div>
+          <Carsearch onSelect={handleSelect} />
+        </div>
+        <div>
+          <Autocomplete>
             <input
-              type="text"
-              name="Name"
-              className="w-full rounded-md text-black"
+              name="Location"
               onChange={handleFormData}
-              value={formData.Name}
-              placeholder="Name"
+              value={formData.Location}
+              type="text"
+              placeholder="Enter location"
+              ref={locationRef}
+              className="text-black rounded-md w-full"
             />
-          </div>
-          <div>
-            <Carsearch onSelect={handleSelect} />
-          </div>
-          <div>
-            <Autocomplete>
-              <input
-                name="Location"
-                onChange={handleFormData}
-                value={formData.Location}
-                type="text"
-                placeholder="Enter location"
-                ref={locationRef}
-                className="text-black rounded-md w-full"
-              />
-            </Autocomplete>
-          </div>
+          </Autocomplete>
+        </div>
 
-          <div className="flex justify-center ">
-            {/*<button
+        <div className="flex justify-center ">
+          {/*<button
               onClick={searchLocation}
               className="p-2 bg-blue-600  hover:bg-blue-500 w-1/2 rounded-md  "
             >
               Search Charging Stations
             </button>*/}
 
-            <Link
-              href={{
-                pathname: `/homePage/${putdocID}`,
-                query: { loc: formData?.Location },
-              }}
-              onClick={addUserData}
-              className="p-2 bg-blue-600  hover:bg-blue-500 w-1/2 rounded-md "
-            >
-              Add User
-            </Link>
-          </div>
+          <Link
+            href={{
+              pathname: `/homePage/${putdocID}`,
+              query: { loc: formData?.Location },
+            }}
+            onClick={addUserData}
+            className="p-2 bg-blue-600  hover:bg-blue-500 w-1/2 rounded-md "
+          >
+            Add User
+          </Link>
         </div>
       </div>
-    </>
+    </div>
   );
 };
 export default Login;

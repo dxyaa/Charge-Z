@@ -2,22 +2,21 @@
 import Confirmation from "@/pages/confirmBook";
 import HomePage from "@/pages/homePage";
 import Home from "@/pages/mainPage";
-import { CarChargeProvider } from "@/components/carChargeContext";
+
+import { AppProps } from "next/app";
 import Login from "../pages/Login";
-import Server from "@/pages/server";
+
 export default function main() {
   return (
-    <CarChargeProvider>
-      <div className="flex flex-col w-screen min-h-screen">
-        <div id="1">
-          {/*<Server />*/}
+    <div className="flex flex-col w-screen min-h-screen">
+      <div id="1">
+        {/*<Server />*/}
 
-          <Login />
-        </div>
-        {/*<div id="2">
+        <Login />
+      </div>
+      {/*<div id="2">
       <Confirmation />
 </div>*/}
-      </div>
-    </CarChargeProvider>
+    </div>
   );
 }

@@ -25,7 +25,7 @@ import { FaCar } from "react-icons/fa";
 import { useRouter } from "next/router";
 import Typewriter from "typewriter-effect";
 import ImmCharge from "../immCharge";
-import { useCarChargeContext } from "@/components/carChargeContext";
+
 import {
   animate,
   motion,
@@ -49,13 +49,23 @@ import {
   where,
 } from "firebase/firestore";
 import app from "@/app/firebase";
-
+import { createContext, useContext } from "react";
+import io from "socket.io-client";
+import { useSocket } from "@/components/websocketcontext";
 /*end of imports*/
 /*const typewriter = new Typewriter("#typewriter", {
   strings: ["Hello", "World"],
   autoStart: true,
 });*/
 
+interface WebSocketContextType {
+  timerReached: boolean;
+  setTimerReached: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const WebSocketContext = createContext<WebSocketContextType | undefined>(
+  undefined
+);
 interface Users {
   id: string;
   Name: string;
@@ -90,7 +100,7 @@ const HomePage = () => {
     month: "short",
     day: "numeric",
   });
-  const iconSize = 60; // Adjust icon size as needed
+  const iconSize = 60;
   useEffect(() => {
     const videoElement = document.querySelector("video");
     if (videoElement) {
@@ -166,8 +176,26 @@ const HomePage = () => {
   }, [userId]);
   //modal
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // context from server
 
+  //websocket
+
+  const socket = useSocket();
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("timerReached", ({ userId: reachedUserId }) => {
+        if (reachedUserId === userId) {
+          setMessage("Hello");
+          console.log("hello");
+        }
+      });
+
+      return () => {
+        socket.off("timerReached");
+      };
+    }
+  }, [socket, userId]);
   return (
     <motion.section
       style={{ backgroundImage }}
@@ -254,7 +282,7 @@ const HomePage = () => {
           <div>
             <button
               className="p-2 bg-black text-white"
-              onClick={() => setIsActive(true)}
+              onClick={() => setIsModalOpen(true)}
             >
               {" "}
               open
@@ -347,7 +375,7 @@ const HomePage = () => {
         </div>
       </div>
       <Cursor isActive={isActive} />
-      {isActive && (
+      {isModalOpen && (
         <div className="fixed inset-0 flex items-center w-screen h-screen  justify-center bg-black bg-opacity-50 z-50">
           <div className="bg-black text-white w-1/2 h-2/5 p-6 rounded-lg shadow-lg flex-flex-col">
             <div className="h-4/5">
@@ -362,13 +390,13 @@ const HomePage = () => {
             <div className="flex justify-center h-1/5 flex-col space-y-2 items-center">
               <Link
                 href="/immCharge"
-                className="bg-green-500 hover:bg-green-400 text-white w-1/4 p-2 rounded-md flex h-32 justify-center items-center"
+                className="bg-green-500 hover:bg-green-400 hover:text-white text-white w-1/4 p-2 rounded-md flex h-32 justify-center items-center"
               >
                 Charge Now
               </Link>
               <button
                 className="bg-white text-black hover:bg-gray-300 w-1/4 p-2 flex rounded-md h-32 justify-center items-center"
-                onClick={() => setIsActive(false)}
+                onClick={() => setIsModalOpen(false)}
               >
                 Remind me later
               </button>
