@@ -19,7 +19,7 @@ import Link from "next/link";
 import { IoPauseCircle } from "react-icons/io5";
 import { IoPlayForward } from "react-icons/io5";
 import { IoPlayBack } from "react-icons/io5";
-import "../app/globals.css";
+//import "../app/globals.css";
 import darknexon from "./../../public/darknexon.png";
 import nexon from "../../public/nexon.png";
 import { Carousel } from "react-bootstrap";
@@ -27,14 +27,14 @@ import { FaCar } from "react-icons/fa";
 import { useSearchParams } from "next/navigation";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import app from "@/app/firebase";
-import { useRouter } from "next/router"
+import { useRouter } from "next/router";
 /*imports end*/
 
 interface Cars {
-    Name:string;
-    Capacity:number;
-    DrainRate:number;
-    Mileage: number;
+  Name: string;
+  Capacity: number;
+  DrainRate: number;
+  Mileage: number;
 }
 
 const ImmCharge = () => {
@@ -44,13 +44,12 @@ const ImmCharge = () => {
     minute: "2-digit",
   });
 
-  
-  const [carData,setCarData] = useState<Cars>({
-    Name:"",
-    Capacity:0,
-    DrainRate:0,
-    Mileage:0
-  })
+  const [carData, setCarData] = useState<Cars>({
+    Name: "",
+    Capacity: 0,
+    DrainRate: 0,
+    Mileage: 0,
+  });
 
   const formattedDate = currentDate.toLocaleDateString(undefined, {
     weekday: "long",
@@ -67,7 +66,7 @@ const ImmCharge = () => {
     month: "short",
     day: "numeric",
   });
-  
+
   const [index, setIndex] = useState(0);
 
   const handleNext = () => {
@@ -76,13 +75,11 @@ const ImmCharge = () => {
     }
   };
 
-
-  
   const router = useRouter();
   const { userId } = router.query;
 
-  const searchParams = useSearchParams()
-  const Car = searchParams?.get("car")
+  const searchParams = useSearchParams();
+  const Car = searchParams?.get("car");
 
   useEffect(() => {
     const fetchCarData = async () => {
@@ -104,7 +101,6 @@ const ImmCharge = () => {
     };
     fetchCarData();
   }, [Car]);
-
 
   const handlePrevious = () => {
     if (index === 1) {
