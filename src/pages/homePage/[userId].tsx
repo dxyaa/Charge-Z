@@ -58,7 +58,6 @@ import { useSearchParams } from "next/navigation";
 import { createContext, useContext } from "react";
 import io from "socket.io-client";
 
-
 /*end of imports*/
 /*const typewriter = new Typewriter("#typewriter", {
   strings: ["Hello", "World"],
@@ -133,7 +132,6 @@ const HomePage = () => {
     if (socket) {
       socket.on("locationUpdate", (data: { stations: string }) => {
         console.log("Received location update:", data);
-
       });
 
       return () => {
@@ -146,6 +144,11 @@ const HomePage = () => {
   const [isActive, setIsActive] = useState(false);
   const [progress, setProgress] = useState(0);
   const [userData, setUserData] = useState<Users[]>([]);
+
+  const [currentCharge, setCurrentCharge] = useState(0);
+  const [isRunning, setIsRunning] = useState(false);
+  const [carData, setCarData] = useState<Car[]>([]);
+
   const onChangeProgress = () => {
     setProgress((prev) => prev + 20);
   };
@@ -169,8 +172,6 @@ const HomePage = () => {
   const locParams = useSearchParams();
   const loc = locParams?.get("loc");
 
- 
-
 
   const border = useMotionTemplate`1px  ${color}`;
   const boxShadow = useMotionTemplate`8px 4px 24px ${color}`;
@@ -179,21 +180,32 @@ const HomePage = () => {
     const fetchUserData = async () => {
       try {
         const db = getFirestore(app);
+
         const userCollectionRef = collection(db, "Users");
         console.log("starting fetch using  ", userId);
 
         if (userId) {
-          const userDocRef = doc(db, `Users/${userId}`);
-          const userDoc = await getDoc(userDocRef);
+        
 
-          if (userDoc.exists()) {
-            const userData = { ...userDoc.data(), id: userDoc.id } as Users;
-            setUserData([userData]);
-            setUserName(userData.Name);
-            console.log(userData);
-          } else {
-            console.log("No such document!");
+        const userDocRef = doc(db, `Users/${userId}`);
+        const userDoc = await getDoc(userDocRef);
+        if (userDoc.exists()) {
+          const userData = { ...userDoc.data(), id: userDoc.id } as Users;
+          setUserData([userData]);
+          setUserName(userData.Name);
+
+          if (userData.Car) {
+            const carDocRef = doc(db, `Cars/${userData.Car}`);
+            const carDoc = await getDoc(carDocRef);
+            if (carDoc.exists()) {
+              const carData = carDoc.data() as Car;
+              setCarData([carData]);
+              setCurrentCharge(carData.CurrentCharge);
+            }
           }
+        } else {
+          console.log("No such document!");
+
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -212,7 +224,10 @@ const HomePage = () => {
   //websocket
 
 
+
   const [message, setMessage] = useState("");
+
+
 
   useEffect(() => {
     if (socket) {
@@ -226,6 +241,35 @@ const HomePage = () => {
       };
     }
   }, [socket]);
+
+  //timer
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
+
+    if (isRunning && currentCharge > 20) {
+      timer = setInterval(() => {
+        setCurrentCharge((prevCharge) => {
+          const newCharge = prevCharge - carData[0].DrainRate;
+          if (newCharge <= 20) {
+            setIsRunning(false);
+            setIsModalOpen(true);
+            return 20;
+          }
+          return newCharge;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isRunning, currentCharge, carData]);
+
+  const handleStartPause = () => {
+    setIsRunning((prevState) => !prevState);
+  };
+
   return (
     <motion.section
       style={{ backgroundImage }}
@@ -317,6 +361,16 @@ const HomePage = () => {
               {" "}
               open
             </button>
+
+          </div>
+          <div className="flex flex-row justify-center items-center">
+            <button
+              onClick={handleStartPause}
+              className="p-2 bg-blue-500 text-white rounded-md"
+            >
+              {isRunning ? "Pause" : "Start"}
+            </button>
+
           </div>
         </motion.div>
       </div>
