@@ -72,7 +72,7 @@ interface Car {
   UserName: string;
   Capacity: string;
   Mileage: string;
-  DrainRate: string;
+  DrainRate: number;
   CurrentCharge: number;
 }
 const poppins = Poppins({
@@ -92,6 +92,9 @@ const HomePage = () => {
   const [message, setMessage] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [carData, setCarData] = useState<Car[]>([]);
+  const [currentCharge, setCurrentCharge] = useState(0);
+  const [timers, setTimers] = useState<{ [key: string]: number }>({});
+  const [isRunning, setIsRunning] = useState(false);
 
   const currentDate = new Date();
   const formattedTime = currentDate.toLocaleTimeString([], {
@@ -117,9 +120,6 @@ const HomePage = () => {
 
   const locParams = useSearchParams();
   const loc = locParams?.get("loc");
-
-  const [timers, setTimers] = useState<{ [key: string]: number }>({});
-  const [isRunning, setIsRunning] = useState(false);
 
   //const socket = useSocket();
 
@@ -171,14 +171,14 @@ const HomePage = () => {
               if (carDocSnap.exists()) {
                 const carData = carDocSnap.data() as Car;
                 setCarData([carData]);
-
+                setCurrentCharge(carData.CurrentCharge);
                 //carData.id = carDocSnap.id;
                 //cars.push(carData);
                 console.log("car data = ", carData);
               }
             });
 
-            carPromises.push(carPromise);
+            //carPromises.push(carPromise);
           }
           //end of addns
         } else {
@@ -191,7 +191,7 @@ const HomePage = () => {
     fetchUserData();
   }, [userId]);
   console.log("user data = ", userData);
-  const currentCharge = carData.length > 0 ? carData[0].CurrentCharge : 0;
+  //const currentCharge = carData.length > 0 ? carData[0].CurrentCharge : 0;
   //timer
   /*useEffect(() => {
     const fetchCars = async () => {
@@ -241,6 +241,27 @@ const HomePage = () => {
     fetchCars();
   }, []);
   console.log(carList);*/
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = null;
+
+    if (isRunning && currentCharge > 20) {
+      timer = setInterval(() => {
+        setCurrentCharge((prevCharge) => {
+          const newCharge = prevCharge - carData[0].DrainRate;
+          if (newCharge <= 20) {
+            setIsRunning(false);
+            return 20;
+          }
+          return newCharge;
+        });
+      }, 1000);
+    }
+
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isRunning, currentCharge, carData]);
+
   const handleStartPause = () => {
     setIsRunning((prevState) => !prevState);
   };
@@ -334,6 +355,14 @@ const HomePage = () => {
             >
               {" "}
               open
+            </button>
+          </div>
+          <div className="flex flex-row justify-center items-center">
+            <button
+              onClick={handleStartPause}
+              className="p-2 bg-blue-500 text-white rounded-md"
+            >
+              {isRunning ? "Pause" : "Start"}
             </button>
           </div>
         </motion.div>
