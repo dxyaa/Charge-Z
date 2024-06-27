@@ -78,6 +78,16 @@ interface Users {
   Car: string;
 }
 
+interface Car {
+  id: string;
+  Name: string;
+  UserName: string;
+  Capacity: string;
+  Mileage: string;
+  DrainRate: number;
+  CurrentCharge: number;
+}
+
 const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -178,15 +188,9 @@ const HomePage = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      if (!userId) return;
       try {
         const db = getFirestore(app);
-
-        const userCollectionRef = collection(db, "Users");
-        console.log("starting fetch using  ", userId);
-
-        if (userId) {
-        
-
         const userDocRef = doc(db, `Users/${userId}`);
         const userDoc = await getDoc(userDocRef);
         if (userDoc.exists()) {
@@ -205,13 +209,11 @@ const HomePage = () => {
           }
         } else {
           console.log("No such document!");
-
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
-
     fetchUserData();
   }, [userId]);
 
@@ -345,7 +347,7 @@ const HomePage = () => {
                   fill="#FFFFFF"
                 >
                   <tspan className="flex flex-col font-extralight text-7xl">
-                    <tspan className="font-light"></tspan>
+                    <tspan className="font-light">{currentCharge}</tspan>
                   </tspan>
                 </text>
               </svg>
