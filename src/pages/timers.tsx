@@ -31,16 +31,16 @@ const Timers = () => {
   const [timers, setTimers] = useState<{ [key: string]: number }>({});
   const [isRunning, setIsRunning] = useState(false);
   const [userList, setUserList] = useState<Users[]>([]);
-
+  const [usersAtTwenty, setUsersAtTwenty] = useState<string[]>([]);
   //const socket = useSocket();
 
-  const socket = useSocket("http://localhost:4000")
+  const socket = useSocket("http://localhost:4000");
 
   useEffect(() => {
     if (socket) {
       socket.on("timerUpdate", (data: { timer: boolean }) => {
         console.log("Received timer update:", data);
-        setIsRunning(data.timer)
+        setIsRunning(data.timer);
       });
 
       return () => {
@@ -103,13 +103,19 @@ const Timers = () => {
       interval = setInterval(() => {
         setTimers((prevTimers) => {
           const newTimers = { ...prevTimers };
+          const newUsersAtTwenty: string[] = [...usersAtTwenty];
           for (const car of carList) {
             if (newTimers[car.id] > 20) {
               newTimers[car.id] -= parseFloat(car.DrainRate);
               if (newTimers[car.id] <= 20) {
                 setIsRunning(false);
+
                 userList.forEach((user) => {
-                  if (car.id === user.Car) {
+                  if (
+                    car.id === user.Car &&
+                    !newUsersAtTwenty.includes(user.id)
+                  ) {
+                    newUsersAtTwenty.push(user.id);
                     //socket?.emit("timerReached", { userId: user.id });
                     console.log("Car:", car.id);
                     console.log("User:", user.id);
@@ -119,6 +125,7 @@ const Timers = () => {
               }
             }
           }
+          setUsersAtTwenty(newUsersAtTwenty);
           return newTimers;
         });
       }, 1000);
@@ -126,11 +133,11 @@ const Timers = () => {
       clearInterval(interval);
     }
     return () => clearInterval(interval!);
-  }, [isRunning, carList, userList]);
-
+  }, [isRunning, carList, userList, usersAtTwenty]);
+  console.log(usersAtTwenty);
   const handleStartPause = () => {
     const newIsRunning = !isRunning;
-  
+
     // Check if the state has actually changed
     if (newIsRunning !== isRunning) {
       setIsRunning(newIsRunning);
@@ -140,8 +147,26 @@ const Timers = () => {
       console.log("Timer status unchanged, no emission");
     }
   };
-  
 
+  //main logic
+  /*
+  useEffect(() => {
+    if (!isRunning) {
+      const newUsersAtTwenty: string[] = [];
+      for (const car of carList) {
+        if (timers[car.id] <= 20) {
+          const user = userList.find((user) => user.Car === car.id);
+          if (user) {
+            newUsersAtTwenty.push(user.id);
+          }
+        }
+      }
+      setUsersAtTwenty(newUsersAtTwenty);
+      console.log("Users whose cars reached 20% charge:", newUsersAtTwenty);
+    }
+  }, [isRunning, carList, timers, userList]);
+  */
+  //console.log(carsAtTwenty);
   return (
     <div className="h-screen bg-black text-white flex text-center flex-col space-y-5">
       <div>Server</div>
