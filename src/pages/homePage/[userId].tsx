@@ -25,6 +25,7 @@ import { FaCar } from "react-icons/fa";
 import { useRouter } from "next/router";
 import Typewriter from "typewriter-effect";
 import ImmCharge from "../immCharge";
+import useSocket from "../useSocket";
 
 
 import {
@@ -56,7 +57,7 @@ import { useSearchParams } from "next/navigation";
 
 import { createContext, useContext } from "react";
 import io from "socket.io-client";
-import { useSocket } from "@/components/websocketcontext";
+
 
 /*end of imports*/
 /*const typewriter = new Typewriter("#typewriter", {
@@ -126,7 +127,20 @@ const HomePage = () => {
 
   // FOR A B H I S H E K : the video currently disappears after playing has ended,which is handled just above with useeffect above.
 
-  const socket = useSocket();
+  const socket = useSocket("http://localhost:4000");
+  const [stations, setStations] = useState<any[]>([]);
+  useEffect(() => {
+    if (socket) {
+      socket.on("locationUpdate", (data: { stations: string }) => {
+        console.log("Received location update:", data);
+
+      });
+
+      return () => {
+        socket.off("locationUpdate");
+      };
+    }
+  }, [socket]);
 
   const [videoFinished, setVideoFinished] = useState(false);
   const [isActive, setIsActive] = useState(false);
@@ -154,6 +168,7 @@ const HomePage = () => {
 
   const locParams = useSearchParams();
   const loc = locParams?.get("loc");
+
  
 
 
@@ -201,18 +216,16 @@ const HomePage = () => {
 
   useEffect(() => {
     if (socket) {
-      socket.on("timerReached", ({ userId: reachedUserId }) => {
-        if (reachedUserId === userId) {
-          setMessage("Hello");
-          console.log("hello");
-        }
+      socket.on("locationUpdate", (data: { stations: any[] }) => {
+        console.log("Received location update:", data);
+        setStations(data.stations);
       });
 
       return () => {
-        socket.off("timerReached");
+        socket.off("locationUpdate");
       };
     }
-  }, [socket, userId]);
+  }, [socket]);
   return (
     <motion.section
       style={{ backgroundImage }}

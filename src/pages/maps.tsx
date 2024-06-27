@@ -25,12 +25,7 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const socket = useSocket("http://localhost:4000");
 
-  useEffect(() => {
-    if (isLoaded && location) {
-      geocodeLocation(location);
-    }
-  }, [isLoaded, location]);
-
+ 
   useEffect(() => {
     if (socket) {
       socket.on("locationUpdate", (data: { loc: string }) => {
@@ -117,23 +112,51 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
     const destinations = stations.map((station) => new google.maps.LatLng(station.location.lat, station.location.lng));
 
     distanceService.getDistanceMatrix({
-      origins: [origin],
-      destinations: destinations,
-      travelMode: google.maps.TravelMode.DRIVING,
+        origins: [origin],
+        destinations: destinations,
+        travelMode: google.maps.TravelMode.DRIVING,
     }, (response, status) => {
-      if (status === google.maps.DistanceMatrixStatus.OK && response) {
-        response.rows[0].elements.forEach((element, index) => {
-          if (element.status === "OK") {
-            stations[index].distance = element.distance.text;
-            stations[index].duration = element.duration.text;
-          }
-        });
-        console.log("Charging Stations with Distance and Duration: ", stations);
-      } else {
-        console.error("Distance Matrix request failed:", status);
-      }
+        if (status === google.maps.DistanceMatrixStatus.OK && response) {
+            response.rows[0].elements.forEach((element, index) => {
+                if (element.status === "OK") {
+                    stations[index].distance = element.distance.text;
+                    stations[index].duration = element.duration.text;
+
+                    // Convert duration to seconds for sorting
+                    const durationParts = element.duration.text.split(' ');
+                    let totalSeconds = 0;
+                    for (let i = 0; i < durationParts.length; i += 2) {
+                        const value = parseInt(durationParts[i]);
+                        const unit = durationParts[i + 1];
+                        if (unit.includes("hour")) {
+                            totalSeconds += value * 3600;
+                        } else if (unit.includes("min")) {
+                            totalSeconds += value * 60;
+                        } else if (unit.includes("sec")) {
+                            totalSeconds += value;
+                        }
+                    }
+                    stations[index].durationInSeconds = totalSeconds;
+                }
+            });
+
+            // Sort stations by durationInSeconds
+            stations.sort((a, b) => a.durationInSeconds - b.durationInSeconds);
+
+            if (socket && socket.connected) {
+              console.log("Emitting location data via WebSocket:", stations);
+              socket.emit("location", { stations: stations });
+            } else {
+              console.error("WebSocket is not connected.");
+            }
+        
+            console.log("Sorted Charging Stations with Distance and Duration: ", stations);
+        } else {
+            console.error("Distance Matrix request failed:", status);
+        }
     });
-  }
+}
+
 
   if (loadError) {
     return <div>Error loading Google Maps API!</div>;
