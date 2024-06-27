@@ -8,10 +8,6 @@ import {
 } from "firebase/firestore";
 import app from "@/app/firebase";
 import "tailwindcss/tailwind.css";
-import { Server } from "socket.io";
-import http from "http";
-import { useSocket } from "@/components/websocketcontext";
-/*end of imports*/
 
 interface Car {
   id: string;
@@ -34,6 +30,7 @@ const Timers = () => {
   const [timers, setTimers] = useState<{ [key: string]: number }>({});
   const [isRunning, setIsRunning] = useState(false);
   const [userList, setUserList] = useState<Users[]>([]);
+  //const socket = useSocket();
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -94,17 +91,13 @@ const Timers = () => {
               newTimers[car.id] -= parseFloat(car.DrainRate);
               if (newTimers[car.id] <= 20) {
                 setIsRunning(false);
-                //FOR ABHISHEK : CHANGE USERNAME TO USER ID
-                for (const user of userList) 
-                  {
-                    if(car.id === user.Car) {
-                      socket?.emit("timerReached", { userId: user.id });
-                      console.log("This car:", car.id);
-                      console.log("this user",user.id)
-      
-                    }
+                userList.forEach((user) => {
+                  if (car.id === user.Car) {
+                    //socket?.emit("timerReached", { userId: user.id });
+                    console.log("Car:", car.id);
+                    console.log("User:", user.id);
                   }
-               
+                });
                 break;
               }
             }
@@ -112,7 +105,7 @@ const Timers = () => {
           return newTimers;
         });
       }, 1000);
-    } else if (!isRunning && interval) {
+    } else if (interval) {
       clearInterval(interval);
     }
     return () => clearInterval(interval!);
@@ -121,8 +114,6 @@ const Timers = () => {
   const handleStartPause = () => {
     setIsRunning((prevState) => !prevState);
   };
-  //websocket
-  const socket = useSocket();
 
   return (
     <div className="h-screen bg-black text-white flex text-center flex-col space-y-5">
