@@ -27,6 +27,7 @@ import Typewriter from "typewriter-effect";
 import ImmCharge from "../immCharge";
 import useSocket from "../useSocket";
 
+
 import {
   animate,
   motion,
@@ -53,6 +54,7 @@ import app from "@/app/firebase";
 
 import { useSearchParams } from "next/navigation";
 
+
 import { createContext, useContext } from "react";
 import io from "socket.io-client";
 
@@ -63,20 +65,20 @@ import io from "socket.io-client";
   autoStart: true,
 });*/
 
+interface WebSocketContextType {
+  timerReached: boolean;
+  setTimerReached: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+const WebSocketContext = createContext<WebSocketContextType | undefined>(
+  undefined
+);
 interface Users {
   id: string;
   Name: string;
   Car: string;
 }
-interface Car {
-  id: string;
-  Name: string;
-  UserName: string;
-  Capacity: string;
-  Mileage: string;
-  DrainRate: number;
-  CurrentCharge: number;
-}
+
 const poppins = Poppins({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -87,22 +89,16 @@ const roboto = Roboto({
   subsets: ["latin"],
 });
 const HomePage = () => {
-  //rep
-  const [videoFinished, setVideoFinished] = useState(false);
-  const [isActive, setIsActive] = useState(false);
-  const [userData, setUserData] = useState<Users[]>([]);
-  const [userName, setUserName] = useState("");
-  const [message, setMessage] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [carData, setCarData] = useState<Car[]>([]);
-  const [currentCharge, setCurrentCharge] = useState(0);
-  const [timers, setTimers] = useState<{ [key: string]: number }>({});
-  const [isRunning, setIsRunning] = useState(false);
-
   const currentDate = new Date();
   const formattedTime = currentDate.toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
+  });
+  const formattedDate = currentDate.toLocaleDateString(undefined, {
+    weekday: "long",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
   });
   const dayOfWeek = currentDate.toLocaleDateString(undefined, {
     weekday: "long",
@@ -111,21 +107,7 @@ const HomePage = () => {
     month: "short",
     day: "numeric",
   });
-
-  const COLORS = ["#1E67C6", "#ADD8E6"];
-  const color = useMotionValue(COLORS[0]);
-  const backgroundImage = useMotionTemplate`radial-gradient(150% 150% at 50% 0%, #020617 50%,${color})`;
-  const border = useMotionTemplate`1px ${color}`;
-  const boxShadow = useMotionTemplate`8px 4px 24px ${color}`;
-
-  const router = useRouter();
-  const { userId } = router.query;
-
-  const locParams = useSearchParams();
-  const loc = locParams?.get("loc");
-
-  //const socket = useSocket();
-
+  const iconSize = 60;
   useEffect(() => {
     const videoElement = document.querySelector("video");
     if (videoElement) {
@@ -145,7 +127,6 @@ const HomePage = () => {
 
   // FOR A B H I S H E K : the video currently disappears after playing has ended,which is handled just above with useeffect above.
 
-
   const socket = useSocket("http://localhost:4000");
   const [stations, setStations] = useState<any[]>([]);
   useEffect(() => {
@@ -161,20 +142,17 @@ const HomePage = () => {
     }
   }, [socket]);
 
-  //const socket = useSocket();
-
-
-  // const [videoFinished, setVideoFinished] = useState(false);
-  //const [isActive, setIsActive] = useState(false);
-  //const [progress, setProgress] = useState(0);
-  //const [userData, setUserData] = useState<Users[]>([]);
-  //const onChangeProgress = () => {
-  //   setProgress((prev) => prev + 20);
-  // };
-  // const [userName, setUserName] = useState("");
-  // const COLORS = ["#1E67C6", "#ADD8E6"];
-  // const color = useMotionValue(COLORS[0]);
-  //const backgroundImage = useMotionTemplate`radial-gradient(150% 150% at 50% 0%, #020617 50%,${color})`;
+  const [videoFinished, setVideoFinished] = useState(false);
+  const [isActive, setIsActive] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [userData, setUserData] = useState<Users[]>([]);
+  const onChangeProgress = () => {
+    setProgress((prev) => prev + 20);
+  };
+  const [userName, setUserName] = useState("");
+  const COLORS = ["#1E67C6", "#ADD8E6"];
+  const color = useMotionValue(COLORS[0]);
+  const backgroundImage = useMotionTemplate`radial-gradient(150% 150% at 50% 0%, #020617 50%,${color})`;
 
   useEffect(() => {
     animate(color, COLORS, {
@@ -185,7 +163,6 @@ const HomePage = () => {
     });
   }, []);
 
-
   const router = useRouter();
   const { userId } = router.query;
 
@@ -194,72 +171,50 @@ const HomePage = () => {
 
  
 
-  //const router = useRouter();
-  //const { userId } = router.query;
 
-
-  //const locParams = useSearchParams();
-  //const loc = locParams?.get("loc");
-
-  //const border = useMotionTemplate`1px  ${color}`;
-  //const boxShadow = useMotionTemplate`8px 4px 24px ${color}`;
+  const border = useMotionTemplate`1px  ${color}`;
+  const boxShadow = useMotionTemplate`8px 4px 24px ${color}`;
 
   useEffect(() => {
     const fetchUserData = async () => {
-      if (!userId) return;
       try {
         const db = getFirestore(app);
-        const userDocRef = doc(db, `Users/${userId}`);
-        const userDoc = await getDoc(userDocRef);
-        if (userDoc.exists()) {
-          const userData = { ...userDoc.data(), id: userDoc.id } as Users;
-          setUserData([userData]);
-          setUserName(userData.Name);
+        const userCollectionRef = collection(db, "Users");
+        console.log("starting fetch using  ", userId);
 
-          //additions
-          const cars: Car[] = [];
-          const carPromises: Promise<void>[] = [];
-          if (userData.Car) {
-            const carDocRef = doc(db, `Cars/${userData.Car}`);
-            const carPromise = getDoc(carDocRef).then((carDocSnap) => {
-              if (carDocSnap.exists()) {
-                const carData = carDocSnap.data() as Car;
-                setCarData([carData]);
-                setCurrentCharge(carData.CurrentCharge);
-                //carData.id = carDocSnap.id;
-                //cars.push(carData);
-                console.log("car data = ", carData);
-              }
-            });
+        if (userId) {
+          const userDocRef = doc(db, `Users/${userId}`);
+          const userDoc = await getDoc(userDocRef);
 
-            //carPromises.push(carPromise);
+          if (userDoc.exists()) {
+            const userData = { ...userDoc.data(), id: userDoc.id } as Users;
+            setUserData([userData]);
+            setUserName(userData.Name);
+            console.log(userData);
+          } else {
+            console.log("No such document!");
           }
-          //end of addns
-        } else {
-          console.log("No such document!");
         }
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
     };
+
     fetchUserData();
   }, [userId]);
 
-  console.log("user data = ", userData);
-  //const currentCharge = carData.length > 0 ? carData[0].CurrentCharge : 0;
-  //timer
-
   const [map, setMap] = useState<google.maps.Map | null>(null);
 
+
   //modal
-  //const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   //websocket
 
-  //const [message, setMessage] = useState("");
+
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
-
     if (socket) {
       socket.on("locationUpdate", (data: { stations: any[] }) => {
         console.log("Received location update:", data);
@@ -271,38 +226,6 @@ const HomePage = () => {
       };
     }
   }, [socket]);
-
-    let timer: NodeJS.Timeout | null = null;
-
-    if (isRunning && currentCharge > 20) {
-      timer = setInterval(() => {
-        setCurrentCharge((prevCharge) => {
-          const newCharge = prevCharge - carData[0].DrainRate;
-          if (newCharge <= 20) {
-            setIsRunning(false);
-            setIsModalOpen(true);
-
-            return 20;
-          }
-          return newCharge;
-        });
-      }, 1000);
-    }
-
-    return () => {
-      if (timer) clearInterval(timer);
-    };
-  }, [isRunning, currentCharge, carData]);
-
-  const handleStartPause = () => {
-    setIsRunning((prevState) => !prevState);
-  };
-
-
-  //dynamic array
-  const [selectedCarId, setSelectedCarId] = useState<string | null>(null);
-
-
   return (
     <motion.section
       style={{ backgroundImage }}
@@ -378,7 +301,7 @@ const HomePage = () => {
                   fill="#FFFFFF"
                 >
                   <tspan className="flex flex-col font-extralight text-7xl">
-                    <tspan className="font-light">{currentCharge}</tspan>
+                    <tspan className="font-light"></tspan>
                   </tspan>
                 </text>
               </svg>
@@ -386,21 +309,13 @@ const HomePage = () => {
             </div>
             <CircularProgressBar strokeWidth={2} sqSize={220} progress={60} />
           </div>
-          {/*<div className="w-1/2">
+          <div>
             <button
-              className="p-2 bg-black text-white text-sm w-1/4 rounded-md"
+              className="p-2 bg-black text-white"
               onClick={() => setIsModalOpen(true)}
             >
               {" "}
               open
-            </button>
-          </div>*/}
-          <div className="flex flex-row justify-center items-center w-1/2">
-            <button
-              onClick={handleStartPause}
-              className="p-2 bg-black hover:bg-gray-900 text-white  text-sm w-1/4 rounded-md"
-            >
-              {isRunning ? "Resume Ride" : "Start Ride"}
             </button>
           </div>
         </motion.div>
@@ -504,10 +419,7 @@ const HomePage = () => {
             </div>
             <div className="flex justify-center h-1/5 flex-col space-y-2 items-center">
               <Link
-                href={{
-                  pathname: `/immCharge/${userId}`,
-                  query: { car: userData[0]?.Car },
-                }}
+                href="/immCharge"
                 className="bg-green-500 hover:bg-green-400 hover:text-white text-white w-1/4 p-2 rounded-md flex h-32 justify-center items-center"
               >
                 Charge Now
