@@ -8,6 +8,7 @@ import {
 } from "firebase/firestore";
 import app from "@/app/firebase";
 import "tailwindcss/tailwind.css";
+import useSocket from "./useSocket";
 
 interface Car {
   id: string;
@@ -30,7 +31,23 @@ const Timers = () => {
   const [timers, setTimers] = useState<{ [key: string]: number }>({});
   const [isRunning, setIsRunning] = useState(false);
   const [userList, setUserList] = useState<Users[]>([]);
+
   //const socket = useSocket();
+
+  const socket = useSocket("http://localhost:4000")
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("timerUpdate", (data: { timer: boolean }) => {
+        console.log("Received timer update:", data);
+        setIsRunning(data.timer)
+      });
+
+      return () => {
+        socket.off("timerUpdate");
+      };
+    }
+  }, [socket]);
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -112,8 +129,18 @@ const Timers = () => {
   }, [isRunning, carList, userList]);
 
   const handleStartPause = () => {
-    setIsRunning((prevState) => !prevState);
+    const newIsRunning = !isRunning;
+  
+    // Check if the state has actually changed
+    if (newIsRunning !== isRunning) {
+      setIsRunning(newIsRunning);
+      socket?.emit("timerUpdate", { timer: newIsRunning });
+      console.log("Timer status updated and emitted:", newIsRunning);
+    } else {
+      console.log("Timer status unchanged, no emission");
+    }
   };
+  
 
   return (
     <div className="h-screen bg-black text-white flex text-center flex-col space-y-5">
