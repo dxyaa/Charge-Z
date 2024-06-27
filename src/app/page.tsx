@@ -13,9 +13,7 @@ export default function main() {
         <div id="1">
           {/*<Server />*/}
 
-          <Login onLocationEntered={function (location: string): void {
-            throw new Error("Function not implemented.");
-          } } />
+          <Login />
         </div>
         {/*<div id="2">
       <Confirmation />

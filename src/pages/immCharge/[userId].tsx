@@ -58,13 +58,16 @@ const ImmCharge = () => {
     month: "short",
     day: "numeric",
   });
+
   const dayOfWeek = currentDate.toLocaleDateString(undefined, {
     weekday: "long",
   });
+
   const monthAndDate = currentDate.toLocaleDateString(undefined, {
     month: "short",
     day: "numeric",
   });
+  
   const [index, setIndex] = useState(0);
 
   const handleNext = () => {
