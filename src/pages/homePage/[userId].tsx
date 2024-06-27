@@ -193,54 +193,6 @@ const HomePage = () => {
   console.log("user data = ", userData);
   //const currentCharge = carData.length > 0 ? carData[0].CurrentCharge : 0;
   //timer
-  /*useEffect(() => {
-    const fetchCars = async () => {
-      try {
-        const db = getFirestore(app);
-        const userCollectionRef = collection(db, "Users");
-        const querySnapshot = await getDocs(userCollectionRef);
-
-        const cars: Car[] = [];
-        const users: Users[] = [];
-        const carPromises: Promise<void>[] = [];
-
-        querySnapshot.forEach((userDoc) => {
-          const userData = userDoc.data() as Users;
-          const userWithId = { ...userData, id: userDoc.id };
-          users.push(userWithId);
-
-          if (userData.Car) {
-            const carDocRef = doc(db, `Cars/${userData.Car}`);
-            const carPromise = getDoc(carDocRef).then((carDocSnap) => {
-              if (carDocSnap.exists()) {
-                const carData = carDocSnap.data() as Car;
-                carData.id = carDocSnap.id;
-                cars.push(carData);
-              }
-            });
-
-            carPromises.push(carPromise);
-          }
-        });
-
-        await Promise.all(carPromises);
-
-        setUserList(users);
-        setCarList(cars);
-
-        const initialTimers = cars.reduce((acc, car) => {
-          acc[car.id] = car.CurrentCharge;
-          return acc;
-        }, {} as { [key: string]: number });
-        setTimers(initialTimers);
-      } catch (error) {
-        console.error("Error fetching user or car data:", error);
-      }
-    };
-
-    fetchCars();
-  }, []);
-  console.log(carList);*/
   useEffect(() => {
     let timer: NodeJS.Timeout | null = null;
 
@@ -250,6 +202,7 @@ const HomePage = () => {
           const newCharge = prevCharge - carData[0].DrainRate;
           if (newCharge <= 20) {
             setIsRunning(false);
+            setIsModalOpen(true);
             return 20;
           }
           return newCharge;
@@ -348,21 +301,21 @@ const HomePage = () => {
             </div>
             <CircularProgressBar strokeWidth={2} sqSize={220} progress={60} />
           </div>
-          <div>
+          {/*<div className="w-1/2">
             <button
-              className="p-2 bg-black text-white"
+              className="p-2 bg-black text-white text-sm w-1/4 rounded-md"
               onClick={() => setIsModalOpen(true)}
             >
               {" "}
               open
             </button>
-          </div>
-          <div className="flex flex-row justify-center items-center">
+          </div>*/}
+          <div className="flex flex-row justify-center items-center w-1/2">
             <button
               onClick={handleStartPause}
-              className="p-2 bg-blue-500 text-white rounded-md"
+              className="p-2 bg-black hover:bg-gray-900 text-white  text-sm w-1/4 rounded-md"
             >
-              {isRunning ? "Pause" : "Start"}
+              {isRunning ? "Resume Ride" : "Start Ride"}
             </button>
           </div>
         </motion.div>
