@@ -7,8 +7,8 @@ import "tailwindcss/tailwind.css";
 import Carsearch from "@/components/carSearch";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { Input, Button } from "@chakra-ui/react";
-import { useRouter } from "next/router";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 interface Login {
   id: string;
@@ -21,7 +21,7 @@ interface LoginProps {
   onLocationEntered: (location: string) => void;
 }
 
-const Login: React.FC = ({}) => {
+const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
   const [formData, setFormData] = useState<Login>({
     id: "",
     Name: "",
@@ -29,8 +29,7 @@ const Login: React.FC = ({}) => {
     Location: "",
   });
   const [putdocID, setDocID] = useState<string | null>(null); // State to hold the document ID
-  const [location, setLocation] = useState<string>("");
-  const [map, setMap] = useState<google.maps.Map | null>(null);
+  const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
   const locationRef = useRef<HTMLInputElement>(null);
 
   const { isLoaded, loadError } = useJsApiLoader({
@@ -67,12 +66,14 @@ const Login: React.FC = ({}) => {
         results &&
         results[0].geometry.location
       ) {
-        console.log("Location added successfuly");
+        console.log("Location added successfully");
       } else {
         alert("Geocode was not successful for the following reason: " + status);
       }
     });
   };
+
+  const router = useRouter();
 
   const addUserData = async () => {
     try {
@@ -82,12 +83,22 @@ const Login: React.FC = ({}) => {
       const userData = {
         Name: formData.Name,
         Car: formData.Car,
+        Location: formData.Location,
       };
 
       const docRef = await addDoc(userCollectionRef, userData);
       console.log("Document ID:", docRef.id);
       const userId = docRef.id; // Log the generated document ID
       setDocID(userId);
+
+      router.push({
+        pathname: `/homePage/${userId}`,
+        query: {loc : formData.Location}
+      })
+
+      // Optionally, you can trigger navigation here
+      // Example: window.location.href = `/homePage/${userId}`;
+
     } catch (error) {
       console.error("Error adding user data:", error);
     }
@@ -100,14 +111,34 @@ const Login: React.FC = ({}) => {
     }));
   };
 
+  const handlePlaceChanged = () => {
+    if (autocompleteRef.current) {
+      const place = autocompleteRef.current.getPlace();
+      const formattedAddress = place.formatted_address || ""; // Provide a default value
+      setFormData((prevData) => ({
+        ...prevData,
+        Location: formattedAddress,
+      }));
+    }
+  };
+
+  useEffect(() => {
+    if (isLoaded && locationRef.current) {
+      autocompleteRef.current = new google.maps.places.Autocomplete(
+        locationRef.current
+      );
+      autocompleteRef.current.addListener("place_changed", handlePlaceChanged);
+    }
+  }, [isLoaded]);
+
   if (!isLoaded) {
     return <div>Loading Google Maps...</div>;
   }
 
   return (
     <>
-      <div className=" flex h-screen w-screen border-2 justify-center bg-black text-white">
-        <div className="w-1/3  flex flex-col space-y-2 p-5 text-center">
+      <div className="flex h-screen w-screen border-2 justify-center bg-black text-white">
+        <div className="w-1/3 flex flex-col space-y-2 p-5 text-center">
           <div>
             <input
               type="text"
@@ -122,41 +153,31 @@ const Login: React.FC = ({}) => {
             <Carsearch onSelect={handleSelect} />
           </div>
           <div>
-            <Autocomplete>
-              <input
-                name="Location"
-                onChange={handleFormData}
-                value={formData.Location}
-                type="text"
-                placeholder="Enter location"
-                ref={locationRef}
-                className="text-black rounded-md w-full"
-              />
-            </Autocomplete>
+            <input
+              name="Location"
+              onChange={handleFormData}
+              value={formData.Location}
+              type="text"
+              placeholder="Enter location"
+              ref={locationRef}
+              className="text-black rounded-md w-full"
+            />
           </div>
 
-          <div className="flex justify-center bg-red-100">
-            {/*<button
-              onClick={searchLocation}
-              className="p-2 bg-blue-600  hover:bg-blue-500 w-1/2 rounded-md  "
-            >
-              Search Charging Stations
-            </button>*/}
-
-            <Link
-              href={{
-                pathname: `/homePage/${putdocID}`,
-                query: { loc: formData?.Location },
-              }}
-              onClick={addUserData}
-              className="p-2 bg-blue-600  hover:bg-blue-500 w-1/2 rounded-md "
-            >
-              Add User
-            </Link>
+          <div className="flex justify-center">
+          
+              <button
+                onClick={addUserData}
+                className="p-2 bg-blue-600 hover:bg-blue-500 w-1/2 rounded-md text-center"
+              >
+                Add User
+              </button>
+           
           </div>
         </div>
       </div>
     </>
   );
 };
+
 export default Login;
