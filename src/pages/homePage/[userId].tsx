@@ -25,6 +25,7 @@ import { FaCar } from "react-icons/fa";
 import { useRouter } from "next/router";
 import Typewriter from "typewriter-effect";
 import ImmCharge from "../immCharge";
+import useSocket from "../useSocket";
 
 import {
   animate,
@@ -54,6 +55,7 @@ import { useSearchParams } from "next/navigation";
 
 import { createContext, useContext } from "react";
 import io from "socket.io-client";
+
 
 /*end of imports*/
 /*const typewriter = new Typewriter("#typewriter", {
@@ -143,7 +145,24 @@ const HomePage = () => {
 
   // FOR A B H I S H E K : the video currently disappears after playing has ended,which is handled just above with useeffect above.
 
+
+  const socket = useSocket("http://localhost:4000");
+  const [stations, setStations] = useState<any[]>([]);
+  useEffect(() => {
+    if (socket) {
+      socket.on("locationUpdate", (data: { stations: string }) => {
+        console.log("Received location update:", data);
+
+      });
+
+      return () => {
+        socket.off("locationUpdate");
+      };
+    }
+  }, [socket]);
+
   //const socket = useSocket();
+
 
   // const [videoFinished, setVideoFinished] = useState(false);
   //const [isActive, setIsActive] = useState(false);
@@ -166,8 +185,18 @@ const HomePage = () => {
     });
   }, []);
 
+
+  const router = useRouter();
+  const { userId } = router.query;
+
+  const locParams = useSearchParams();
+  const loc = locParams?.get("loc");
+
+ 
+
   //const router = useRouter();
   //const { userId } = router.query;
+
 
   //const locParams = useSearchParams();
   //const loc = locParams?.get("loc");
@@ -230,6 +259,19 @@ const HomePage = () => {
   //const [message, setMessage] = useState("");
 
   useEffect(() => {
+
+    if (socket) {
+      socket.on("locationUpdate", (data: { stations: any[] }) => {
+        console.log("Received location update:", data);
+        setStations(data.stations);
+      });
+
+      return () => {
+        socket.off("locationUpdate");
+      };
+    }
+  }, [socket]);
+
     let timer: NodeJS.Timeout | null = null;
 
     if (isRunning && currentCharge > 20) {
@@ -254,6 +296,7 @@ const HomePage = () => {
   const handleStartPause = () => {
     setIsRunning((prevState) => !prevState);
   };
+
   return (
     <motion.section
       style={{ backgroundImage }}
