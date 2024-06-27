@@ -49,9 +49,14 @@ import {
   where,
 } from "firebase/firestore";
 import app from "@/app/firebase";
+
+import { useSearchParams } from "next/navigation";
+
+
 import { createContext, useContext } from "react";
 import io from "socket.io-client";
 import { useSocket } from "@/components/websocketcontext";
+
 /*end of imports*/
 /*const typewriter = new Typewriter("#typewriter", {
   strings: ["Hello", "World"],
@@ -144,6 +149,9 @@ const HomePage = () => {
   const router = useRouter();
   const { userId } = router.query;
 
+  const locParams = useSearchParams();
+  const loc = locParams?.get("loc");
+
   const border = useMotionTemplate`1px  ${color}`;
   const boxShadow = useMotionTemplate`8px 4px 24px ${color}`;
 
@@ -174,6 +182,10 @@ const HomePage = () => {
 
     fetchUserData();
   }, [userId]);
+
+  const [map, setMap] = useState<google.maps.Map | null>(null);
+
+
   //modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 

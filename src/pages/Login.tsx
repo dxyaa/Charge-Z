@@ -16,11 +16,8 @@ interface Login {
   Location: string;
 }
 
-interface LoginProps {
-  onLocationEntered: (location: string) => void;
-}
-
 const Login: React.FC = ({}) => {
+
   const [formData, setFormData] = useState<Login>({
     id: "",
     Name: "",
@@ -174,4 +171,4 @@ const Login: React.FC = ({}) => {
   );
 };
 
-export default Login;
+
