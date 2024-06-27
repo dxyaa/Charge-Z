@@ -8,6 +8,8 @@ import { FaLocationArrow } from "react-icons/fa";
 import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import useSocket from "./useSocket";
+import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
+import app from "@/app/firebase";
 
 interface MapsProps {
   location: string;
@@ -25,7 +27,38 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const socket = useSocket("http://localhost:4000");
 
- 
+  async function checkStatus(chargingStations: any[]) {
+    const db = getFirestore(app);
+    const stationIds = chargingStations.map(station => {
+      // Assuming your station names are in format "StationName,id" and split it
+      return station.name.split(",")[1];
+    });
+  
+    const stationsRef = collection(db, "stations");
+    const querySnapshot = await getDocs(stationsRef);
+  
+    const filteredStations: { id: string }[] = [];
+    querySnapshot.forEach(doc => {
+      console.log("Checking document:", doc.id); // Log the document ID being checked
+      if (stationIds.includes(doc.id)) {
+        const stationData = doc.data();
+        console.log("Station data:", stationData); // Log the station data found
+        if (stationData.Status === false) {
+          // Add the station data to filteredStations array
+          filteredStations.push({
+            id: doc.id,
+            // Add other relevant fields you need from the station document
+          });
+        }
+      }
+    });
+  
+    console.log("Filtered stations :", filteredStations); // Log the final filtered stations array
+    return filteredStations;
+  }
+  
+  
+
   useEffect(() => {
     if (socket) {
       socket.on("location", (data: { loc: string }) => {
@@ -157,7 +190,7 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
             } else {
               console.error("WebSocket is not connected.");
             }
-        
+            checkStatus(stations)
             console.log("Sorted Charging Stations with Distance and Duration: ", stations);
         } else {
             console.error("Distance Matrix request failed:", status);

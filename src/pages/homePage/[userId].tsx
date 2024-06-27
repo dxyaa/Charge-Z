@@ -461,7 +461,10 @@ const HomePage = () => {
             </div>
             <div className="flex justify-center h-1/5 flex-col space-y-2 items-center">
               <Link
-                href="/immCharge"
+                 href={{
+                  pathname: `/chargeNow/${userId}`,
+                  query: { car: userData[0]?.Car },
+                }}
                 className="bg-green-500 hover:bg-green-400 hover:text-white text-white w-1/4 p-2 rounded-md flex h-32 justify-center items-center"
               >
                 Charge Now

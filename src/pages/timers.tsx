@@ -24,6 +24,7 @@ interface Users {
   id: string;
   Name: string;
   Car: string;
+  Location:string;
 }
 
 const Timers = () => {
@@ -33,7 +34,7 @@ const Timers = () => {
   const [userList, setUserList] = useState<Users[]>([]);
   const [usersAtTwenty, setUsersAtTwenty] = useState<string[]>([]);
   //const socket = useSocket();
-
+  const [len, setLen] = useState<number>(0);
   const socket = useSocket("http://localhost:4000");
 
   useEffect(() => {
@@ -126,6 +127,8 @@ const Timers = () => {
             }
           }
           setUsersAtTwenty(newUsersAtTwenty);
+          setLen(newUsersAtTwenty.length);
+          console.log("len : ",len)
           return newTimers;
         });
       }, 1000);
@@ -147,7 +150,37 @@ const Timers = () => {
       console.log("Timer status unchanged, no emission");
     }
   };
-
+useEffect(()=>{
+  if(len>0){
+    if(len==1){
+      //handle single element in arr
+      const userId = usersAtTwenty[0];
+      const user = userList.find((user) => user.id === userId);
+      if (user) {
+        const curr_loc = user.Location;
+        console.log("loc : ",curr_loc)
+      }
+      
+      //send curr_loc to maps via websockets
+      //get return min_station
+      //console.log(min_station)
+      //send min_station to dashboard with user.id for display
+    }
+    else{
+      //multiple element in arr
+      usersAtTwenty.forEach((userId) => {
+        const user = userList.find((user) => user.id === userId);
+        if (user) {
+          const curr_loc = user.Location;
+          console.log("loc : ",curr_loc);
+          //send curr_loc to maps via websocket
+          //add returned output station to a temp_arr (push)
+        }
+      });
+      //console.log(temp_arr)
+    }
+  }
+})
   //main logic
   /*
   useEffect(() => {
