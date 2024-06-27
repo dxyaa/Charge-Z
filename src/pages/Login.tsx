@@ -8,8 +8,7 @@ import Carsearch from "@/components/carSearch";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { Input, Button } from "@chakra-ui/react";
 import Link from "next/link";
-import { useRouter } from "next/router";
-
+import { useRouter } from 'next/navigation'
 interface Login {
   id: string;
   Name: string;
@@ -73,7 +72,7 @@ const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
     });
   };
 
-  const router = useRouter();
+  const  router  = useRouter();
 
   const addUserData = async () => {
     try {
@@ -90,11 +89,8 @@ const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
       console.log("Document ID:", docRef.id);
       const userId = docRef.id; // Log the generated document ID
       setDocID(userId);
+      router.push(`/homePage/${userId}?loc=${encodeURIComponent(formData.Location)}`);
 
-      router.push({
-        pathname: `/homePage/${userId}`,
-        query: {loc : formData.Location}
-      })
 
       // Optionally, you can trigger navigation here
       // Example: window.location.href = `/homePage/${userId}`;
