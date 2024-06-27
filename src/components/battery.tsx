@@ -17,8 +17,7 @@ const CircularProgressBar: FC<Props> = (props) => {
     strokeWidth / 2
   } ${viewBoxSize} ${viewBoxSize}`;
   const startAngle = 0;
-  const endAngle = startAngle + (progress / 100) * 360; // Calculate end angle based on progress
-
+  const endAngle = startAngle + (progress / 100) * 360;
   const rays = [];
 
   for (let angle = startAngle; angle < endAngle; angle += 3.6) {

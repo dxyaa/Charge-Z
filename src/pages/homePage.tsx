@@ -73,7 +73,7 @@ const HomePage = () => {
     month: "short",
     day: "numeric",
   });
-  const iconSize = 60; // Adjust icon size as needed
+  const iconSize = 60;
   useEffect(() => {
     const videoElement = document.querySelector("video");
     if (videoElement) {
