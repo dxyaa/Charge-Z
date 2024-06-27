@@ -8,7 +8,10 @@ import {
 } from "firebase/firestore";
 import app from "@/app/firebase";
 import "tailwindcss/tailwind.css";
-import { useCarChargeContext } from "@/components/carChargeContext";
+import { Server } from "socket.io";
+import http from "http";
+import { useSocket } from "@/components/websocketcontext";
+/*end of imports*/
 
 interface Car {
   id: string;
@@ -26,7 +29,7 @@ interface Users {
   Car: string;
 }
 
-const Server = () => {
+const Timers = () => {
   const [carList, setCarList] = useState<Car[]>([]);
   const [timers, setTimers] = useState<{ [key: string]: number }>({});
   const [isRunning, setIsRunning] = useState(false);
@@ -36,8 +39,6 @@ const Server = () => {
     const fetchCars = async () => {
       try {
         const db = getFirestore(app);
-
-        // Fetch users first
         const userCollectionRef = collection(db, "Users");
         const querySnapshot = await getDocs(userCollectionRef);
 
@@ -50,13 +51,12 @@ const Server = () => {
           const userWithId = { ...userData, id: userDoc.id };
           users.push(userWithId);
 
-          // Check if userData.Car exists
           if (userData.Car) {
             const carDocRef = doc(db, `Cars/${userData.Car}`);
             const carPromise = getDoc(carDocRef).then((carDocSnap) => {
               if (carDocSnap.exists()) {
                 const carData = carDocSnap.data() as Car;
-                carData.id = carDocSnap.id; // Add the ID to carData
+                carData.id = carDocSnap.id;
                 cars.push(carData);
               }
             });
@@ -65,14 +65,11 @@ const Server = () => {
           }
         });
 
-        // Wait for all car promises to resolve
         await Promise.all(carPromises);
 
-        // Update state with fetched data
         setUserList(users);
         setCarList(cars);
 
-        // Initialize timers with CurrentCharge values
         const initialTimers = cars.reduce((acc, car) => {
           acc[car.id] = car.CurrentCharge;
           return acc;
@@ -97,6 +94,7 @@ const Server = () => {
               newTimers[car.id] -= parseFloat(car.DrainRate);
               if (newTimers[car.id] <= 20) {
                 setIsRunning(false);
+                socket?.emit("timerReached", { userId: car.UserName });
                 console.log("This car:", car.id);
 
                 break;
@@ -115,6 +113,8 @@ const Server = () => {
   const handleStartPause = () => {
     setIsRunning((prevState) => !prevState);
   };
+  //websocket
+  const socket = useSocket();
 
   return (
     <div className="h-screen bg-black text-white flex text-center flex-col space-y-5">
@@ -157,4 +157,4 @@ const Server = () => {
   );
 };
 
-export default Server;
+export default Timers;

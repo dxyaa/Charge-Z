@@ -8,7 +8,7 @@ import Carsearch from "@/components/carSearch";
 import { useJsApiLoader, Autocomplete } from "@react-google-maps/api";
 import { Input, Button } from "@chakra-ui/react";
 import Link from "next/link";
-import { useRouter } from 'next/navigation'
+import { useRouter } from "next/navigation";
 interface Login {
   id: string;
   Name: string;
@@ -20,7 +20,7 @@ interface LoginProps {
   onLocationEntered: (location: string) => void;
 }
 
-const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
+const Login: React.FC = ({}) => {
   const [formData, setFormData] = useState<Login>({
     id: "",
     Name: "",
@@ -72,7 +72,7 @@ const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
     });
   };
 
-  const  router  = useRouter();
+  const router = useRouter();
 
   const addUserData = async () => {
     try {
@@ -89,12 +89,12 @@ const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
       console.log("Document ID:", docRef.id);
       const userId = docRef.id; // Log the generated document ID
       setDocID(userId);
-      router.push(`/homePage/${userId}?loc=${encodeURIComponent(formData.Location)}`);
-
+      router.push(
+        `/homePage/${userId}?loc=${encodeURIComponent(formData.Location)}`
+      );
 
       // Optionally, you can trigger navigation here
       // Example: window.location.href = `/homePage/${userId}`;
-
     } catch (error) {
       console.error("Error adding user data:", error);
     }
@@ -160,17 +160,13 @@ const Login: React.FC<LoginProps> = ({ onLocationEntered }) => {
             />
           </div>
 
-
           <div className="flex justify-center">
-          
-              <button
-                onClick={addUserData}
-                className="p-2 bg-blue-600 hover:bg-blue-500 w-1/2 rounded-md text-center"
-              >
-                Add User
-              </button>
-           
-
+            <button
+              onClick={addUserData}
+              className="p-2 bg-blue-600 hover:bg-blue-500 w-1/2 rounded-md text-center"
+            >
+              Add User
+            </button>
           </div>
         </div>
       </div>
