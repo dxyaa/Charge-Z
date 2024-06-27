@@ -27,7 +27,6 @@ import Typewriter from "typewriter-effect";
 import ImmCharge from "../immCharge";
 import useSocket from "../useSocket";
 
-
 import {
   animate,
   motion,
@@ -53,7 +52,6 @@ import {
 import app from "@/app/firebase";
 
 import { useSearchParams } from "next/navigation";
-
 
 import { createContext, useContext } from "react";
 import io from "socket.io-client";
@@ -136,8 +134,6 @@ const HomePage = () => {
 
   // FOR A B H I S H E K : the video currently disappears after playing has ended,which is handled just above with useeffect above.
 
-
-
   const socket = useSocket("http://localhost:4000");
   const [stations, setStations] = useState<any[]>([]);
 
@@ -149,7 +145,6 @@ const HomePage = () => {
   const [currentCharge, setCurrentCharge] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [carData, setCarData] = useState<Car[]>([]);
-  
 
   const onChangeProgress = () => {
     setProgress((prev) => prev + 20);
@@ -173,7 +168,6 @@ const HomePage = () => {
 
   const locParams = useSearchParams();
   const loc = locParams?.get("loc");
-
 
   const border = useMotionTemplate`1px  ${color}`;
   const boxShadow = useMotionTemplate`8px 4px 24px ${color}`;
@@ -211,30 +205,27 @@ const HomePage = () => {
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
 
-
   //modal
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   //websocket
 
-
-
   const [message, setMessage] = useState("");
 
-//recieve timer status
+  //recieve timer status
 
-useEffect(() => {
-  if (socket) {
-    socket.on("timerUpdate", (data: { timer: boolean }) => {
-      console.log("Received timer update:", data);
-      setIsRunning(data.timer);
-    });
+  useEffect(() => {
+    if (socket) {
+      socket.on("timerUpdate", (data: { timer: boolean }) => {
+        console.log("Received timer update:", data);
+        setIsRunning(data.timer);
+      });
 
-    return () => {
-      socket.off("timerUpdate");
-    };
-  }
-}, [socket]);
+      return () => {
+        socket.off("timerUpdate");
+      };
+    }
+  }, [socket]);
   //timer
 
   useEffect(() => {
@@ -261,7 +252,7 @@ useEffect(() => {
 
   useEffect(() => {
     if (socket && isRunning !== undefined) {
-      socket.emit("timer", { isRunning : isRunning });
+      socket.emit("timer", { isRunning: isRunning });
     }
   }, [isRunning]);
 
@@ -352,7 +343,7 @@ useEffect(() => {
             </div>
             <CircularProgressBar strokeWidth={2} sqSize={220} progress={60} />
           </div>
-          {/*<div>
+          <div>
             <button
               className="p-2 bg-black text-white"
               onClick={() => setIsModalOpen(true)}
@@ -360,21 +351,14 @@ useEffect(() => {
               {" "}
               open
             </button>
-
-          </div>*/}
-          <div className="flex flex-row justify-center items-center w-1/2">
-
-
           </div>
-       
-
+          <div className="flex flex-row justify-center items-center">
             <button
               onClick={handleStartPause}
-              className="p-2 bg-black hover:bg-gray-800 text-white rounded-md w-1/4 text-sm"
+              className="p-2 bg-blue-500 text-white rounded-md"
             >
-              {isRunning ? "Pause" : "Start Ride"}
+              {isRunning ? "Pause" : "Start"}
             </button>
-
           </div>
         </motion.div>
       </div>
