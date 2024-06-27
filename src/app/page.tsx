@@ -5,6 +5,7 @@ import Home from "@/pages/mainPage";
 import { CarChargeProvider } from "@/components/carChargeContext";
 import Login from "../pages/Login";
 import Server from "@/pages/server";
+import { useRouter } from "next/navigation";
 export default function main() {
   return (
     <CarChargeProvider>
@@ -12,7 +13,9 @@ export default function main() {
         <div id="1">
           {/*<Server />*/}
 
-          <Login />
+          <Login onLocationEntered={function (location: string): void {
+            throw new Error("Function not implemented.");
+          } } />
         </div>
         {/*<div id="2">
       <Confirmation />
