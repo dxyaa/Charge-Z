@@ -1,15 +1,13 @@
 import {
   Box,
-  Button,
   Flex,
-  HStack,
   IconButton,
-  Input,
   Text,
 } from "@chakra-ui/react";
 import { FaLocationArrow } from "react-icons/fa";
-import { useJsApiLoader, GoogleMap, Marker, Autocomplete } from "@react-google-maps/api";
-import { useEffect, useRef, useState } from "react";
+import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
+import { useEffect, useState } from "react";
+import useSocket from "./useSocket";
 
 interface MapsProps {
   location: string;
@@ -25,13 +23,26 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
   });
 
   const [map, setMap] = useState<google.maps.Map | null>(null);
-  const locationRef = useRef<HTMLInputElement>(null);
+  const socket = useSocket("http://localhost:4000");
 
   useEffect(() => {
     if (isLoaded && location) {
       geocodeLocation(location);
     }
   }, [isLoaded, location]);
+
+  useEffect(() => {
+    if (socket) {
+      socket.on("locationUpdate", (data: { loc: string }) => {
+        console.log("Received location update:", data);
+        geocodeLocation(data.loc);
+      });
+
+      return () => {
+        socket.off("locationUpdate");
+      };
+    }
+  }, [socket]);
 
   async function geocodeLocation(location: string) {
     const geocoder = new google.maps.Geocoder();
@@ -124,27 +135,6 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
     });
   }
 
-  async function searchLocation() {
-    if (!locationRef.current || !locationRef.current.value) {
-      alert("Please enter a location.");
-      return;
-    }
-
-    const geocoder = new google.maps.Geocoder();
-    const address = locationRef.current.value;
-
-    geocoder.geocode({ address }, (results, status) => {
-      if (status === google.maps.GeocoderStatus.OK && results && results[0].geometry.location) {
-        const location = results[0].geometry.location;
-        map?.panTo(location);
-        map?.setZoom(15);
-        displayNearbyEVChargingStations(location.lat(), location.lng());
-      } else {
-        alert("Geocode was not successful for the following reason: " + status);
-      }
-    });
-  }
-
   if (loadError) {
     return <div>Error loading Google Maps API!</div>;
   }
@@ -171,19 +161,9 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
           <Marker position={center} />
         </GoogleMap>
       </Box>
-      <Box p={4} borderRadius="lg"  m={4} bgColor="white" shadow="base" minW="container.md" zIndex="1" >
-        <HStack spacing={2} className="text-black"  justifyContent="space-between" >
-          <Box flexGrow={1} >
-            <Autocomplete >
-              <Input type="text" placeholder="Enter location" ref={locationRef} />
-            </Autocomplete>
-          </Box>
-          <Button colorScheme="pink" type="submit" onClick={searchLocation}>
-            Find EV Charging Stations
-          </Button>
-        </HStack>
-        <HStack spacing={4} mt={4} className="text-black" justifyContent="space-between">
-          <Text>Search for nearby EV Charging Stations by entering a location above.</Text>
+      <Box p={4} borderRadius="lg" m={4} bgColor="white" shadow="base" minW="container.md" zIndex="1">
+        <Text>Waiting for location updates...</Text>
+        <Box mt={4} className="text-black" justifyContent="space-between">
           <IconButton
             aria-label="center back"
             icon={<FaLocationArrow />}
@@ -193,7 +173,7 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
               map?.setZoom(15);
             }}
           />
-        </HStack>
+        </Box>
       </Box>
     </Flex>
   );

@@ -26,6 +26,7 @@ import { useRouter } from "next/router";
 import Typewriter from "typewriter-effect";
 import ImmCharge from "../immCharge";
 
+
 import {
   animate,
   motion,
@@ -125,6 +126,8 @@ const HomePage = () => {
 
   // FOR A B H I S H E K : the video currently disappears after playing has ended,which is handled just above with useeffect above.
 
+  const socket = useSocket();
+
   const [videoFinished, setVideoFinished] = useState(false);
   const [isActive, setIsActive] = useState(false);
   const [progress, setProgress] = useState(0);
@@ -151,6 +154,8 @@ const HomePage = () => {
 
   const locParams = useSearchParams();
   const loc = locParams?.get("loc");
+ 
+
 
   const border = useMotionTemplate`1px  ${color}`;
   const boxShadow = useMotionTemplate`8px 4px 24px ${color}`;
@@ -191,7 +196,7 @@ const HomePage = () => {
 
   //websocket
 
-  const socket = useSocket();
+
   const [message, setMessage] = useState("");
 
   useEffect(() => {
@@ -283,7 +288,7 @@ const HomePage = () => {
                   fill="#FFFFFF"
                 >
                   <tspan className="flex flex-col font-extralight text-7xl">
-                    <tspan className="font-light">80</tspan>
+                    <tspan className="font-light"></tspan>
                   </tspan>
                 </text>
               </svg>
