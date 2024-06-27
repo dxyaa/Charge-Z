@@ -16,6 +16,13 @@ io.on("connection", (socket) => {
   io.emit("locationUpdate", data);
   });
 
+  socket.on("timerUpdate",(data) => {
+    console.log("Received timer data:", data);
+    io.emit("timerUpdate", data);
+  })
+
+  
+
   socket.on("disconnect", () => {
     console.log("Client disconnected");
   });

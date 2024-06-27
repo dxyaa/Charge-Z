@@ -136,19 +136,10 @@ const HomePage = () => {
 
   // FOR A B H I S H E K : the video currently disappears after playing has ended,which is handled just above with useeffect above.
 
+
+
   const socket = useSocket("http://localhost:4000");
   const [stations, setStations] = useState<any[]>([]);
-  useEffect(() => {
-    if (socket) {
-      socket.on("locationUpdate", (data: { stations: string }) => {
-        console.log("Received location update:", data);
-      });
-
-      return () => {
-        socket.off("locationUpdate");
-      };
-    }
-  }, [socket]);
 
   const [videoFinished, setVideoFinished] = useState(false);
   const [isActive, setIsActive] = useState(false);
@@ -158,6 +149,7 @@ const HomePage = () => {
   const [currentCharge, setCurrentCharge] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [carData, setCarData] = useState<Car[]>([]);
+  
 
   const onChangeProgress = () => {
     setProgress((prev) => prev + 20);
@@ -229,21 +221,20 @@ const HomePage = () => {
 
   const [message, setMessage] = useState("");
 
+//recieve timer status
 
+useEffect(() => {
+  if (socket) {
+    socket.on("timerUpdate", (data: { timer: boolean }) => {
+      console.log("Received timer update:", data);
+      setIsRunning(data.timer);
+    });
 
-  useEffect(() => {
-    if (socket) {
-      socket.on("locationUpdate", (data: { stations: any[] }) => {
-        console.log("Received location update:", data);
-        setStations(data.stations);
-      });
-
-      return () => {
-        socket.off("locationUpdate");
-      };
-    }
-  }, [socket]);
-
+    return () => {
+      socket.off("timerUpdate");
+    };
+  }
+}, [socket]);
   //timer
 
   useEffect(() => {
@@ -267,6 +258,12 @@ const HomePage = () => {
       if (timer) clearInterval(timer);
     };
   }, [isRunning, currentCharge, carData]);
+
+  useEffect(() => {
+    if (socket && isRunning !== undefined) {
+      socket.emit("timer", { isRunning : isRunning });
+    }
+  }, [isRunning]);
 
   const handleStartPause = () => {
     setIsRunning((prevState) => !prevState);
