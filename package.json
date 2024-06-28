@@ -24,6 +24,7 @@
     "framer-motion": "^11.2.6",
     "gsap": "^3.12.5",
     "isomorphic-ws": "^5.0.0",
+    "lodash.debounce": "^4.0.8",
     "next": "14.2.3",
     "react": "^18",
     "react-bootstrap": "^2.10.2",
@@ -35,15 +36,13 @@
     "react-tailwindcss-datepicker": "^1.6.6",
     "react-time-picker": "^7.0.0",
     "socket.io": "^4.7.5",
-
-
     "socket.io-client": "^4.7.5",
     "ts-node": "^10.9.2",
     "typewriter-effect": "^2.21.0",
     "ws": "^8.17.1"
-
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
     "@types/node": "^20.14.9",
     "@types/node-fetch": "^2.6.11",
     "@types/react": "^18",

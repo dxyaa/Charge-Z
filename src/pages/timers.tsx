@@ -194,6 +194,7 @@ useEffect(()=>{
         socket?.emit("location", { loc: curr_loc });
         if(getStation && curr_loc && socket)
           {
+            console.log("emitting station")
             socket?.emit("chargeNow", { station: curr_loc,userId,getStation });
           }
       } 
