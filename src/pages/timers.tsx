@@ -71,8 +71,8 @@ const Timers = () => {
       socket.on("filteredlocations", (data: { station: string }) => {
         console.log("received station", data.station);
         setStation(data.station);
-        temp_arr.push(data.station)
-        console.log(temp_arr)
+        temp_arr.push(data.station);
+        console.log(temp_arr);
       });
 
       return () => {
@@ -80,8 +80,6 @@ const Timers = () => {
       };
     }
   }, [socket]);
-
-  
 
   useEffect(() => {
     const fetchCars = async () => {
@@ -182,7 +180,32 @@ const Timers = () => {
       console.log("Timer status unchanged, no emission");
     }
   };
+  //change
+  const fetchModelPrediction = async (formattedData: any) => {
+    try {
+      const response = await fetch("http://localhost:5000/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formattedData),
+      });
 
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      console.log(result);
+      // Assuming the result contains car_id with the highest priority
+      const maxPriorityCarId = result.car_id;
+      console.log("max prio", maxPriorityCarId);
+      // Do something with maxPriorityCarId, like updating state or UI
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  //end of change
   useEffect(() => {
     if (len > 0 && !processedStations) {
       if (len === 1) {
@@ -218,10 +241,47 @@ const Timers = () => {
 
         // Emitting all stations and user ids
         if (temp_arr.length > 0 && temp_id.length > 0) {
-          socket?.emit("chargeNowMultiple", { stations: temp_arr, userIds: temp_id });
+          socket?.emit("chargeNowMultiple", {
+            stations: temp_arr,
+            userIds: temp_id,
+          });
         }
       }
       setProcessedStations(true);
+      const formattedData = usersAtTwenty
+        .map((userId) => {
+          const user = userList.find((user) => user.id === userId);
+          const car = carList.find((car) => car.id === user?.Car);
+          if (user && car) {
+            const remaining_battery = 20; // Always 20
+            const remaining_range =
+              (remaining_battery / parseFloat(car.Capacity)) * 100;
+            const estimated_time_left =
+              (remaining_battery / parseFloat(car.DrainRate)) * 60;
+            const time_to_station = temp_arr.find(
+              (station) => station === getStation
+            );
+            const distance_to_station = temp_arr.find(
+              (station) => station === getStation
+            );
+            return {
+              car_id: car.id,
+              remaining_battery: remaining_battery.toString(),
+              drain_rate: car.DrainRate,
+              remaining_range: remaining_range.toString(),
+              estimated_time_left: estimated_time_left.toString(),
+              time_to_station: time_to_station || "0",
+              distance_to_station: distance_to_station || "0",
+            };
+          }
+          return null;
+        })
+        .filter((data) => data !== null);
+
+      if (formattedData.length > 0 && socket && temp_arr) {
+        console.log("calling fetchmodelprediction");
+        fetchModelPrediction(formattedData);
+      }
     }
   }, [len, getStation, socket, usersAtTwenty, userList, processedStations]);
 
