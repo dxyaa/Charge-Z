@@ -297,7 +297,7 @@ const HomePage = () => {
           <div className="font-light text-gray-400 text-lg">
             <Typewriter
               options={{
-                strings: ["Some ev stuff!", "Ev stuff pnem"],
+                strings: ["Plug In,Energize,Go!", "Charge,Drive,Arrive!"],
                 autoStart: true,
                 loop: true,
               }}
@@ -343,7 +343,7 @@ const HomePage = () => {
             </div>
             <CircularProgressBar strokeWidth={2} sqSize={220} progress={60} />
           </div>
-          <div>
+          {/*<div>
             <button
               className="p-2 bg-black text-white"
               onClick={() => setIsModalOpen(true)}
@@ -351,7 +351,7 @@ const HomePage = () => {
               {" "}
               open
             </button>
-          </div>
+          </div>*/}{/*
           <div className="flex flex-row justify-center items-center">
             <button
               onClick={handleStartPause}
@@ -359,7 +359,7 @@ const HomePage = () => {
             >
               {isRunning ? "Pause" : "Start"}
             </button>
-          </div>
+          </div>*/}
         </motion.div>
       </div>
 
