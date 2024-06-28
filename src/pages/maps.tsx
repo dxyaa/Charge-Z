@@ -8,6 +8,8 @@ import { FaLocationArrow } from "react-icons/fa";
 import { useJsApiLoader, GoogleMap, Marker } from "@react-google-maps/api";
 import { useEffect, useState } from "react";
 import useSocket from "./useSocket";
+import { collection, getDocs, getFirestore, query, where } from "firebase/firestore";
+import app from "@/app/firebase";
 
 interface MapsProps {
   location: string;
@@ -25,7 +27,8 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const socket = useSocket("http://localhost:4000");
 
- 
+
+
   useEffect(() => {
     if (socket) {
       socket.on("location", (data: { loc: string }) => {
@@ -106,6 +109,7 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
 
         calculateDistances(new google.maps.LatLng(lat, lng), chargingStations);
 
+
         if (onChargingStationsFound) {
           onChargingStationsFound(chargingStations);
         }
@@ -153,11 +157,17 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
 
             if (socket && socket.connected) {
               console.log("Emitting location data via WebSocket:", stations);
-              socket.emit("location", { stations: stations });
+             
             } else {
               console.error("WebSocket is not connected.");
             }
-        
+            let flag = 1;
+
+            while(flag == 1) {
+              socket?.emit("filteredlocations", { station : stations[0] })
+              flag =0;
+            }
+           
             console.log("Sorted Charging Stations with Distance and Duration: ", stations);
         } else {
             console.error("Distance Matrix request failed:", status);

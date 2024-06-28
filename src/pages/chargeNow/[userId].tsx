@@ -28,13 +28,15 @@ import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import app from "@/app/firebase";
+import useSocket from "../useSocket";
 /*imports end*/
 
 interface Cars {
     Name:string;
     Capacity:number;
     DrainRate:number;
-    Mileage: number;
+    CurrentCharge: number;
+    Range:number;
 }
 
 
@@ -49,7 +51,8 @@ const ChargeNow = () => {
     Name:"",
     Capacity:0,
     DrainRate:0,
-    Mileage:0
+    CurrentCharge:0,
+    Range:0
   })
 
   const router = useRouter();
@@ -71,6 +74,7 @@ const ChargeNow = () => {
           } else {
             console.log("No such document");
           }
+          console.log("car id : ",)
         }
       } catch (error) {
         console.error("Error fetching car data:", error);
@@ -78,6 +82,22 @@ const ChargeNow = () => {
     };
     fetchCarData();
   }, [Car]);
+
+  const socket = useSocket("http://localhost:4000");
+
+ useEffect(() => {
+  if (socket) {
+    socket.on("chargeNow", (data: { station: string }) => {
+      console.log("Received station:", data.station);
+    });
+
+    // Cleanup to remove the listener when the component unmounts or the socket changes
+    return () => {
+      socket.off("chargeNow");
+    };
+  }
+}, [socket]);
+
 
   const formattedDate = currentDate.toLocaleDateString(undefined, {
     weekday: "long",
@@ -105,6 +125,13 @@ const ChargeNow = () => {
       setIndex(0);
     }
   };
+
+  //range left calc
+  const { Capacity, DrainRate, CurrentCharge } = carData;
+  const remainingBatteryKWh = (CurrentCharge / 100) * Capacity;
+  const averageEnergyConsumptionRatePerKm = 2; // Adjust this value as needed
+
+  const remainingRangeKm = remainingBatteryKWh / averageEnergyConsumptionRatePerKm;
   return (
     <div className="h-screen bg-black text-white w-screen">
       <div className="flex justify-center">
@@ -202,9 +229,9 @@ const ChargeNow = () => {
               <FaCar size={20} />
             </div>
             <div className="flex flex-col">
-              <div className="text-md font-semibold">Nexon EV</div>
+              <div className="text-md font-semibold">{Car}</div>
               <div className="text-sm text-gray-500">
-                Nexon EV Empowered Plus LR
+              {carData.Name}
               </div>
             </div>
           </div>
@@ -222,14 +249,14 @@ const ChargeNow = () => {
             <div className="bg-black h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
               <div className=" text-sm pl-5 pt-4 ">Kms left</div>
               <div className="flex flex-row space-x-3 justify-center items-center">
-                <div className="text-7xl">43 </div>
+                <div className="text-7xl">{remainingRangeKm} </div>
                 <div className=" flex text-sm mt-10 font-thin">km</div>
               </div>
             </div>
             <div className="bg-black h-32 w-1/2 rounded-lg flex flex-col  space-y-2">
               <div className=" text-sm pl-5 pt-4 ">Charge</div>
               <div className="flex flex-row space-x-3 justify-center items-center">
-                <div className="text-7xl">60</div>
+                <div className="text-7xl">20</div>
                 <div className=" flex text-sm mt-10 font-thin">%</div>
               </div>
             </div>
