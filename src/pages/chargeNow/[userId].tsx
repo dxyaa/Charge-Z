@@ -46,6 +46,7 @@ const ChargeNow = () => {
     hour: "2-digit",
     minute: "2-digit",
   });
+  const [station,setStation] = useState<string>();
 
   const [carData,setCarData] = useState<Cars>({
     Name:"",
@@ -89,6 +90,7 @@ const ChargeNow = () => {
   if (socket) {
     socket.on("chargeNow", (data: { station: string }) => {
       console.log("Received station:", data.station);
+      setStation(data.station)
     });
 
     // Cleanup to remove the listener when the component unmounts or the socket changes

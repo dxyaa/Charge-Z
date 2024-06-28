@@ -138,7 +138,7 @@ const ChargeNow = () => {
                 className="h-60 flex justify-center items-center flex-col space-y-4 swap"
               >
                 <div className=" ">Your nearest charging station is : </div>
-                <div>Kochi</div>
+                <div>KSEB Charging Station,Nemom</div>
                 <Link
                   href={{
                     pathname: "/dashBoard",

@@ -104,11 +104,12 @@ const Login: React.FC = () => {
       // Check if socket is connected before emitting
       if (socket && socket.connected) {
         console.log("Emitting location data via WebSocket:", formData.Location);
+        socket?.emit("location",{loc:formData.Location})
        
       } else {
         console.error("WebSocket is not connected.");
       }
-  
+      
       const encodedLocation = encodeURIComponent(formData.Location);
       console.log("Navigating to:", `/homePage/${userId}?loc=${encodedLocation}`);
       router.push(`/homePage/${userId}?loc=${encodedLocation}`);
