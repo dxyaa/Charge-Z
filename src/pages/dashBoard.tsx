@@ -18,6 +18,7 @@ import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
 import { FaCar } from "react-icons/fa";
 import Maps from "./maps";
+import RouteMaps from "./maps-old";
 /* end of imports*/
 
 interface Trip {
@@ -171,10 +172,15 @@ const DashBoard = () => {
         </div>
         <div className="w-2/3 rounded-xl bg-slate-800 h-full flex flex-col p-5 space-y-5">
           <div className="flex h-3/4 w-full bg-black rounded-lg justify-center items-center">
-            <Maps
+            <RouteMaps
               origin="Trivandrum"
-              destination="Kochi"
-              onDistanceDurationChange={handleDistanceDurationChange}
+              destination="KSEB,Nemom"
+              onDistanceDurationChange={(distance, duration) => {
+                console.log(`Distance: ${distance}, Duration: ${duration}`);
+              }}
+              onChargingStationsFound={(stations) => {
+                console.log("Charging Stations:", stations);
+              }}
             />
           </div>
           <div className="flex flex-row space-x-5 h-full">
