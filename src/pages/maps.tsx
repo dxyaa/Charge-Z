@@ -27,37 +27,7 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
   const [map, setMap] = useState<google.maps.Map | null>(null);
   const socket = useSocket("http://localhost:4000");
 
-  async function checkStatus(chargingStations: any[]) {
-    const db = getFirestore(app);
-    const stationIds = chargingStations.map(station => {
-      // Assuming your station names are in format "StationName,id" and split it
-      return station.name.split(",")[1];
-    });
-  
-    const stationsRef = collection(db, "stations");
-    const querySnapshot = await getDocs(stationsRef);
-  
-    const filteredStations: { id: string }[] = [];
-    querySnapshot.forEach(doc => {
-      console.log("Checking document:", doc.id); // Log the document ID being checked
-      if (stationIds.includes(doc.id)) {
-        const stationData = doc.data();
-        console.log("Station data:", stationData); // Log the station data found
-        if (stationData.Status === false) {
-          // Add the station data to filteredStations array
-          filteredStations.push({
-            id: doc.id,
-            // Add other relevant fields you need from the station document
-          });
-        }
-      }
-    });
-  
-    console.log("Filtered stations :", filteredStations); // Log the final filtered stations array
-    return filteredStations;
-  }
-  
-  
+
 
   useEffect(() => {
     if (socket) {
@@ -139,6 +109,7 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
 
         calculateDistances(new google.maps.LatLng(lat, lng), chargingStations);
 
+
         if (onChargingStationsFound) {
           onChargingStationsFound(chargingStations);
         }
@@ -186,11 +157,17 @@ function Maps({ location, onChargingStationsFound }: MapsProps) {
 
             if (socket && socket.connected) {
               console.log("Emitting location data via WebSocket:", stations);
-              socket.emit("location", { stations: stations });
+             
             } else {
               console.error("WebSocket is not connected.");
             }
-            checkStatus(stations)
+            let flag = 1;
+
+            while(flag == 1) {
+              socket?.emit("filteredlocations", { station : stations[0] })
+              flag =0;
+            }
+           
             console.log("Sorted Charging Stations with Distance and Duration: ", stations);
         } else {
             console.error("Distance Matrix request failed:", status);

@@ -104,7 +104,7 @@ const Login: React.FC = () => {
       // Check if socket is connected before emitting
       if (socket && socket.connected) {
         console.log("Emitting location data via WebSocket:", formData.Location);
-        socket.emit("location", { loc: formData.Location });
+       
       } else {
         console.error("WebSocket is not connected.");
       }

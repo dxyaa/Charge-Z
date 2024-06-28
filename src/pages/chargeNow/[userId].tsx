@@ -28,6 +28,7 @@ import { useRouter } from "next/router";
 import { useSearchParams } from "next/navigation";
 import { doc, getDoc, getFirestore } from "firebase/firestore";
 import app from "@/app/firebase";
+import useSocket from "../useSocket";
 /*imports end*/
 
 interface Cars {
@@ -81,6 +82,22 @@ const ChargeNow = () => {
     };
     fetchCarData();
   }, [Car]);
+
+  const socket = useSocket("http://localhost:4000");
+
+ useEffect(() => {
+  if (socket) {
+    socket.on("chargeNow", (data: { station: string }) => {
+      console.log("Received station:", data.station);
+    });
+
+    // Cleanup to remove the listener when the component unmounts or the socket changes
+    return () => {
+      socket.off("chargeNow");
+    };
+  }
+}, [socket]);
+
 
   const formattedDate = currentDate.toLocaleDateString(undefined, {
     weekday: "long",

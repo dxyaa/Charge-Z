@@ -29,11 +29,24 @@ interface Station {
   Name:string
 }
 
+interface Bookings {
+  Name:string;
+  Locaton:string;
+  Date:string;
+}
+
 const BookLater = () => {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [formData, setFormData] = useState<Station>({
   Name:""
   });
+
+  const [bookingData,setBookingData] = useState<Bookings> ( {
+    Name: "",
+    Locaton:"",
+    Date: "",
+  })
+
   const currentDate = new Date();
 
   const formattedTime = currentDate.toLocaleTimeString([], {
@@ -50,6 +63,8 @@ const BookLater = () => {
   };
 
 
+
+  
   const handleDateChange = (date: Date | null) => {
     setSelectedDate(date);
   };

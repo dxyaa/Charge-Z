@@ -21,7 +21,15 @@ io.on("connection", (socket) => {
     io.emit("timerUpdate", data);
   })
 
-  
+  socket.on("filteredlocations",(data) => {
+    console.log("recieving filtered data",data);
+    io.emit("filteredlocations",data);
+  })
+
+  socket.on("chargeNow",(data) =>{
+    console.log("recieving filtered data",data);
+    io.emit("chargeNow",data);
+  })
 
   socket.on("disconnect", () => {
     console.log("Client disconnected");

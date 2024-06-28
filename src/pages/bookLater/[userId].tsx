@@ -43,7 +43,7 @@ const BookLater = () => {
   const [formData, setFormData] = useState<Bookings>({
     Date: "",
     Name: "",
-    location: null,
+    location: "",
   });
 
   const [carData, setCarData] = useState<Cars>({
@@ -99,33 +99,34 @@ const BookLater = () => {
   const addBookings = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      if (!formData.Date) {
-        throw new Error('Date is required.'); // Handle validation for Date input
+      if (!value.startDate) {
+        throw new Error('Date is required.');
       }
   
       const db = getFirestore(app);
       const bookingsCollectionRef = collection(db, 'bookings');
   
-      // Get the time input value
-      const timeInput = e.currentTarget.getElementById('time').value;
+      const timeElement = e.currentTarget.elements.namedItem('time') as HTMLInputElement;
+      const timeInput = timeElement?.value;
+  
       const [hours, minutes] = timeInput.split(':').map(Number);
   
-      // Create a new Date object with selected date and time
-      const selectedDateTime = new Date(formData.Date);
+      const selectedDateTime = new Date(value.startDate);
       selectedDateTime.setHours(hours, minutes, 0, 0);
   
+      const formattedDate = selectedDateTime.toLocaleDateString('en-GB');
+  
       const bookingData = {
-        Date: Timestamp.fromDate(selectedDateTime),
+        Date: formattedDate,
         Name: formData.Name,
+        time: timeInput,
         location: formData.location,
       };
   
       await addDoc(bookingsCollectionRef, bookingData);
       console.log('Booking added successfully:', bookingData);
-      // Optionally, you can redirect or show a success message here
     } catch (error) {
       console.error('Error adding booking:', error);
-      // Handle error as needed
     }
   };
   
@@ -188,7 +189,6 @@ const BookLater = () => {
           <div className="w-full h-full space-y-4 flex flex-col justify-center items-center p-4">
             <div className="bg-slate-800 flex flex-col w-1/2 h-1/2 items-center rounded-lg p-5 space-y-4">
               <div className="w-1/2 text-black">
-                {/* Replace with Stationsearch component */}
                 <Stationsearch onSelect={handleSelect} />
               </div>
               <div className="w-1/2 text-black">

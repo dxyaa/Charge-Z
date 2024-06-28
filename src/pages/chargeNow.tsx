@@ -24,6 +24,7 @@ import darknexon from "./../../public/darknexon.png";
 import nexon from "../../public/nexon.png";
 import { Carousel } from "react-bootstrap";
 import { FaCar } from "react-icons/fa";
+import useSocket from "./useSocket";
 /*imports end*/
 const ChargeNow = () => {
   const currentDate = new Date();
@@ -58,6 +59,11 @@ const ChargeNow = () => {
       setIndex(0);
     }
   };
+
+ 
+
+
+
   return (
     <div className="h-screen bg-black text-white w-screen">
       <div className="flex justify-center">
