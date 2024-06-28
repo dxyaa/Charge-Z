@@ -47,12 +47,14 @@ const Timers = () => {
   const [userList, setUserList] = useState<Users[]>([]);
   const [usersAtTwenty, setUsersAtTwenty] = useState<string[]>([]);
   const [getStation, setStation] = useState<string>("");
+  const [stationsReceived, setStationsReceived] = useState<boolean>(false); // New state variable
   const socket = useSocket("http://localhost:4000");
   const [len, setLen] = useState<number>(0);
   const [processedStations, setProcessedStations] = useState<boolean>(false);
   const temp_arr: string[] = [];
   const temp_id: string[] = [];
-
+  const userIdIndexMap: string[] = [];
+  // Socket setup and event listeners
   useEffect(() => {
     if (socket) {
       socket.on("timerUpdate", (data: { timer: boolean }) => {
@@ -73,6 +75,7 @@ const Timers = () => {
         setStation(data.station);
         temp_arr.push(data.station);
         console.log(temp_arr);
+        setStationsReceived(true); // Mark stations as received
       });
 
       return () => {
@@ -81,6 +84,7 @@ const Timers = () => {
     }
   }, [socket]);
 
+  // Fetching user and car data
   useEffect(() => {
     const fetchCars = async () => {
       try {
@@ -129,6 +133,7 @@ const Timers = () => {
     fetchCars();
   }, []);
 
+  // Timer management
   useEffect(() => {
     let interval: NodeJS.Timeout | undefined;
     if (isRunning) {
@@ -168,8 +173,7 @@ const Timers = () => {
     return () => clearInterval(interval!);
   }, [isRunning, carList, userList, usersAtTwenty]);
 
-  console.log(usersAtTwenty);
-
+  // Handling timer start/pause
   const handleStartPause = () => {
     const newIsRunning = !isRunning;
     if (newIsRunning !== isRunning) {
@@ -180,32 +184,8 @@ const Timers = () => {
       console.log("Timer status unchanged, no emission");
     }
   };
-  //change
-  const fetchModelPrediction = async (formattedData: any) => {
-    try {
-      const response = await fetch("http://localhost:5000/predict", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formattedData),
-      });
 
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-
-      const result = await response.json();
-      console.log(result);
-      // Assuming the result contains car_id with the highest priority
-      const maxPriorityCarId = result.car_id;
-      console.log("max prio", maxPriorityCarId);
-      // Do something with maxPriorityCarId, like updating state or UI
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-  //end of change
+  // Processing users with charge at 20
   useEffect(() => {
     if (len > 0 && !processedStations) {
       if (len === 1) {
@@ -248,6 +228,35 @@ const Timers = () => {
         }
       }
       setProcessedStations(true);
+    }
+  }, [len, getStation, socket, usersAtTwenty, userList, processedStations]);
+  const fetchModelPrediction = async (formattedData: any) => {
+    try {
+      const response = await fetch("http://localhost:5000/predict", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formattedData),
+      });
+
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const result = await response.json();
+      console.log(result);
+      // Assuming the result contains car_id with the highest priority
+      const maxPriorityCarId = result.car_id;
+      console.log("max prio", maxPriorityCarId);
+      // Do something with maxPriorityCarId, like updating state or UI
+    } catch (error) {
+      console.error("Error:", error);
+    }
+  };
+  // Call fetchModelPrediction after stations are received and processedStations is set
+  useEffect(() => {
+    if (stationsReceived && processedStations && usersAtTwenty.length > 0) {
       const formattedData = usersAtTwenty
         .map((userId) => {
           const user = userList.find((user) => user.id === userId);
@@ -264,8 +273,9 @@ const Timers = () => {
             const distance_to_station = temp_arr.find(
               (station) => station === getStation
             );
+            const carIdIndex = userIdIndexMap.indexOf(userId);
             return {
-              car_id: car.id,
+              car_id: carIdIndex,
               remaining_battery: remaining_battery.toString(),
               drain_rate: car.DrainRate,
               remaining_range: remaining_range.toString(),
@@ -278,13 +288,21 @@ const Timers = () => {
         })
         .filter((data) => data !== null);
 
-      if (formattedData.length > 0 && socket && temp_arr) {
+      if (formattedData.length > 0) {
         console.log("calling fetchmodelprediction");
         fetchModelPrediction(formattedData);
       }
     }
-  }, [len, getStation, socket, usersAtTwenty, userList, processedStations]);
+  }, [stationsReceived, processedStations, usersAtTwenty, getStation]);
 
+  //map user id to indices
+  useEffect(() => {
+    userList.forEach((user) => {
+      if (!userIdIndexMap.includes(user.id)) {
+        userIdIndexMap.push(user.id);
+      }
+    });
+  }, [userList]);
   return (
     <div className="h-screen bg-black text-white flex text-center flex-col space-y-5">
       <div>Server</div>
