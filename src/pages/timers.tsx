@@ -74,6 +74,7 @@ const Timers = () => {
         console.log("received station", data.station);
         setStation(data.station);
         temp_arr.push(data.station);
+        socket?.emit("chargeNow", { Station: temp_arr[0] });
         console.log(temp_arr);
         setStationsReceived(true); // Mark stations as received
       });
@@ -195,7 +196,7 @@ const Timers = () => {
           const curr_loc = user.Location;
           console.log("loc : ", curr_loc);
           socket?.emit("location", { loc: curr_loc });
-          if (getStation && curr_loc && socket) {
+          if (getStation && socket) {
             console.log("emitting station");
             socket?.emit("chargeNow", { station: getStation, userId });
           }

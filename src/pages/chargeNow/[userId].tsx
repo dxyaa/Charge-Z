@@ -1,6 +1,6 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useCallback } from "react";
 import "tailwindcss/tailwind.css";
 import { TiWeatherPartlySunny } from "react-icons/ti";
 import { useEffect } from "react";
@@ -12,7 +12,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { RiBatteryChargeLine } from "react-icons/ri";
 import { FaBluetoothB } from "react-icons/fa";
 import App from "next/app";
-import Maps from "../maps"
+import Maps from "../maps";
 import { FaRegPauseCircle } from "react-icons/fa";
 import starboy from "../../public/starboy.png";
 import Link from "next/link";
@@ -32,13 +32,24 @@ import useSocket from "../useSocket";
 /*imports end*/
 
 interface Cars {
-    Name:string;
-    Capacity:number;
-    DrainRate:number;
-    CurrentCharge: number;
-    Range:number;
+  Name: string;
+  Capacity: number;
+  DrainRate: number;
+  CurrentCharge: number;
+  Range: number;
 }
 
+interface Station {
+  name: string;
+  location: string;
+  distance: number;
+  duration: string;
+  durationInSeconds: number;
+}
+
+interface StationResponse {
+  Station: Station;
+}
 
 const ChargeNow = () => {
   const currentDate = new Date();
@@ -46,21 +57,31 @@ const ChargeNow = () => {
     hour: "2-digit",
     minute: "2-digit",
   });
-  const [station,setStation] = useState<string>();
+  const [station, setStation] = useState<Station>({
+    name: "",
+    location: "",
+    distance: 0,
+    duration: "",
+    durationInSeconds: 0,
+  });
 
-  const [carData,setCarData] = useState<Cars>({
-    Name:"",
-    Capacity:0,
-    DrainRate:0,
-    CurrentCharge:0,
-    Range:0
-  })
+  const [carData, setCarData] = useState<Cars>({
+    Name: "",
+    Capacity: 0,
+    DrainRate: 0,
+    CurrentCharge: 0,
+    Range: 0,
+  });
+
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   const router = useRouter();
   const { userId } = router.query;
-
-  const searchParams = useSearchParams()
-  const Car = searchParams?.get("car")
+  const [dataReceived, setDataReceived] = useState(false);
+  const searchParams = useSearchParams();
+  const Car = searchParams?.get("car");
+  const [isConnected, setIsConnected] = useState(false);
 
   useEffect(() => {
     const fetchCarData = async () => {
@@ -75,7 +96,7 @@ const ChargeNow = () => {
           } else {
             console.log("No such document");
           }
-          console.log("car id : ",)
+          console.log("car id : ");
         }
       } catch (error) {
         console.error("Error fetching car data:", error);
@@ -85,21 +106,26 @@ const ChargeNow = () => {
   }, [Car]);
 
   const socket = useSocket("http://localhost:4000");
+  useEffect(() => {
+    if (socket) {
+      console.log("Socket connected");
+      socket.on("chargeNow", (data: StationResponse) => {
+        console.log("Received station data:", data);
+        if (data.Station) {
+          setStation(data.Station);
+          setDataReceived(true);
+          console.log("Updated station state:", data.Station);
+        } else {
+          console.log("No Station data in the response");
+        }
+      });
 
- useEffect(() => {
-  if (socket) {
-    socket.on("chargeNow", (data: { station: string }) => {
-      console.log("Received station:", data.station);
-      setStation(data.station)
-    });
-
-    // Cleanup to remove the listener when the component unmounts or the socket changes
-    return () => {
-      socket.off("chargeNow");
-    };
-  }
-}, [socket]);
-
+      return () => {
+        console.log("Cleaning up socket listener");
+        socket.off("chargeNow");
+      };
+    }
+  }, [socket]);
 
   const formattedDate = currentDate.toLocaleDateString(undefined, {
     weekday: "long",
@@ -133,7 +159,8 @@ const ChargeNow = () => {
   const remainingBatteryKWh = (CurrentCharge / 100) * Capacity;
   const averageEnergyConsumptionRatePerKm = 2; // Adjust this value as needed
 
-  const remainingRangeKm = remainingBatteryKWh / averageEnergyConsumptionRatePerKm;
+  const remainingRangeKm =
+    remainingBatteryKWh / averageEnergyConsumptionRatePerKm;
   return (
     <div className="h-screen bg-black text-white w-screen">
       <div className="flex justify-center">
@@ -208,7 +235,15 @@ const ChargeNow = () => {
                 className="h-60 flex justify-center items-center flex-col space-y-4 swap"
               >
                 <div className=" ">Your nearest charging station is : </div>
-                <div>Kochi</div>
+                {!dataReceived ? (
+                  <div>Waiting for station data...</div>
+                ) : (
+                  <div>
+                    {station.name
+                      ? `${station.name} | ${station.location}`
+                      : "No station data available"}
+                  </div>
+                )}
                 <Link
                   href={{
                     pathname: "/dashBoard",
@@ -232,9 +267,7 @@ const ChargeNow = () => {
             </div>
             <div className="flex flex-col">
               <div className="text-md font-semibold">{Car}</div>
-              <div className="text-sm text-gray-500">
-              {carData.Name}
-              </div>
+              <div className="text-sm text-gray-500">{carData.Name}</div>
             </div>
           </div>
 
@@ -292,9 +325,9 @@ const ChargeNow = () => {
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
                       d="M14 5l7 7m0 0l-7 7m7-7H3"
                     ></path>
                   </svg>
